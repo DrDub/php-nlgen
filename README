@@ -1,0 +1,65 @@
+PHP Natural Language Generation helper classes
+==============================================
+
+These are pure PHP helper classes to implement recursive-descent
+natural language generators [1].  The classes provided are an abstract
+generator, an ontology container and a lexicon container.
+
+These classes should help build simple to mid-level generators,
+speaking about their complexity.  Emphasis has been made in keeping
+more advanced features out of the way for simpler cases (i.e., if
+there is no need to use the ontology or the lexicon, they can be
+skipped).
+
+The generator keeps track of semantic annotations on the generated
+text, so as to enable further generation functions to reason about the
+text.  A global context blackboard is also available.
+
+This is work in progress, see the ROADMAP for some insights in future
+development.
+
+[1] http://duboue.net/blog5.html
+
+
+How to use it
+=============
+
+Look at the examples/ folder, but in a nutshell, subclass the
+nlg\Generator class and implemented a function named 'top'. This
+function can return either a string or an array with a 'text' and
+'sem' for semantic annotations on the returned text.
+
+If you want to use other functions to assemble the text use
+$this->gen('name_of_the_function', $data_array_input_to_the_function)
+to call it (instead of
+$this->name_of_the_function($data_array_input_to_the_function). The
+generator abstract class keeps track of the semantic annotations for
+you and other goodies.
+
+To call the class, if your instantiated subclass is $my_gen then
+$my_gen->generate($input_data_as_an_array) will return the generated
+strings. If you want to access the semantic annotations, use
+$my_gen->semantics() afterward.
+
+For different use cases, see the examples/ folder.
+
+
+Learning more about NLG
+=======================
+
+I highly recommend Building Natural Language Generation Systems (2000)
+by Reiter and Dale [2] 
+
+The SIGGEN site [3] has plenty of good resources. You might also want
+to look at the NLG portal at the Association for Computational
+Linguistics wiki [4].
+
+Last but not least, you might be interested in the author's blog [5]
+and the class notes of his recent NLG course [6].
+
+
+[2] http://amzn.to/p63jzB
+[3] http://www.siggen.org/
+[4] http://aclweb.org/aclwiki/index.php?title=Natural_Language_Generation_Portal
+[5] http://duboue.net/blog.html
+[6] http://wiki.duboue.net/index.php/2011_FaMAF_Intro_to_NLG

@@ -1,0 +1,27 @@
+Some possible future additions 
+
+(if you'd like to try your chops at one of these, just fork the
+project at GitHub.)
+
+
+* Complete the Tarot example
+
+* More examples so as to complete the complexity continuum
+
+* A sqlite3 backed lexicon and ontology example
+
+* Handle backtracking using exceptions
+
+* Add a base lexicon using WordNet
+
+* Web-based visualization tool for the semantic annotations
+
+
+Pipe dreams
+
+* Add the Penman Upper Model as an ontology [1]
+
+* Add a statistical generation component that'll "fill-in-the-blanks" given weaker semantics.
+
+
+[1] http://www.fb10.uni-bremen.de/anglistik/langpro/kpml/um89/um89-root.htm

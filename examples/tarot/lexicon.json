@@ -1,0 +1,45 @@
+{
+"card_number_1":{ "POS" : "noun", "string" : "ace" },
+"card_number_11":{ "POS" : "noun", "string" : "page" },
+"card_number_12":{ "POS" : "noun", "string" : "knight" },
+"card_number_13":{ "POS" : "noun", "string" : "queen" },
+"card_number_14":{ "POS" : "noun", "string" : "king" } ,
+"opening_very_positive":[ 
+  { "POS" : "full_phrase", "string" : "Wow, look at those cards!" },
+  { "POS" : "full_phrase", "string" : "Lucky today, aren't we?" },
+  { "POS" : "full_phrase", "string" : "Why I never get such good cards myself, I wonder." },
+  { "POS" : "full_phrase", "string" : "Sometimes life is good to people, that makes me happy." },
+  { "POS" : "full_phrase", "string" : "Take a photo of these cards and keep them, they shine!" } ],
+"opening_positive":[ 
+  { "POS" : "full_phrase", "string" : "Overall, cards look good, let's get down to business." },
+  { "POS" : "full_phrase", "string" : "Good, good." },
+  { "POS" : "full_phrase", "string" : "Not bad, not bad at all." },
+  { "POS" : "full_phrase", "string" : "Luck can be helped but overall is looking good." },
+  { "POS" : "full_phrase", "string" : "Things seem to be doing well, I would say." } ],
+"opening_neutral":[ 
+  { "POS" : "full_phrase", "string" : "Life is you make out of it, same with these cards." },
+  { "POS" : "full_phrase", "string" : "Not bad, not good, just your cards." },
+  { "POS" : "full_phrase", "string" : "And what is this supposed to mean?" },
+  { "POS" : "full_phrase", "string" : "Hmmm." },
+  { "POS" : "full_phrase", "string" : "Let us see how things play out here." } ],
+"opening_negative":[ 
+  { "POS" : "full_phrase", "string" : "Oh, well, you'll need to work a little bit or so it seems." },
+  { "POS" : "full_phrase", "string" : "Not easy times ahead, I should say." },
+  { "POS" : "full_phrase", "string" : "And what is this supposed to mean?" },
+  { "POS" : "full_phrase", "string" : "Ouch." },
+  { "POS" : "full_phrase", "string" : "We will have to go slow." } ],
+"opening_very_negative":[ 
+  { "POS" : "full_phrase", "string" : "Agh, this will take a lot of work." },
+  { "POS" : "full_phrase", "string" : "You are not going to like this." },
+  { "POS" : "full_phrase", "string" : "Don't shoot the messenger, please." },
+  { "POS" : "full_phrase", "string" : "Maybe we should just skip this." },
+  { "POS" : "full_phrase", "string" : "These cards are unusually bad." } ],
+"omen_good" : [ { "POS" : "phrase", "string" : "good things to come" }, { "POS" : "phrase", "string" : "a positive outlook" } ],
+"omen_neutral" : [ { "POS" : "phrase", "string" : "a little bit of a puzzle" }, { "POS" : "phrase", "string" : "a mixed outlook" } ],
+"omen_bad" : { "POS" : "phrase", "string" : "something bad" },
+"issue_the_lovers" : {"POS" : "phrase", "string" : "The lovers refers to relationships, sexuality but also personal beliefs and values" },
+"suit_description_wands" : { "POS" : "phrase", "string" : "adventurous, energetic" },
+"suit_description_pentacles" : { "POS" : "phrase", "string" : "nurturing, concrete" },
+"suit_description_swords" : { "POS" : "phrase", "string" : "intellectual, analytical" },
+"suit_description_cups" : { "POS" : "phrase", "string" : "loving, compassionate" }
+}

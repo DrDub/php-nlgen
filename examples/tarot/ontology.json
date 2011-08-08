@@ -1,0 +1,66 @@
+{
+"the_fool": 
+{ "class": "card", 
+  "name": "fool",
+  "opposes" : { "death": 1 },
+  "omen" : "good"
+},
+"death":
+{ "class": "card",
+  "name": "death",
+  "opposes" : { "the_fool": 1 },
+  "omen" : "bad"
+},
+"the_tower":
+{ "class": "card",
+  "name": "tower",
+  "opposes" : { "the_lovers": 1 },
+  "omen" : "bad"
+},
+"the_lovers":
+{ "class": "card",
+  "name": "lovers",
+  "opposes" : { "the_tower": 1 },
+  "omen": "good"
+},
+"the_magician":
+{ "class": "card",
+  "name": "magician",
+  "omen" : "good"
+},
+"the_empress":
+{ "class": "card",
+  "name": "empress",
+  "omen" : "neutral"
+},
+"pentacles_1":
+{ "class": "card",
+  "suit": "pentacles",
+  "number": "1",
+  "omen" : "good"
+},
+"pentacles_2":
+{ "class": "card",
+  "suit": "pentacles",
+  "number": "2",
+  "omen" : "neutral" 
+},
+"pentacles_3":
+{ "class": "card",
+  "suit": "pentacles",
+  "number": "3",
+  "omen" : "neutral"
+},
+"pentacles_4":
+{ "class": "card",
+  "suit": "pentacles",
+  "number": "4",
+  "omen" : "good"
+},
+"pentacles_5":
+{ "class": "card",
+  "suit": "pentacles",
+  "number": "5",
+  "omen" : "neutral"
+}
+}
