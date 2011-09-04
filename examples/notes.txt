@@ -1,10 +1,11 @@
 ﻿The examples here are intended to show a continuum of increasing complexity.
 
 The first example (basic/basic0.php) is a simple event reporting text
-nugget, to fit in a larger Web interface. It is intended to verbalize
-quadruplets of the form $agent, $event, $action, $theme, meaning the
-agent $agent has performed an $event (started, finished, make
-progress) with respect to the action $action on the topic of $theme.
+nugget, to fit into a larger Web interface.  It is intended to
+verbalize quadruplets of the form ($agent, $event, $action, $theme),
+meaning the agent $agent has performed an $event (started, finished,
+make progress) with respect to the action $action on the topic of
+$theme.
 
 For example:
 
@@ -21,7 +22,7 @@ production system you'll expect this information to be fetched from a
 DB and a Lexicon subclass that can be tied to a DB is a planned
 feature (see ROADMAP).
 
-The last basic example (not yet implemented) uses an ontology to
+The last basic example (basic/basic2.php) uses an ontology to
 distinguish between actors that are people and are referred by name
 (e.g., Juan) versus events referring to automatic tools (e.g.,
 "nightly build").  This information is used to add an article to form
@@ -36,8 +37,10 @@ should how semantic annotations can simplify dealing with number
 agreement and pronominalization. The planned example is a SMS-powered
 package-delivering notification system that should generate:
 
-Your two packages were delivered yesterday. The recepient signed them in.
-Your package was delivered two days ago. The recepient signed it in.
+* Your two packages were delivered yesterday. The recepient signed
+  them in.
+
+* Your package was delivered two days ago. The recepient signed it in.
 
 Again, simple example, but here you can profit from semantic
 annotations to the point of simplifying the code and make it much more
@@ -53,24 +56,24 @@ situation (cards 1 and 2).
 The ontology only has (vague) information about 11 cards and still can
 produce this type of texts:
 
-"Ouch. Currently, you got the empress and the lovers. The empress
-implies a little bit of a puzzle. This follows the lovers which
-implies good things to come. The lovers refers to relationships,
+"Ouch. Currently, you got the empress and the lovers.  The empress
+implies a little bit of a puzzle.  This follows the lovers which
+implies good things to come.  The lovers refers to relationships,
 sexuality but also personal beliefs and values."
 
 "And what is this supposed to mean? Currently, you got the five of
-pentacles and the fool. The five of pentacles implies a little bit of
-a puzzle. The pentacles are nurturing, concrete. This follows the fool
-which implies good things to come."
+pentacles and the fool.  The five of pentacles implies a little bit of
+a puzzle. The pentacles are nurturing, concrete.  This follows the
+fool which implies good things to come."
 
 "Things seem to be doing well, I would say. Currently, you got the
-lovers and the tower. The lovers implies good things to come. The
+lovers and the tower.  The lovers implies good things to come.  The
 lovers refers to relationships, sexuality but also personal beliefs
-and values. This strongly opposes the tower which implies something
+and values.  This strongly opposes the tower which implies something
 bad."
 
 "Good, good. Currently, you got the five of pentacles and the ace of
-pentacles. The five of pentacles implies a little bit of a puzzle. The
-pentacles are nurturing, concrete. This follows the ace of pentacles
-which implies good things to come. Same as the other card, this is
-also a pentacles."
+pentacles.  The five of pentacles implies a little bit of a puzzle.
+The pentacles are nurturing, concrete.  This follows the ace of
+pentacles which implies good things to come.  Same as the other card,
+this is also a pentacles."
