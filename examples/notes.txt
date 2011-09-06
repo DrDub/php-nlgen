@@ -47,7 +47,7 @@ annotations to the point of simplifying the code and make it much more
 reusable.
 
 
-The final example is a Tarot spread interpreter in the tarot/
+The next example is a Tarot spread interpreter in the tarot/
 folder. This is as complex as it can get and currently it can only
 produce an opening statement, referring to the overall "goodness" of
 the spread and a then generates a statement about the current
@@ -77,3 +77,14 @@ pentacles.  The five of pentacles implies a little bit of a puzzle.
 The pentacles are nurturing, concrete.  This follows the ace of
 pentacles which implies good things to come.  Same as the other card,
 this is also a pentacles."
+
+
+The final example is an insult generator in the bocasucia/ folder.  
+As this generator is heavily lexicon-driven, most of the structure lies 
+in the lexicon rules.  It is an example of the new 'function' and 
+'mixed' lexical capabilities in lexicon.php.  The subject matter 
+(insults in river plate Spanish, with English glosses) might bother 
+certain people.  If you feel this might be your case, please refrain 
+from looking into this example.  This example is also under construction, 
+but much more functional than the tarot reader (for all the functionality
+rendered by a program that just generates insults, that is).

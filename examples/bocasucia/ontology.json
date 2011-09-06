@@ -1,0 +1,89 @@
+{
+"INSULT-TYPE" : { "class" : "insult_type",
+"description" : "general insult"
+},
+"WISH" : { "class" : "insult_type", "parent" : "INSULT-TYPE",
+"description" : "wish somebody something"
+},
+"WISH-GO" : { "class" : "insult_type", "parent" : "WISH",
+"description" : "Wish they go to a place, either real or figurative"
+},
+"WISH-DO" : { "class" : "insult_type", "parent" : "WISH",
+"description" : "wish they go and do something, usually unpleasant"  
+},
+"WISH-BAD" : { "class" : "insult_type", "parent" : "WISH",
+"description" : "wish something bad happens to them"
+},
+"WISH-STOP" : { "class" : "insult_type", "parent" : "WISH",
+"description" : "wish they stop doing something"
+},
+"DESCRIBE" : { "class" : "insult_type", "parent" : "INSULT-TYPE",
+"description" : "refer to specific qualities of the person"
+},
+"BAD" : { "class" : "insult_type", "parent" : "DESCRIBE",
+"description" : "bad person"
+},
+"HOMO" : { "class" : "insult_type", "parent" : "DESCRIBE",
+"taboo-lock" : "true",
+"description" : "of non-conformant sexual tendencies"
+},
+"BAD-SEED" : { "class" : "insult_type", "parent" : "DESCRIBE",
+"description" : "of an undesirable ascendance"
+},
+"LOWLY" : { "class" : "insult_type", "parent" : "DESCRIBE",
+"description" : "of an undesirable ascendance"
+},
+"ANIMAL" : { "class" : "insult_type", "parent" : "DESCRIBE",
+"description" : "of animal-like characteristics"
+},
+"BAD-PHYSIQUE" : { "class" : "insult_type", "parent" : "DESCRIBE",
+"description" : "of undesirable physical characteristics"
+},
+"BAD-HISTORY" : { "class" : "insult_type", "parent" : "DESCRIBE",
+"description" : "negative events or attitudes in their past history"
+},
+"UNINTELLIGENT" : { "class" : "insult_type", "parent" : "DESCRIBE",
+"description" : "lack of intellectual prowess"
+},
+"UNFORTUNATE" : { "class" : "insult_type", "parent" : "DESCRIBE",
+"description" : "marked by ill fortune"
+},
+"LACKING" : { "class" : "insult_type", "parent" : "DESCRIBE",
+"description" : "marked by unsatisfied needs, usually sexual"
+},
+"THREATEN" : { "class" : "insult_type", "parent" : "INSULT-TYPE",
+"description" : "threaten the person"
+},
+"THREATEN-PHYSICAL" : { "class" : "insult_type", "parent" : "THREATEN",
+"description" : "threaten to use physical violence"
+},
+"THREATEN-SEX" : { "class" : "insult_type", "parent" : "THREATEN",
+"description" : "threaten to use sexual violence"
+},
+"EQUATE" : { "class" : "insult_type", "parent" : "INSULT-TYPE",
+"description" : "equate the person to an object of undesirable characteristics"
+},
+"EQUATE-BODY-PART" : { "class" : "insult_type", "parent" : "EQUATE",
+"description" : "equate the person to body parts"
+},
+"EQUATE-BODY-WASTE" : { "class" : "insult_type", "parent" : "EQUATE",
+"description" : "equate the person to body excretions"
+},
+"EQUATE-OBJECT" : { "class" : "insult_type", "parent" : "EQUATE",
+"description" : "equate the person to inanimate objects with undesirable characteristics"
+},
+"INTERJ" : { "class" : "insult_type", "parent" : "INSULT-TYPE",
+"description" : "general interjections"
+},
+
+"LENGTH" : { "class" : "insult_length" },
+"LENGTH-SHORT" : { "class" : "insult_length", "parent" : "LENGTH" },
+"LENGTH-MEDIUM" : { "class" : "insult_length", "parent" : "LENGTH" },
+"LENGTH-LONG" : { "class" : "insult_length", "parent" : "LENGTH" },
+
+"LEVEL" : { "class" : "insult_level" },
+"POLITE" : { "class" : "insult_level", "parent" : "LEVEL" },
+"NORMAL" : { "class" : "insult_level", "parent" : "LEVEL" },
+"NASTY" : { "class" : "insult_level", "parent" : "LEVEL" }
+
+}

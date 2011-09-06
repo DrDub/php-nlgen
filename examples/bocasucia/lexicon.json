@@ -1,0 +1,255 @@
+{
+"WISH-GO" : 
+[ { "POS" : "full_phrase", "insult_type" : "WISH-GO", "insult_level" : "POLITE", "length" : "LENGTH-LONG",
+    "mixed" : 
+    [ "pero por favor ",
+      { "function" : "verb" , "root" : "go", "mode":"imperative" },
+      { "function" : "pronoun" , "referent":"target", "case" : "accusative" },
+      " por donde ",
+      { "function" : "verb" , "root" : "come", "tense": "past" } ],
+    "gloss" : "the target should follow back the steps that brought the target to this place" },
+  { "POS" : "full_phrase", "insult_type" : "WISH-GO", "insult_level" : "NORMAL", "length" : "LENGTH-LONG",
+    "mixed" : [ { "function" : "phrase", "phrases":
+                  [ { "mixed" : 
+                	  [ { "function" : "verb" , "root" : "go", "mode":"imperative" },
+                        { "function" : "pronoun" , "referent":"target", "case" : "accusative" } ],
+                      "likelihood" : "3" }, 
+                    { "mixed" : 
+                      [ "pero porque no ", 
+                        { "function" : "pronoun", "referent" : "target", "case" : "accusative" },
+                        " ",
+                        { "function" : "verb" , "root" : "go", "mode":"indicative" },
+                        { "function" : "phrase", "phrases" :
+                          [ "", " un poquito"] } ] } ] }, 
+                " a ",
+                { "function" : "phrase" , "phrases" : 
+                  [ { "mixed" : [ "la ",
+                                  { "function" : "decorator", "root" : "pre_decoration" }, 
+                                  "concha de ",
+                                  { "function" : "pronoun", "referent" : "target", "case" : "possessive" },
+                                  " ",
+                                  { "function" : "noun", "root" : "female_relative", "article":"none" } ],
+                      "gloss" : "the vagina of a female relative" },
+                    { "function" : "noun" , "root" : "poop", "decorated":"yes" },
+                    { "function" : "full_phrase", "phrase" : "madre_pario" } ] } ],
+    "gloss" : "go to an unpleasant place" },
+  { "POS" : "full_phrase", "insult_type" : "WISH-GO", "insult_level" : "NORMAL", "length" : "LENGTH-LONG",  "likelihood" : "0.01",
+    "mixed" : [ { "function" : "verb" , "root" : "catch", "mode":"imperative" }, 
+                " una tortuga y ",
+                { "function" : "verb" , "root" : "go", "mode":"imperative" }, 
+                " despacito a la concha de tu madre" ],
+    "gloss" : "go back to your mother's vagina slowly by ridding a turtle" },
+  { "POS" : "full_phrase", "insult_type" : "WISH-GO", "insult_level" : "NORMAL", "length" : "LENGTH-SHORT", "likelihood":"5",
+    "mixed" : [ { "function" : "noun", "root" : "vagina", "mode":"imperative" }, 
+                  " de ",
+                  { "function" : "pronoun", "referent" : "target", "case" : "possessive" },
+                  " ",
+                  { "function" : "noun", "root" : "female_relative", "article":"none" } ],
+    "gloss" : "calling out to a female relative's vagina (most likely intending the target goes back to it)" },
+  { "POS" : "full_phrase", "insult_type" : "WISH-GO", "insult_level" : "NORMAL", "length" : "LENGTH-SHORT", "likelihood":"5",
+    "mixed" : [ "la concha de la ",
+                { "function" : "phrase", "phrases" : 
+                  [ { "string":"lora", "gloss":"parrot (female)" },
+                    { "string":"vaca", "gloss":"cow" } ] },
+                { "function" : "phrase", "phrases" : 
+                  [ {"string":"","likelihood":"20"}, " trola"," puta" ] } ],
+        "gloss" : "calling out to an animal vagina (most likely intending the target goes back to it)" }
+],
+"WISH-DO" : 
+[ { "POS" : "full_phrase", "insult_type" : "WISH-DO", "insult_level" : "NORMAL", "length" : "LENGTH-SHORT",
+    "mixed" : [ { "function" : "verb" , "root" : "suck", "mode":"imperative" },
+             { "function" : "pronoun" , "referent":"speaker", "case" : "accusative" }, 
+             " ",
+             { "function" : "noun" , "root" : "penis" } ],
+    "gloss" : "perform oral sex to the speaker" }
+],
+"WISH-BAD" : 
+[ { "POS" : "full_phrase", "insult_type" : "WISH-BAD", "insult_level" : "NORMAL", "length" : "LENGTH-MEDIUM",
+    "mixed" : [ "qué se ", { "function" : "pronoun" , "referent":"target", "case" : "accusative" }, " cierre ",
+             { "function" : "noun" , "root" : "vagina" } ],
+    "gloss" : "wishing for the target vagina to close up",
+    "target_gender" : "female" }
+],
+"BAD" : 
+[ { "POS" : "full_phrase", "insult_type" : "BAD", "insult_level" : "POLITE", "length" : "LENGTH-SHORT",
+    "string" : "mal bicho",
+    "gloss" : "literally, bad insect; bad person",
+    "target_number" : "singular" },
+  { "POS" : "full_phrase", "insult_type" : "BAD", "insult_level" : "POLITE", "length" : "LENGTH-SHORT",
+    "function" : "noun", "root" : "sleazy", "agreement":"target", "article":"none" },
+  { "POS" : "full_phrase", "insult_type" : "BAD", "insult_level" : "POLITE", "length" : "LENGTH-SHORT",
+    "function" : "noun", "root" : "shameless", "agreement":"target", "article":"none" },
+  { "POS" : "full_phrase", "insult_type" : "BAD", "insult_level" : "NORMAL", "length" : "LENGTH-SHORT",
+    "string" : "conchudo",
+    "gloss" : "literally, a man with a big vagina (a physical impossibility); person with no morals",
+    "target_number" : "singular", "target_gender" : "male" },
+  { "POS" : "full_phrase", "insult_type" : "BAD", "insult_level" : "NORMAL", "length" : "LENGTH-MEDIUM",
+    "mixed" : [ { "function" : "verb" , "root" : "be", "mode":"indicative" },
+                " ",
+                { "function" : "noun" , "root": "offspring", "agreement": "target", "article" : "indefinite" },
+                " de ",
+                { "function" : "decorator", "root" : "pre_decoration2" },
+                "puta" ],
+    "gloss" : "literally, person born from a prostitute; a bad person" },
+  { "POS" : "full_phrase", "insult_type" : "BAD", "insult_level" : "NASTY", "length" : "LENGTH-MEDIUM",
+    "mixed" : [ "pedazo de ",
+                { "function" : "noun" , "root": "analized", "agreement": "target", "article" : "none" } ],
+    "gloss" : "literally, somebody that has had lots of anal sex; a mean person" }
+],
+"BAD-SEED" :
+[ { "POS" : "full_phrase", "insult_type" : "BAD", "insult_level" : "NORMAL", "length" : "LENGTH-SHORT",
+    "mixed" : [ { "function" : "noun" , "root": "offspring", "agreement": "target", "article" : "none" }, 
+                " de puta" ],
+    "gloss" : "the target came to be from a prostitute" },
+  { "POS" : "full_phrase", "insult_type" : "BAD", "insult_level" : "NORMAL", "length" : "LENGTH-MEDIUM",
+    "function" : "full_phrase", "phrase" : "madre_pario" },
+  { "POS" : "full_phrase", "insult_type" : "BAD", "insult_level" : "NORMAL", "length" : "LENGTH-LONG",
+    "mixed" :
+    [ { "function" : "noun" , "root": "offspring", "agreement": "target", "article" : "none" },
+      " de un ",
+      { "function" : "phrase", "phrases":
+          [ { "string" : "container" },
+            { "string" : "camión" },
+            { "string" : "vagón", "gloss":"train car" },
+            { "string" : "regimiento", "gloss":"army outpost" },
+            { "string" : "destacamento", "gloss":"army outpost" } ] },
+      " lleno de ",
+      { "function" : "decorator", "root" : "pre_decoration2" },
+      "putas",
+      { "function" : "phrase", "phrases":
+          [ { "string" : "", "likelihood" : "20" },
+            " amaestradas" ] } ],
+    "gloss" : "offspring from a large gathering of prostitutes"}
+],
+"INTERJ" : 
+[ { "POS" : "full_phrase", "insult_type" : "INTERJ", "insult_level" : "NORMAL", "length" : "LENGTH-SHORT",
+    "string" : "la puta madre",
+    "gloss" : "calling out to the mother of the target, who happens to be a prostitute" }
+],
+
+"catch" : { "POS" : "verb", "string" : "agarrar", "gloss" : "to catch" },
+"go" : { "POS" : "verb", "string" : "andar", "gloss" : "to go", 
+         "indicative" : { "2s" : "vas", "2p" : "van" },
+         "imperative" : { "2s" : "anda", "2p" : "vayan" } },
+"be" : { "POS" : "verb", "string" : "ser", "gloss" : "to be", 
+         "indicative" : { "2s" : "sos", "2p" : "son" } },
+"come" : { "POS" : "verb", "string" : "venir", "gloss" : "to come", 
+           "indicative" : { "2s_past" : "viniste", "2p_past" : "vinieron" } },
+"suck" : 
+[ { "POS" : "verb", "string" : "chupar",
+	"imperative" : { "2p" : "chupen" },
+	"likelihood" : "20" }, 
+  { "POS" : "verb", "string" : "mamar", "imperative" : { "2p" : "mamen" } }, 
+  { "POS" : "verb", "string" : "lamer", "imperative" : { "2p" : "lamen" } },
+  "gloss", "suck"
+],
+"poop" : { "POS" : "noun", "string": "mierda", "gender": "femenine", "gloss":"feces" },
+"offspring" : { "POS" : "noun", "string": "hijo", "gender": "masculine", "gloss":"offspring" },
+"analized" : { "POS" : "noun", "string": "culiado", "gender": "masculine", 
+    "gloss":"somebody that partakes in anal sex" },
+"sleazy" : 
+[ { "POS" : "noun", "string": "atorrante", "gender": "masculine" },
+  { "POS" : "noun", "string": "zarpado", "gender": "masculine" } ,
+  "gloss", "a sleazy person"
+],
+"shameless" : 
+[ { "POS" : "noun", "string": "caradura", "gender": "masculine" },
+  { "POS" : "noun", "string": "sinvergüenza", "gender": "masculine" },
+  "gloss", "a shameless person"
+],
+"poop_pre_decoration" : 
+[ { "POS" : "particle", "string":"", "likelihood" : "20" },
+  { "POS" : "particle", "string": "requete", "likelihood" : "10" },
+  { "POS" : "particle", "string": "recontra", "likelihood" : "5" },
+  { "POS" : "particle", "string": "recalcada" },
+  { "POS" : "particle", "string": "recontramil" },
+  { "POS" : "particle", "string": "recontra remil" },
+  "gloss" , "emphatic"  
+],
+"penis_ext" : 
+[ { "POS" : "noun", "string": "pija", "gender": "femenine", "likelihood" : "20" },
+  { "POS" : "noun", "string": "trocha", "gender": "femenine" },
+  { "POS" : "noun", "string": "tarasca", "gender": "femenine" },
+  { "POS" : "noun", "string": "tripa gorda", "gender": "femenine", "number": "singular" },
+  { "POS" : "noun", "string": "poronga", "gender": "femenine", "likelihood": "10" },
+  { "POS" : "noun", "string": "verga", "gender": "femenine", "likelihood": "10" },
+  { "POS" : "noun", "string": "guacha", "gender": "femenine" },
+  { "POS" : "noun", "string": "japi", "gender": "femenine", "likelihood": "5"  },
+  { "POS" : "noun", "string": "chota", "gender": "femenine", "likelihood": "5"  },
+  { "POS" : "noun", "string": "anguila", "gender": "femenine" },
+  { "POS" : "noun", "string": "quena", "gender": "femenine" },
+  { "POS" : "noun", "string": "batata", "gender": "femenine" },
+  { "POS" : "noun", "string": "pinchila", "gender": "femenine" },
+  { "POS" : "noun", "string": "pete", "gender": "masculine" },
+  { "POS" : "noun", "string": "matafuegos", "gender": "masculine", "number": "singular" },
+  { "POS" : "noun", "string": "sable", "gender": "masculine" },
+  { "POS" : "noun", "string": "chilo", "gender": "masculine" },
+  { "POS" : "noun", "string": "indio", "gender": "masculine" },
+  { "POS" : "noun", "string": "trozo", "gender": "masculine", "likelihood": "10" },
+  { "POS" : "noun", "string": "pito", "gender": "masculine" },
+  { "POS" : "noun", "string": "pingo", "gender": "masculine" },
+  "gloss" , "penis"
+],
+"penis" : 
+[ { "POS" : "noun", "string": "pija", "gender": "femenine", "likelihood" : "20" },
+  { "POS" : "noun", "string": "trocha", "gender": "femenine" },
+  { "POS" : "noun", "string": "poronga", "gender": "femenine", "likelihood": "10" },
+  { "POS" : "noun", "string": "verga", "gender": "femenine", "likelihood": "10" },
+  { "POS" : "noun", "string": "chota", "gender": "femenine", "likelihood": "5"  },
+  { "POS" : "noun", "string": "trozo", "gender": "masculine", "likelihood": "10" },
+  "gloss" , "penis"
+],
+"female_relative" :
+[ { "POS" : "noun", "string": "madre", "gender": "femenine", "likelihood" : "20", "gloss" : "mother"},
+  { "POS" : "noun", "string": "hermana", "gender": "femenine", "likelihood" : "10", "gloss" : "sister" },
+  { "POS" : "noun", "string": "tía", "gender": "femenine", "likelihood" : "5", "gloss" : "aunt" },
+  { "POS" : "noun", "string": "abuela", "gender": "femenine", "likelihood" : "5", "gloss" : "grandmother" },
+  { "POS" : "noun", "string": "madrina", "gender": "femenine", "gloss" : "godmother"  }
+],
+"vagina" : 
+[ { "POS" : "noun", "string": "concha", "gender": "femenine", "likelihood" : "20" },
+  { "POS" : "noun", "string": "chucha", "gender": "femenine", "likelihood" : "3" },
+  { "POS" : "noun", "string": "cachucha", "gender": "femenine" },
+  { "POS" : "noun", "string": "argoya", "gender": "femenine", "likelihood" : "3" },
+  { "POS" : "noun", "string": "hoyo", "gender": "masculine" },
+  "gloss", "vagina"
+],
+"pre_decoration" : [ { "POS" : "particle", "string":"", "likelihood" : "20" },
+{ "POS" : "particle", "string": "re", "likelihood" : "10" },
+{ "POS" : "particle", "string": "recontra", "likelihood" : "5" },
+{ "POS" : "particle", "string": "recontramil" },
+{ "POS" : "particle", "string": "recontra remil" }
+],
+"pre_decoration2" : 
+[ { "POS" : "particle", "string":"", "likelihood" : "2" },
+  { "POS" : "particle", "string": "recontramil" },
+  { "POS" : "particle", "string": "recontra remil" }
+],
+"post_decoration" : [ { "POS" : "particle", "string":"", "likelihood" : "20" },
+{ "POS" : "particle", "string": "del orto" },
+{ "POS" : "particle", "string": "de mierda" },
+{ "POS" : "particle", "string": "de la concha de tu madre" }
+],
+"pronoun_1s_accusative" : { "POS" : "pronoun", "string" : "me" },
+"pronoun_1p_accusative" : { "POS" : "pronoun", "string" : "nos" },
+"pronoun_2s_accusative" : { "POS" : "pronoun", "string" : "te" },
+"pronoun_2p_accusative" : { "POS" : "pronoun", "string" : "se" },
+"pronoun_1s_dative" : { "POS" : "pronoun", "string" : "me" },
+"pronoun_1p_dative" : { "POS" : "pronoun", "string" : "nos" },
+"pronoun_2s_dative" : { "POS" : "pronoun", "string" : "te" },
+"pronoun_2p_dative" : { "POS" : "pronoun", "string" : "los" },
+"pronoun_1s_possessive" : { "POS" : "pronoun", "string" : "mi" },
+"pronoun_1p_possessive" : { "POS" : "pronoun", "string" : "nuestro" },
+"pronoun_2s_possessive" : { "POS" : "pronoun", "string" : "tu" },
+"pronoun_2p_possessive" : { "POS" : "pronoun", "string" : "su" },
+
+"madre_pario" : 
+{ "mixed" :
+ [ "la puta madre que " ,
+   { "function" : "pronoun", "referent" : "target", "case" : "dative" },
+   " ", 
+   { "function" : "decorator", "root" : "pre_decoration" }, 
+   "parió" ],
+ "gloss" : "the target came to be from a harlot"  
+}
+}

@@ -29,6 +29,12 @@ require 'lexicon.php';
 abstract class Generator {
 
   var $context = array();
+  
+  # the semantics array is used as a stack.
+  # the currently generated frame is the last item in the stack.
+  # as text gets generated, their semantic annotations go into the stack, which gets unravelled after each function call.
+  # the old frame gets tossed out and its semantics go into the caller frame, inside an entry with its name.
+  # the stack can be preserved with a call to savepoint and rollback. 
   var $semantics = array();
 
   var $onto;
@@ -109,6 +115,44 @@ abstract class Generator {
   public function semantics() {
     return $this->semantics[0];
   }
-
+  
+  public function savepoint() {
+    $len = count($this->semantics);
+    $savepoint = array();
+    $savepoint["depth"] = $len;
+    # shallow clone, we will know the state of the keys at that time
+    $top = $this->semantics[$len-1]; # clone
+    $savepoint["last"] = $top;
+    #NOTE: this savepoint technique doesn't deal with complex semantic manipulations done
+    #  directly on $this->semantics.
+    # The easy option of deep cloning semantics won't work because the linking between frames
+    # are done with pointers.
+    
+    #print "semantics at save point: "; print_r($this->semantics);
+    #print "savepoint: "; print_r($savepoint);
+    return $savepoint;
+  }
+  
+  public function rollback($savepoint) {
+    #print "semantics at rollback: "; print_r($this->semantics);
+    #print "savepoint: "; print_r($savepoint);
+    # revert the length of the semantics stack
+    $len=$savepoint["depth"];
+    array_splice($this->semantics, $len);
+    # remove new keys
+    $old = $savepoint["last"];
+    $top = &$this->semantics[$len-1];
+    $to_remove=array();
+    foreach($top as $key=>$value){
+      if(!isset($old[$key])){
+        $to_remove[] = $key;
+      }
+    }
+    foreach($to_remove as $key){
+      unset($top[$key]);
+    }
+    # print "semantics after rollback: "; print_r($this->semantics);
+  }
+  
   abstract function top($data);
 }
