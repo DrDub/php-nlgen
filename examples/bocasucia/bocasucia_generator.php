@@ -129,6 +129,9 @@ class BocaSuciaGenerator extends Generator {
       }
       $plan = array_splice($plan, 0, $end);
     }
+    if($restrictions["length"] == "twitter"){
+      $restrictions["charlength"] = 140;
+    }
 
     $result = "";
     foreach($plan as $len){
@@ -137,6 +140,9 @@ class BocaSuciaGenerator extends Generator {
       if($gen) {
         $result = $result .
         (strlen($result)>0?" ":"") . ($len == "S"?"¡":"") . ucfirst($gen) . ($len == "S"?"!":".");
+        if($restrictions["length"] == "twitter"){
+          $restrictions["charlength"] = 140 - strlen($result) - 4;
+        }
       }
     }
     return $result;
@@ -204,8 +210,10 @@ class BocaSuciaGenerator extends Generator {
         }
         ++$i;
       }
+      $toolong = isset($restictrions["charlength"]) &&
+      strlen($result['string']) > $restictrions["charlength"];
 
-      if($repeated){
+      if($repeated || $toolong){
         $this->rollback($savepoint);
         #print "rollback! " . $result['string'] ."\n";
         $result = NULL;

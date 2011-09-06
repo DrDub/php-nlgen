@@ -73,9 +73,10 @@ for ($i = 1; $i < $argc; $i+=2) {
 
 if(!isset($constraints['seed'])){
   $constraints['seed'] = rand();
+  print $constraints['seed']. " ";
 }
 
-print $constraints['seed']." ".$gen->generate($constraints)."\n";
+print $gen->generate($constraints)."\n";
 
 if(isset($constraints['show_sem'])){
   print_r($gen->semantics());
