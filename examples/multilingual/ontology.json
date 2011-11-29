@@ -1,0 +1,14 @@
+{
+"reading" : { "class": "metric" },
+"culture": { "class": "metric" },
+"sport": { "class": "metric" },
+"car_accident": { "class": "metric" },
+"snow_removal": { "class": "metric" },
+"street_care": { "class": "metric" },
+"maison_culture": { "class": "place" },
+"heated_pool": { "class": "place" },
+"top": { "class": "position" },
+"bottom": { "class": "position" },
+"city" : { "class" : "region" },
+"province" : { "class" : "region", "includes" : "city" }
+}

@@ -2,25 +2,25 @@
 
 /*
  * Copyright (c) 2011 Pablo Ariel Duboue <pablo.duboue@gmail.com>
- * 
- * Permission is hereby granted, free of charge, to any person obtaining 
- * a copy of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the 
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included 
+ *
+ * The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
- * 
+ *
  */
 
 require 'ontology.php';
@@ -29,37 +29,60 @@ require 'lexicon.php';
 abstract class Generator {
 
   var $context = array();
-  
+
   # the semantics array is used as a stack.
   # the currently generated frame is the last item in the stack.
   # as text gets generated, their semantic annotations go into the stack, which gets unravelled after each function call.
   # the old frame gets tossed out and its semantics go into the caller frame, inside an entry with its name.
-  # the stack can be preserved with a call to savepoint and rollback. 
+  # the stack can be preserved with a call to savepoint and rollback.
   var $semantics = array();
 
   var $onto;
   var $lex;
+  var $mlex; # for multilingual lexicons
 
 
   function __construct($onto='', $lexicon='') {
     $this->onto = is_object($onto) ? $onto : new Ontology($onto);
-    $this->lex = is_object($lexicon) ? $lexicon : new Lexicon($this,$lexicon);
+    if(is_object($lexicon)){
+      $this->lex = $lexicon;
+    }elseif(is_array($lexicon)){
+      # multilingual
+      $this->mlex = array();
+      foreach ($lexicon as $lang => $llexicon) {
+        $this->mlex[$lang] = is_object($llexicon) ? $llexicon : new Lexicon($this,$llexicon);
+      }
+    }else{
+      $this->lex = new Lexicon($this,$lexicon);
+    }
   }
 
-  public function generate($data) {
-    $this->context = array();
+  public function generate($data, $context=array()) {
+    $this->context = $context;
     $this->semantics = array();
     array_push($this->semantics, array());
 
     $this->context['initial_data'] = $data;
 
+    # multilingual
+    if(isset($context['lang'])) {
+      $this->lex = $this->mlex[$context['lang']];
+    }
+
     return $this->gen("top", $data);
   }
 
   function gen($func, $data, $name=NULL) {
-    //print "Calling $func, semantics at start:\n";
-    //print_r($this->semantics);
-    
+    if(isset($this->context['debug'])) {
+      print "Calling $func, semantics at start:\n";
+      print_r($this->semantics);
+    }
+
+    # multilingual
+    if(!method_exists($this,$func) && isset($this->context['lang'])){
+      $func = $func . "_" . $this->context['lang'];
+    }
+
     # prepare the stack
     if($name == NULL){
       $name = $func;
@@ -91,9 +114,11 @@ abstract class Generator {
 
     array_pop($this->semantics);
 
-    //print "Calling $func, semantic at end:\n";
-    //print_r($this->semantics);
-    
+    if(isset($this->context['debug'])) {
+      print "Calling $func, semantic at end:\n";
+      print_r($this->semantics);
+    }
+
     return 	$text;
   }
 
@@ -111,11 +136,15 @@ abstract class Generator {
       }
     }
   }
-  
+
   public function semantics() {
     return $this->semantics[0];
   }
   
+  function current_semantics() {
+    return $this->semantics[count($this->semantics)-1];
+  }
+
   public function savepoint() {
     $len = count($this->semantics);
     $savepoint = array();
@@ -127,15 +156,19 @@ abstract class Generator {
     #  directly on $this->semantics.
     # The easy option of deep cloning semantics won't work because the linking between frames
     # are done with pointers.
-    
-    #print "semantics at save point: "; print_r($this->semantics);
-    #print "savepoint: "; print_r($savepoint);
+
+    if(isset($this->context['debug'])) {
+      print "semantics at save point: "; print_r($this->semantics);
+      print "savepoint: "; print_r($savepoint);
+    }
     return $savepoint;
   }
-  
+
   public function rollback($savepoint) {
-    #print "semantics at rollback: "; print_r($this->semantics);
-    #print "savepoint: "; print_r($savepoint);
+    if(isset($this->context['debug'])) {
+      print "semantics at rollback: "; print_r($this->semantics);
+      print "savepoint: "; print_r($savepoint);
+    }
     # revert the length of the semantics stack
     $len=$savepoint["depth"];
     array_splice($this->semantics, $len);
@@ -151,8 +184,10 @@ abstract class Generator {
     foreach($to_remove as $key){
       unset($top[$key]);
     }
-    # print "semantics after rollback: "; print_r($this->semantics);
+    if(isset($this->context['debug'])) {
+      print "semantics after rollback: "; print_r($this->semantics);
+    }
   }
-  
+
   abstract function top($data);
 }

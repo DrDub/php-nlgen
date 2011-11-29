@@ -1,0 +1,41 @@
+IF culture_feries > 2 AND culture_dimanche == 52 THEN
+  pct_change(reading, 10)
+
+IF culture_feries + culture_dimanche < 30 THEN
+  pct_change(reading, -10)
+
+IF culture_spectacles < 50 THEN
+  on_strike(employee(maison_culture))
+
+IF culture_spectacles < 100 THEN
+  benchmarked(bottom, culture, city)
+
+IF culture_spectacles > 140 THEN
+  benchmarked(top, culture, city)
+
+IF culture_spectacles > 160 THEN
+  benchmarked(top, culture, province)
+
+IF baignade_interieures < -500 THEN
+  on_strike(employee(heated_pool))
+
+IF baignade_interieures > 500 THEN
+  benchmarked(top, sport, city)
+
+IF deneigement_chargements == 5 THEN
+  pct_change(car_accident, 5)
+
+IF deneigement_chargements == 7 THEN
+  benchmarked(top, snow_removal, province)
+
+IF deneigement_chargements == 5 AND deneigement_findesemaine < 3 THEN
+  pct_change(car_accident, 10)
+
+IF routier_nidsdepoule > 10 THEN
+  pct_change(car_accident, -5)
+
+IF routier_nidsdepoule > 20 THEN
+  benchmarked(top, street_care, city)
+
+IF routier_nidsdepoule > 25 THEN
+  benchmarked(top, street_care, province)

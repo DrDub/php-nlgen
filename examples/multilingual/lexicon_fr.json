@@ -1,0 +1,22 @@
+{
+  "employees" : { "string" : "fonctionnères", "class" : "actor" },
+  "conjunction" : { "string" : "et" , "class" : "conj" },
+  "on_strike" : { "string" : "vont aller en grêve", "class" : "phrase"  },
+  "will_be" : { "string" : "seront", "pl":"seront", "sing":"sera", "class" : "verb"  },
+  "will_increase" : { "string" : "augmenteront", "pl":"augmenteront", 
+    "sing":"va augmenter", "class" : "verb"  },
+  "will_decrease" : { "string" : "diminueront", "pl":"diminueront", 
+    "sing":"diminuera", "class" : "verb"  },
+  "maison_culture" : { "string" : "la Maison de la Culture", "class" : "place" },
+  "heated_pool" : { "string" : "la piscine interieur", "class" : "place" },
+  "top" : { "string" : "élevé", "class" : "position" },
+  "bottom" : { "string" : "bas", "class" : "position" },
+  "city" : { "string" : "ville", "class" : "region" },
+  "province" : { "string" : "province", "class" : "region" },
+  "reading" : { "string" : "la lecture", "class" : "metric", "num" : "sing" },
+  "sports" : { "string" : "les activités sportifs", "class" : "metric", "num" : "pl" },
+  "culture" : { "string" : "les dépenses à des activités culturelles", "class" : "metric", "num" : "pl" },
+  "snow_removal" : { "string" : "les dépenses de déneigement", "class" : "metric", "num" : "pl" },
+  "street_care" : { "string" : "les dépenses dans les soins de la rue", "class" : "metric", "num" : "pl" },
+  "car_accident" : { "string" : "le nombre d'accidents de voiture", "class" : "metric", "num" : "sing" }
+}

@@ -1,0 +1,17 @@
+{
+  "employees" : { "string" : "employees", "class" : "actor" },
+  "conjunction" : { "string" : "and", "class" : "conj" },
+  "on_strike" : { "string" : "will go on strike", "class" : "phrase" },
+  "maison_culture" : { "string" : "Maison de la Culture", "class" : "place" },
+  "heated_pool" : { "string" : "heated pool", "is_short" : "1", "class" : "place" },
+  "top" : { "string" : "highest", "class" : "position" },
+  "bottom" : { "string" : "lowest", "class" : "position" },
+  "city" : { "string" : "city", "class" : "region" },
+  "province" : { "string" : "province", "class" : "region" },
+  "reading" : { "string" : "reading of printed material", "class" : "metric" },
+  "sports" : { "string" : "performance of sport activities", "class" : "metric" },
+  "culture" : { "string" : "spending in cultural activities", "class" : "metric" },
+  "snow_removal" : { "string" : "spending in snow removal", "class" : "metric" },
+  "street_care" : { "string" : "spending in street care", "class" : "metric" },
+  "car_accident" : { "string" : "number of car accidents", "class" : "metric" }
+}
