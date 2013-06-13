@@ -95,7 +95,8 @@ abstract class Generator {
     }
     $name = $name.$i;
     $current_sem[$name] = &$rec_sem;
-    array_push($this->semantics,&$rec_sem);
+    array_push($this->semantics, 0);
+    $this->semantics[count($this->semantics)-1] = &$rec_sem;
 
     # call the function
     $text_and_maybe_sem = $this->$func($data);
@@ -104,7 +105,7 @@ abstract class Generator {
     if(is_array($text_and_maybe_sem)){
       if(isset($text_and_maybe_sem['sem'])){
         $sem = $text_and_maybe_sem['sem'];
-        $this->apply_semantics(&$rec_sem, $sem);
+        $this->apply_semantics($rec_sem, $sem);
       }
       $text=$text_and_maybe_sem['text'];
     }else{
@@ -122,12 +123,16 @@ abstract class Generator {
     return 	$text;
   }
 
-  function apply_semantics($basic, $addition){
+  function apply_semantics(&$basic, $addition){
+    //print "Applying semantics basic:\n";
+    //print_r($basic);
+    //print "addition:\n";
+    //print_r($addition);
     foreach ($addition as $key => $value) {
       if(is_array($value)){
         # recurse
         if(isset($basic[$key])){
-          $this->apply_semantics(&$basic[$key], $value);
+          $this->apply_semantics($basic[$key], $value);
         }else{
           $basic[$key]=$value;
         }

@@ -26,6 +26,8 @@
 use nlgen\Generator;
 require '../../php-nlgen/generator.php';
 
+// execute as php basic0.php 0 0 0 0
+
 class BasicGenerator extends Generator {
 
   var $agents = array('Juan','Pedro','The helpdesk operator');
