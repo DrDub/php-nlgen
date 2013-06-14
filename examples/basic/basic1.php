@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2011 Pablo Ariel Duboue <pablo.duboue@gmail.com>
+ * Copyright (c) 2011-13 Pablo Ariel Duboue <pablo.duboue@gmail.com>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining 
  * a copy of this software and associated documentation files (the "Software"), 
@@ -28,22 +28,22 @@ require '../../php-nlgen/generator.php';
 
 class BasicGenerator extends Generator {
 
-  function top($data){
+  protected function top($data){
     return
-    ucfirst($this->gen("person", $data[0]). " " .
-    $this->gen("action", array($data[1], $data[2])). " " .
-    $this->gen("item", $data[3]));
+      ucfirst($this->person($data[0]). " " .
+	      $this->action($data[1], $data[2]). " " .
+	      $this->item($data[3]));
   }
 
-  function person($agent){
+  protected function person($agent){
     return $this->lex->string_for_id($agent);
   }
   
-  function action($data){
-    return $this->lex->string_for_id($data[0])." ".$this->lex->string_for_id($data[1]);
+  protected function action($event, $action){
+    return $this->lex->string_for_id($event)." ".$this->lex->string_for_id($action);
   }
   
-  function item($theme){
+  protected function item($theme){
     return $this->lex->string_for_id($theme);
   }
 }
@@ -68,10 +68,10 @@ $lexicon_json = <<<HERE
 HERE
 ;
 
-$gen = new BasicGenerator('',$lexicon_json);
+$gen = BasicGenerator::NewSealed('',$lexicon_json);
 
-# example inputs juan ongoing code sub_delivery
-#                helpdesk finish qa itm_25
+// example inputs juan ongoing code sub_delivery
+//                helpdesk finish qa itm_25
 
 print $gen->generate(array_splice($argv,1))."\n";
 

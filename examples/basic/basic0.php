@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2011 Pablo Ariel Duboue <pablo.duboue@gmail.com>
+ * Copyright (c) 2011-13 Pablo Ariel Duboue <pablo.duboue@gmail.com>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining 
  * a copy of this software and associated documentation files (the "Software"), 
@@ -35,34 +35,31 @@ class BasicGenerator extends Generator {
   var $actions = array('working on','coding','doing QA on');
   var $themes = array('Component ABC','Item 25','the delivery subsystem');
 
-  function top($data){
+  protected function top($data){
     return
-      // $this->gen("person", $data[0]). " " .
-      // $this->gen("action", array($data[1], $data[2])). " " .
-      // $this->gen("item", $data[3]);
       $this->person($data[0]). " " .
-      $this->action(array($data[1], $data[2])). " " .
+      $this->action($data[1], $data[2]). " " .
       $this->item($data[3]);
   }
 
-  function person($idx){
-    return $this->agents[$idx];
+  protected function person($agt){
+    return $this->agents[$agt];
   }
   
-  function action($data){
-    return $this->events[$data[0]]." ".$this->actions[$data[1]];
+  protected function action($evt, $act){
+    return $this->events[$evt]." ".$this->actions[$act];
   }
   
-  function item($idx){
-    return $this->themes[$idx];
+  protected function item($thm){
+    return $this->themes[$thm];
   }
 }
 
 global $argv,$argc;
 
-$gen = new BasicGenerator();
+$gen = BasicGenerator::NewSealed();
 
-print $gen->generate(array_splice($argv,1),array("debug"=>1))."\n";
+print $gen->generate(array_splice($argv,1) /*,array("debug"=>1)*/)."\n";
 
 print_r($gen->semantics());
 

@@ -30,26 +30,23 @@ abstract class Generator {
 
   var $context = array();
 
-  # the semantics array is used as a stack.
-  # the currently generated frame is the last item in the stack.
-  # as text gets generated, their semantic annotations go into the stack, which gets unravelled after each function call.
-  # the old frame gets tossed out and its semantics go into the caller frame, inside an entry with its name.
-  # the stack can be preserved with a call to savepoint and rollback.
+  // the semantics array is used as a stack.
+  // the currently generated frame is the last item in the stack.
+  // as text gets generated, their semantic annotations go into the stack, which gets unravelled after each function call.
+  // the old frame gets tossed out and its semantics go into the caller frame, inside an entry with its name.
+  // the stack can be preserved with a call to savepoint and rollback.
   var $semantics = array();
 
   var $onto;
   var $lex;
-  var $mlex; # for multilingual lexicons
-
-  var $is_sealed = FALSE;
-
+  var $mlex; // for multilingual lexicons
 
   function __construct($onto='', $lexicon='') {
     $this->onto = is_object($onto) ? $onto : new Ontology($onto);
     if(is_object($lexicon)){
       $this->lex = $lexicon;
     }elseif(is_array($lexicon)){
-      # multilingual
+      // multilingual
       $this->mlex = array();
       foreach ($lexicon as $lang => $llexicon) {
         $this->mlex[$lang] = is_object($llexicon) ? $llexicon : new Lexicon($this,$llexicon);
@@ -59,49 +56,82 @@ abstract class Generator {
     }
   }
 
-  function seal(){
-    $reflection = new \ReflectionClass($this);
+  // method interception for a more streamlined framework.
+  // the use of 'eval' is reserved at construction time and doesn't involve any user-provided data,
+  // a better solution will involve the use of the intercept extension.
+  // NB: the current code might not play well with optional arguments and default values.
+  public static function NewSealed($onto='', $lexicon=''){
+    $reflection = new \ReflectionClass(get_called_class());
+    $top_reflection = new \ReflectionClass(get_class());
+    $BASE = $reflection->getName();
+    $target_class_name = $BASE . "Sealed";
+
+    $code_to_eval = "class $target_class_name extends $BASE {\n";
+
+    $methods = $top_reflection->getMethods();
+    
+    $known = array();
+    foreach ($methods as $key => $method) {
+      $known[$method->getName()] = 1;
+    }
     $methods = $reflection->getMethods();
-    $known = array('__constructor' => 1, 
-		   'rollback' => 1, 
-		   'savepoint' => 1, 
-		   'current_semantics' => 1, 
-		   'semantics' => 1, 
-		   'apply_semantics' => 1, 
-		   'gen' => 1, 
-		   'generate' => 1, 
-		   'seal' => 1);
     foreach ($methods as $key => $method) {
       $name=$method->getName();
-      if(isset($known[$name]) || substr($name,0,1) == "_"){
+      if(isset($known[$name]) || substr($name,0,1) == "_" || $method->isStatic() || $method->isPublic()){
 	continue;
       }
 
       echo "Sealing ".$name ."\n";
-      
+
       // rename method
-      $name_orig = $name + "_orig";
-      $func_orig = &$this->name;
-      $this->{$name_orig} = $func_orig;
-      $this->{$name} = function($data){
-	return $this->gen($name_orig, $data);
-      };
+      $renamed = $name . "_orig";
+      $params="";
+      $params_calling = "";
+      for($i=0; $i<$method->getNumberOfParameters(); $i++){
+	if($i>0){
+	  $params .= ",";
+	  $params_calling .= ",";
+	}
+	$params .= '$p' . $i;
+	$params_calling .= '$params[' . $i . ']';
+      }
+      $code_to_eval .= "  function $renamed(". '$params' ."){\n    return $BASE::$name($params_calling);\n  }\n\n";
+
+      // regular method calls $this->gen with renamed and array of parameters
+      // if the last parameter name is 'sem', it is kept as the semantics for $this->gen
+      $method_params = $method->getParameters();
+      $num_method_params = count($method_params);
+      $has_sem = FALSE;
+      if($num_method_params>0 && $method_params[$num_method_params-1]->getName() == 'sem'){
+	$has_sem = TRUE;
+      }
+      $code_to_eval .= "  function $name($params){\n    ";
+      //$code_to_eval .= '    print_r(func_get_args());';
+      $code_to_eval .= '    return $this->gen("' . $renamed . '", func_get_args()';
+      if($has_sem){
+	$code_to_eval .= ',$p' . strval($num_method_params-1);
+      }
+      $code_to_eval .= ");\n  }\n\n";
     }
-    $this->is_sealed = TRUE;
+    $code_to_eval .= "  protected function is_sealed() { return TRUE; }\n}\n";
     echo "SEALED!\n";
+    echo $code_to_eval; 
+    eval($code_to_eval);
+    return new $target_class_name($onto,$lexicon);
   }
 
   public function generate($data, $context=array()) {
-    if(! $this->is_sealed){
-      $this->seal();
+    if(isset($context['debug']) && !$this->is_sealed()){
+	print "Warning, executing a non-sealed class.\n";
     }
+
     $this->context = $context;
     $this->semantics = array();
     array_push($this->semantics, array());
 
     $this->context['initial_data'] = $data;
 
-    # multilingual
+    // multilingual
     if(isset($context['lang'])) {
       $this->lex = $this->mlex[$context['lang']];
     }
@@ -115,12 +145,12 @@ abstract class Generator {
       print_r($this->semantics);
     }
 
-    # multilingual
+    // multilingual
     if(!method_exists($this,$func) && isset($this->context['lang'])){
       $func = $func . "_" . $this->context['lang'];
     }
 
-    # prepare the stack
+    // prepare the stack
     if($name == NULL){
       $name = $func;
     }
@@ -135,10 +165,10 @@ abstract class Generator {
     array_push($this->semantics, 0);
     $this->semantics[count($this->semantics)-1] = &$rec_sem;
 
-    # call the function
+    // call the function
     $text_and_maybe_sem = $this->$func($data);
 
-    # process output and unraven stack
+    // process output and unraven stack
     if(is_array($text_and_maybe_sem)){
       if(isset($text_and_maybe_sem['sem'])){
         $sem = $text_and_maybe_sem['sem'];
@@ -163,7 +193,7 @@ abstract class Generator {
   function apply_semantics(&$basic, $addition){
     foreach ($addition as $key => $value) {
       if(is_array($value)){
-        # recurse
+        // recurse
         if(isset($basic[$key])){
           $this->apply_semantics($basic[$key], $value);
         }else{
@@ -187,13 +217,13 @@ abstract class Generator {
     $len = count($this->semantics);
     $savepoint = array();
     $savepoint["depth"] = $len;
-    # shallow clone, we will know the state of the keys at that time
-    $top = $this->semantics[$len-1]; # clone
+    // shallow clone, we will know the state of the keys at that time
+    $top = $this->semantics[$len-1]; // clone
     $savepoint["last"] = $top;
-    #NOTE: this savepoint technique doesn't deal with complex semantic manipulations done
-    #  directly on $this->semantics.
-    # The easy option of deep cloning semantics won't work because the linking between frames
-    # are done with pointers.
+    //NOTE: this savepoint technique doesn't deal with complex semantic manipulations done
+    // directly on $this->semantics.
+    // The easy option of deep cloning semantics won't work because the linking between frames
+    // are done with pointers.
 
     if(isset($this->context['debug'])) {
       print "semantics at save point: "; print_r($this->semantics);
@@ -207,10 +237,10 @@ abstract class Generator {
       print "semantics at rollback: "; print_r($this->semantics);
       print "savepoint: "; print_r($savepoint);
     }
-    # revert the length of the semantics stack
+    // revert the length of the semantics stack
     $len=$savepoint["depth"];
     array_splice($this->semantics, $len);
-    # remove new keys
+    // remove new keys
     $old = $savepoint["last"];
     $top = &$this->semantics[$len-1];
     $to_remove=array();
@@ -227,5 +257,10 @@ abstract class Generator {
     }
   }
 
-  abstract function top($data);
+  // to be overriden in sealed classes
+  protected function is_sealed() {
+    return FALSE;
+  }
+
+  abstract protected function top($data);
 }
