@@ -1,7 +1,7 @@
 <?php namespace nlgen;
 
 /*
- * Copyright (c) 2011 Pablo Ariel Duboue <pablo.duboue@gmail.com>
+ * Copyright (c) 2011-13 Pablo Ariel Duboue <pablo.duboue@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -41,6 +41,8 @@ abstract class Generator {
   var $lex;
   var $mlex; # for multilingual lexicons
 
+  var $is_sealed = FALSE;
+
 
   function __construct($onto='', $lexicon='') {
     $this->onto = is_object($onto) ? $onto : new Ontology($onto);
@@ -57,7 +59,42 @@ abstract class Generator {
     }
   }
 
+  function seal(){
+    $reflection = new \ReflectionClass($this);
+    $methods = $reflection->getMethods();
+    $known = array('__constructor' => 1, 
+		   'rollback' => 1, 
+		   'savepoint' => 1, 
+		   'current_semantics' => 1, 
+		   'semantics' => 1, 
+		   'apply_semantics' => 1, 
+		   'gen' => 1, 
+		   'generate' => 1, 
+		   'seal' => 1);
+    foreach ($methods as $key => $method) {
+      $name=$method->getName();
+      if(isset($known[$name]) || substr($name,0,1) == "_"){
+	continue;
+      }
+
+      echo "Sealing ".$name ."\n";
+      
+      // rename method
+      $name_orig = $name + "_orig";
+      $func_orig = &$this->name;
+      $this->{$name_orig} = $func_orig;
+      $this->{$name} = function($data){
+	return $this->gen($name_orig, $data);
+      };
+    }
+    $this->is_sealed = TRUE;
+    echo "SEALED!\n";
+  }
+
   public function generate($data, $context=array()) {
+    if(! $this->is_sealed){
+      $this->seal();
+    }
     $this->context = $context;
     $this->semantics = array();
     array_push($this->semantics, array());
@@ -124,10 +161,6 @@ abstract class Generator {
   }
 
   function apply_semantics(&$basic, $addition){
-    //print "Applying semantics basic:\n";
-    //print_r($basic);
-    //print "addition:\n";
-    //print_r($addition);
     foreach ($addition as $key => $value) {
       if(is_array($value)){
         # recurse

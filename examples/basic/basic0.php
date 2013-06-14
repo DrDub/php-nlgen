@@ -37,9 +37,12 @@ class BasicGenerator extends Generator {
 
   function top($data){
     return
-    $this->gen("person", $data[0]). " " .
-    $this->gen("action", array($data[1], $data[2])). " " .
-    $this->gen("item", $data[3]);
+      // $this->gen("person", $data[0]). " " .
+      // $this->gen("action", array($data[1], $data[2])). " " .
+      // $this->gen("item", $data[3]);
+      $this->person($data[0]). " " .
+      $this->action(array($data[1], $data[2])). " " .
+      $this->item($data[3]);
   }
 
   function person($idx){
@@ -59,7 +62,7 @@ global $argv,$argc;
 
 $gen = new BasicGenerator();
 
-print $gen->generate(array_splice($argv,1))."\n";
+print $gen->generate(array_splice($argv,1),array("debug"=>1))."\n";
 
 print_r($gen->semantics());
 
