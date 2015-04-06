@@ -335,8 +335,8 @@ class Lexicon {
   }
 
   var $_basic_numbers = array("zero","one","two","three","four","five",
-  "six","seven","eight","ten","twelve","thirteen","fourteen","fifeteen",
-  "sixteen","eighteen","nineteen");
+  "six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen",
+  "fifeteen","sixteen","eighteen","nineteen");
 
   public function number_to_string($num){
     if(isset($this->_basic_numbers[$num])){
