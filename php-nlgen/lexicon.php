@@ -1,7 +1,7 @@
 <?php namespace nlgen;
 
 /*
- * Copyright (c) 2011 Pablo Ariel Duboue <pablo.duboue@gmail.com>
+ * Copyright (c) 2011-2016 Pablo Ariel Duboue <pablo.duboue@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -335,8 +335,8 @@ class Lexicon {
   }
 
   var $_basic_numbers = array("zero","one","two","three","four","five",
-  "six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen",
-  "fifeteen","sixteen","eighteen","nineteen");
+  "six","seven","eight","ten","twelve","thirteen","fourteen","fifeteen",
+  "sixteen","eighteen","nineteen");
 
   public function number_to_string($num){
     if(isset($this->_basic_numbers[$num])){

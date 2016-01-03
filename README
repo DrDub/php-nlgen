@@ -36,10 +36,16 @@ $this->name_of_the_function($data_array_input_to_the_function). The
 generator abstract class keeps track of the semantic annotations for
 you and other goodies.
 
-To call the class, if your instantiated subclass is $my_gen then
-$my_gen->generate($input_data_as_an_array) will return the generated
-strings. If you want to access the semantic annotations, use
-$my_gen->semantics() afterward.
+If the functions that implement the grammar are protected, a dynamic
+class can be created with the NewSealed class method. This dynamic
+class will have function interception so you can call
+$this->name_of_function as usual but actually $this->gen will be
+called.
+
+Either way you use it, to call the class, if your instantiated
+subclass is $my_gen then $my_gen->generate($input_data_as_an_array)
+will return the generated strings. If you want to access the semantic
+annotations, use $my_gen->semantics() afterward.
 
 For different use cases, see the examples/ folder.
 
@@ -48,18 +54,17 @@ Learning more about NLG
 =======================
 
 I highly recommend Building Natural Language Generation Systems (2000)
-by Reiter and Dale [2].
+by Reiter and Dale.
 
-The SIGGEN site [3] has plenty of good resources. You might also want
+The SIGGEN site [2] has plenty of good resources. You might also want
 to look at the NLG portal at the Association for Computational
-Linguistics wiki [4].
+Linguistics wiki [3].
 
-Last but not least, you might be interested in the author's blog [5]
-and the class notes of his recent NLG course [6].
+Last but not least, you might be interested in the author's blog [4]
+and the class notes of his recent NLG course [5].
 
 
-[2] http://amzn.to/p63jzB
-[3] http://www.siggen.org/
-[4] http://aclweb.org/aclwiki/index.php?title=Natural_Language_Generation_Portal
-[5] http://duboue.net/blog.html
-[6] http://wiki.duboue.net/index.php/2011_FaMAF_Intro_to_NLG
+[2] http://www.siggen.org/
+[3] http://aclweb.org/aclwiki/index.php?title=Natural_Language_Generation_Portal
+[4] http://duboue.net/blog.html
+[5] http://wiki.duboue.net/index.php/2011_FaMAF_Intro_to_NLG

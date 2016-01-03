@@ -4,7 +4,9 @@ Some possible future additions
 project at GitHub.)
 
 
-* Complete the Tarot example
+* Add a base lexicon using WordNet
+
+* Add a simple example English grammar
 
 * More examples so as to complete the complexity continuum
 
@@ -12,9 +14,9 @@ project at GitHub.)
 
 * Handle backtracking using exceptions
 
-* Add a base lexicon using WordNet
-
 * Web-based visualization tool for the semantic annotations
+
+* Complete the Tarot example
 
 
 Pipe dreams

@@ -1,7 +1,7 @@
 <?php namespace nlgen;
 
 /*
- * Copyright (c) 2011-13 Pablo Ariel Duboue <pablo.duboue@gmail.com>
+ * Copyright (c) 2011-15 Pablo Ariel Duboue <pablo.duboue@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -41,6 +41,8 @@ abstract class Generator {
   var $lex;
   var $mlex; // for multilingual lexicons
 
+  var $last_sem;
+
   function __construct($onto='', $lexicon='') {
     $this->onto = is_object($onto) ? $onto : new Ontology($onto);
     if(is_object($lexicon)){
@@ -60,7 +62,7 @@ abstract class Generator {
   // the use of 'eval' is reserved at construction time and doesn't involve any user-provided data,
   // a better solution will involve the use of the intercept extension.
   // NB: the current code might not play well with optional arguments and default values.
-  public static function NewSealed($onto='', $lexicon=''){
+  public static function NewSealed($onto='', $lexicon='',$debug=false,$silent=false){
     $reflection = new \ReflectionClass(get_called_class());
     $top_reflection = new \ReflectionClass(get_class());
     $BASE = $reflection->getName();
@@ -74,26 +76,31 @@ abstract class Generator {
     foreach ($methods as $key => $method) {
       $known[$method->getName()] = 1;
     }
+    $sealed = 0;
     $methods = $reflection->getMethods();
     foreach ($methods as $key => $method) {
       $name=$method->getName();
       if(isset($known[$name]) || substr($name,0,1) == "_" || $method->isStatic() || $method->isPublic()){
-	continue;
+        continue;
       }
 
-      echo "Sealing ".$name ."\n";
-
+      $sealed += 1;
+      
+      if($debug){
+        error_log("Sealing ".$name ."\n");
+      }
+      
       // rename method
       $renamed = $name . "_orig";
       $params="";
       $params_calling = "";
       for($i=0; $i<$method->getNumberOfParameters(); $i++){
-	if($i>0){
-	  $params .= ",";
-	  $params_calling .= ",";
-	}
-	$params .= '$p' . $i;
-	$params_calling .= '$params[' . $i . ']';
+        if($i>0){
+	      $params .= ",";
+	      $params_calling .= ",";
+	    }
+        $params .= '$p' . $i;
+        $params_calling .= '$params[' . $i . ']';
       }
       $code_to_eval .= "  function $renamed(". '$params' ."){\n    return $BASE::$name($params_calling);\n  }\n\n";
 
@@ -103,26 +110,31 @@ abstract class Generator {
       $num_method_params = count($method_params);
       $has_sem = FALSE;
       if($num_method_params>0 && $method_params[$num_method_params-1]->getName() == 'sem'){
-	$has_sem = TRUE;
+        $has_sem = TRUE;
       }
       $code_to_eval .= "  function $name($params){\n    ";
-      //$code_to_eval .= '    print_r(func_get_args());';
+      $code_to_eval .= "    if(isset(\$this->context['debug'])) {\n      error_log(print_r(func_get_args(),true));\n    }\n";
       $code_to_eval .= '    return $this->gen("' . $renamed . '", func_get_args()';
       if($has_sem){
-	$code_to_eval .= ',$p' . strval($num_method_params-1);
+        $code_to_eval .= ',$p' . strval($num_method_params-1);
       }
       $code_to_eval .= ");\n  }\n\n";
     }
     $code_to_eval .= "  protected function is_sealed() { return TRUE; }\n}\n";
-    echo "SEALED!\n";
-    echo $code_to_eval; 
+    if(! $sealed && ! $silent){
+      error_log("No methods intercepted, only non-public methods that do not start with '_' are intercepted.");
+    }
+    if($debug){
+      error_log("SEALED!\n");
+      error_log($code_to_eval);
+    }
     eval($code_to_eval);
     return new $target_class_name($onto,$lexicon);
   }
 
   public function generate($data, $context=array()) {
     if(isset($context['debug']) && !$this->is_sealed()){
-	print "Warning, executing a non-sealed class.\n";
+       print "Warning, executing a non-sealed class.\n";
     }
 
     $this->context = $context;
@@ -141,13 +153,16 @@ abstract class Generator {
 
   function gen($func, $data, $name=NULL) {
     if(isset($this->context['debug'])) {
-      print "Calling $func, semantics at start:\n";
-      print_r($this->semantics);
+      error_log("Calling $func, semantics at start:\n");
+      error_log(print_r($this->semantics,true));
     }
 
     // multilingual
-    if(!method_exists($this,$func) && isset($this->context['lang'])){
-      $func = $func . "_" . $this->context['lang'];
+    if(isset($this->context['lang'])){
+      $func_ml = $func . "_" . $this->context['lang'];
+      if(method_exists($this,$func_ml)) {
+        $func = $func_ml;
+      }
     }
 
     // prepare the stack
@@ -175,16 +190,18 @@ abstract class Generator {
         $this->apply_semantics($rec_sem, $sem);
       }
       $text=$text_and_maybe_sem['text'];
+      $this->last_sem = $sem;
     }else{
       $text=$text_and_maybe_sem;
+      $this->last_sem = array();
     }
     $rec_sem['text'] = $text;
 
     array_pop($this->semantics);
 
     if(isset($this->context['debug'])) {
-      print "Calling $func, semantic at end:\n";
-      print_r($this->semantics);
+      error_log("Calling $func, semantic at end:\n");
+      error_log(print_r($this->semantics,true));
     }
 
     return 	$text;
@@ -226,16 +243,16 @@ abstract class Generator {
     // are done with pointers.
 
     if(isset($this->context['debug'])) {
-      print "semantics at save point: "; print_r($this->semantics);
-      print "savepoint: "; print_r($savepoint);
+      error_log("semantics at save point: "); error_log(print_r($this->semantics,true));
+      error_log("savepoint: "); error_log(print_r($savepoint,true));
     }
     return $savepoint;
   }
 
   public function rollback($savepoint) {
     if(isset($this->context['debug'])) {
-      print "semantics at rollback: "; print_r($this->semantics);
-      print "savepoint: "; print_r($savepoint);
+      error_log("semantics at rollback: "); error_log(print_r($this->semantics,true));
+      error_log("savepoint: "); error_log(print_r($savepoint,true));
     }
     // revert the length of the semantics stack
     $len=$savepoint["depth"];
@@ -253,7 +270,7 @@ abstract class Generator {
       unset($top[$key]);
     }
     if(isset($this->context['debug'])) {
-      print "semantics after rollback: "; print_r($this->semantics);
+      error_log("semantics after rollback: "); error_log(print_r($this->semantics,true));
     }
   }
 
@@ -262,5 +279,6 @@ abstract class Generator {
     return FALSE;
   }
 
+  // entry level for user grammar productions
   abstract protected function top($data);
 }
