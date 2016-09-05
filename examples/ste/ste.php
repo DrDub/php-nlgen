@@ -34,7 +34,15 @@ class SimpleTechnicalEnglish extends Generator {
       $this->context['data'] = $data;
       // data is a list of array(rel, input, output)
       // build the tree, each node is an array( head=> string, relation => array(nodes), relation... )
-      $root = $this->_build_tree('ROOT');
+      // check whether is ROOT or ROOT-0
+      $rootname = 'ROOT';
+      foreach($this->context['data'] as $entry){
+          if($entry[1] == 'ROOT-0'){
+              $rootname='ROOT-0';
+          }
+      }
+      
+      $root = $this->_build_tree($rootname);
       
       return $this->root($root['root'][0]);
   }
@@ -54,15 +62,25 @@ class SimpleTechnicalEnglish extends Generator {
 
   private function _morphology($word){
       $pluralize = FALSE;
+      $word = preg_replace('/-\d+$/', "", $word);
       if(preg_match('/\-PLURAL$/', $word)){
           $pluralize = TRUE;
           $word = preg_replace('/\-PLURAL$/', "", $word);
       }
-      return preg_replace('/-\d+$/', "", $word);
+      $word = preg_replace('/-\d+$/', "", $word);
+      if($pluralize){
+          $word .= "s";
+      }
+      return $word;
   }
 
   protected function root($entry){
       $result = $entry['head'];
+      if(isset($entry['cop'])){
+          foreach($entry['cop'] as $cop){
+              $result=$this->cop($cop).' '.$result;
+          }
+      }
       if(isset($entry['dobj'])){
           foreach($entry['dobj'] as $dobj){
               $result=$result.' '.$this->dobj($dobj);
@@ -98,8 +116,14 @@ class SimpleTechnicalEnglish extends Generator {
               $result=$this->dobj($nsubj).' '.$result;
           }
       }
+      if(isset($entry['ccomp'])){
+          foreach($entry['ccomp'] as $ccomp){
+              $result=$result.' '.$this->root($ccomp);
+          }
+      }
       foreach($entry as $key => $value){
-          if($key != 'head' && $key != 'dep' && $key != 'dobj' && $key != 'nmod' && $key != 'mark' && $key != 'xcomp' && $key != 'nsubj'){
+          if($key != 'head' && $key != 'dep' && $key != 'dobj' && $key != 'nmod' && $key != 'mark'
+          && $key != 'xcomp' && $key != 'nsubj' && $key != 'ccomp' && $key != 'cop'){
               $result.=' [MM-root:'.$key.']';
           }
       }
@@ -113,6 +137,11 @@ class SimpleTechnicalEnglish extends Generator {
               $result=$this->compound($compound).' '.$result;
           }
       }
+      if(isset($entry['amod'])){
+          foreach($entry['amod'] as $amod){
+              $result=$this->amod($amod).' '.$result;
+          }
+      }      
       if(isset($entry['det'])){
           foreach($entry['det'] as $det){
               $result=$this->det($det)." ".$result;
@@ -123,8 +152,13 @@ class SimpleTechnicalEnglish extends Generator {
               $result=$result.' '.$this->root($acl);
           }
       }
+      if(isset($entry['nmod'])){
+          foreach($entry['nmod'] as $nmod){
+              $result=$result.' '.$this->nmod($nmod);
+          }
+      }
       foreach($entry as $key => $value){
-          if($key != 'head' && $key != 'det' && $key != 'acl' && $key != 'compound'){
+          if($key != 'head' && $key != 'det' && $key != 'acl' && $key != 'compound' && $key != 'amod' && $key != 'nmod'){
               $result.=' [MM-dobj:'.$key.']';
           }
       }
@@ -154,6 +188,11 @@ class SimpleTechnicalEnglish extends Generator {
               $result=$this->amod($amod)." ".$result;
           }
       }
+      if(isset($entry['nummod'])){
+          foreach($entry['nummod'] as $nummod){
+              $result=$this->nummod($nummod).' '.$result;
+          }
+      }
       if(isset($entry['det'])){
           foreach($entry['det'] as $det){
               $result=$this->det($det)." ".$result;
@@ -170,7 +209,7 @@ class SimpleTechnicalEnglish extends Generator {
           }
       }
       foreach($entry as $key => $value){
-          if($key != 'head' && $key != 'case' && $key != 'det'&& $key != 'amod' && $key != 'compound' && $key != 'nmod'){
+          if($key != 'head' && $key != 'case' && $key != 'det'&& $key != 'amod' && $key != 'compound' && $key != 'nmod' && $key != 'nummod'){
               $result.=' [MM-nmod:'.$key.']';
           }
       }
@@ -211,6 +250,16 @@ class SimpleTechnicalEnglish extends Generator {
       }
       return $result;
   }
+
+  protected function cop($entry){
+      $result = $entry['head'];
+      foreach($entry as $key => $value){
+          if($key != 'head'){
+              $result.=' [MM-cop:'.$key.']';
+          }
+      }
+      return $result;
+  }
   
   protected function dep($entry){
       $result = $entry['head'];
@@ -247,6 +296,16 @@ class SimpleTechnicalEnglish extends Generator {
       foreach($entry as $key => $value){
           if($key != 'head'){
               $result.=' [MM-amod:'.$key.']';
+          }
+      }
+      return $result;
+  }
+  
+  protected function nummod($entry){
+      $result = $entry['head'];
+      foreach($entry as $key => $value){
+          if($key != 'head'){
+              $result.=' [MM-nummod:'.$key.']';
           }
       }
       return $result;
@@ -303,7 +362,78 @@ case(water, of)
 amod(water, clean-2)
 nmod(quantity, water)
 HERE
-
+,
+<<<HERE
+det(shock, the)
+nsubj(mount, shock)
+root(ROOT, mount)
+ccomp(mount, absorbs)
+det(vibration, the)
+dobj(absorbs, vibration)
+HERE
+,
+<<<HERE
+root(ROOT, obey)
+det(instruction-PLURAL, the)
+compound(instruction-PLURAL, safety)
+dobj(obey, instruction-PLURAL)
+HERE
+,
+<<<HERE
+root(ROOT, keep)
+det(part, the)
+amod(part, primary)
+dobj(keep, part)
+case(assembly, of)
+det(assembly, the)
+nmod(part, assembly)
+HERE
+,
+<<<HERE
+root(ROOT-0, install-1)
+det(spacer-3, the-2)
+dobj(install-1, spacer-3)
+case(washer-PLURAL-7, between-4)
+det(washer-PLURAL-7, the-5)
+nummod(washer-PLURAL-7, two-6)
+nmod(spacer-3, washer-PLURAL-7)
+HERE
+,
+<<<HERE
+det(fume-PLURAL, the)
+nsubj(dangerous, fume-PLURAL)
+case(material, from)
+det(material, this)
+nmod(fume-PLURAL, material)
+cop(dangerous, are)
+root(ROOT, dangerous)
+case(skin, to)
+det(skin, the)
+nmod(dangerous, skin)
+HERE
+,
+<<<HERE
+det(stay, the)
+compound(stay, side)
+nsubj(holds, stay)
+root(ROOT, holds)
+det(leg, the)
+amod(leg, main)
+compound(leg, gear)
+dobj(holds, leg)
+HERE
+,
+<<<HERE
+root(ROOT, Obey)
+det(instructions, the)
+compound(instructions, safety)
+dobj(Obey, instructions)
+advmod(turn-7, when-5)
+nsubj(turn-7, you-6)
+advcl(Obey-1, turn-7)
+det(valves-9, the-8)
+dobj(turn-7, valves-9)
+HERE
 );
 
 function parse_deps($deps) {
