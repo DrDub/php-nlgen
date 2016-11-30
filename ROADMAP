@@ -6,8 +6,6 @@ project at GitHub.)
 
 * Add a base lexicon using WordNet
 
-* Add a simple example English grammar
-
 * More examples so as to complete the complexity continuum
 
 * A sqlite3 backed lexicon and ontology example
