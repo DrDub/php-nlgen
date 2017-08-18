@@ -27,9 +27,11 @@ use nlgen\Generator;
 
 global $argv,$argc;
 
-if($argc>2){
+if($argc>1){
     require '../../php-nlgen/generator.php';
 }
+
+
 
 // done at the INLG2016 hackathon
 // takes as input as a stripped version of the Stanford Parser Universal dependencies
@@ -93,7 +95,7 @@ class SimpleTechnicalEnglish extends Generator {
       if(isset($entry['compound:prt'])){ foreach($entry['compound:prt'] as $compound){ $result=$result.' '.$this->compound($compound); } }
       if(isset($entry['dep'])){ foreach($entry['dep'] as $dep){
               $generated = $this->dep($dep);
-              if(count(split(' ',$generated)) > 1){
+              if(count(explode(' ',$generated)) > 1){
                   $result = $result.' '.$generated;
               }else{
                   $result=$generated.' '.$result;
@@ -449,9 +451,27 @@ function parse_deps($deps) {
 
 $gen = SimpleTechnicalEnglish::NewSealed();
 
-if($argc>2){
-    foreach($examples as $example){
-        print ucfirst($gen->generate(parse_deps($example))).".\n";
+if($argc>1){
+    if($argv[1] == "test") {
+      foreach($examples as $example){
+          print ucfirst($gen->generate(parse_deps($example))).".\n";
+      }
+    }else{
+        // load file
+        $lines = file($argv[1]);
+        $deps = array();
+        $current = "";
+        foreach($lines as $line) {
+            if($line == "\n"){
+                $deps[] = $current;
+                $current = "";
+            }else{
+                $current .= $line;
+            }
+        }
+        foreach($deps as $task){
+            print ucfirst($gen->generate(parse_deps($task))).".\n";
+        }
     }
 }
 //print_r($gen->semantics());
