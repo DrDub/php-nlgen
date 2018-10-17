@@ -15,10 +15,13 @@ The generator keeps track of semantic annotations on the generated
 text, so as to enable further generation functions to reason about the
 text.  A global context blackboard is also available.
 
+For details on the multilingual example see the Make Web Not War talk. [2]
+
 This is work in progress, see the ROADMAP for some insights in future
 development.
 
 [1] http://duboue.net/blog5.html
+[2] http://duboue.net/papers/makewebnotwar20111128.html
 
 
 How to use it
