@@ -46,7 +46,7 @@ class TruckConfigGenerator extends Generator {
   }
 
   protected function sentence($action, $info) {      
-      $result =  "You want to " . $action . " a " . $this->truck($info) . '.';
+      $result =  "You want to " . $action . " " . $this->truck($info) . '.';
       $sem = $this->current_semantics()['truck_orig'];
       if(isset($sem['leftover'])){
           $result = $result . " " . $this->truck_s($sem['leftover']);
@@ -56,11 +56,11 @@ class TruckConfigGenerator extends Generator {
 
   protected function truck($data) {
       if(count($data) == 3){
-          return array('text' => "a " . $this->box_ap($data['box']) . " pick-up truck " . $this->cabin_pp($data['cabin']),
+          return array('text' => "a " . $this->box_ap($data['box']) . " pickup truck " . $this->cabin_pp($data['cabin']),
           'sem' => array('leftover' => array('drivetrain' => $data['drivetrain'])));
       }
       if(isset($data['box'])){
-          $result = "a " . $this->box_ap($data['box']) . " pick-up truck";
+          $result = "a " . $this->box_ap($data['box']) . " pickup truck";
           if(isset($data['cabin'])) {
               $result = $result . " " . $this->cabin_pp($data['cabin']);
           }elseif(isset($data['drivetrain'])) {
@@ -69,7 +69,7 @@ class TruckConfigGenerator extends Generator {
           return $result;
       }
       if(isset($data['cabin'])){
-          $result = "a " . $this->cabin_ap($data['cabin']) . " pick-up truck";
+          $result = "a " . $this->cabin_ap($data['cabin']) . " pickup truck";
           if(isset($data['drivetrain'])) {
               return array('text' => $result,
               'sem' => array('leftover' => array('drivetrain' => $data['drivetrain'])));
@@ -78,9 +78,9 @@ class TruckConfigGenerator extends Generator {
           }
       }
       if(isset($data['drivetrain'])){
-          return "a " . $this->drivetrain_ap($data['drivetrain']) . " pick-up truck";
+          return "a " . $this->drivetrain_ap($data['drivetrain']) . " pickup truck";
       }
-      return "a pick-up truck";
+      return "a pickup truck";
   }
 
   protected function cabin_ap($cabin) {
