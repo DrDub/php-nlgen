@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2011-13 Pablo Ariel Duboue <pablo.duboue@gmail.com>
+ * Copyright (c) 2011-19 Pablo Ariel Duboue <pablo.duboue@gmail.com>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining 
  * a copy of this software and associated documentation files (the "Software"), 
@@ -24,7 +24,7 @@
  */
 
 use nlgen\Generator;
-require '../../php-nlgen/generator.php';
+require '../../nlgen/generator.php';
 
 // execute as php basic0.php 0 0 0 0
 

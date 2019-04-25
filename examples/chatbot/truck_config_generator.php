@@ -23,7 +23,7 @@
  *
  */
 
-require_once '../../php-nlgen/generator.php';
+require_once '../../nlgen/generator.php';
 use nlgen\Generator;
 
 class TruckConfigGenerator extends Generator {
