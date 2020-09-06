@@ -1,5 +1,16 @@
 ﻿# NLGen: Example Generators
 
+These examples use the library through composer. To use them, do:
+
+```bash
+cd basic # or bocasucia, etc
+composer install
+php BasicGenerator1.php 0 0 0 0 # or bocasucia.php or ...
+```
+
+If you edit the `composer.json` and remove the `repository` entry, you
+can use the nlgen package as available on packagist.org.
+
 The examples here are intended to show a continuum of increasing complexity.
 
 The first example (`basic/BasicGenerator1.php`) is a simple event
