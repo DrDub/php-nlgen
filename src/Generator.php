@@ -1,7 +1,7 @@
-<?php namespace nlgen;
+<?php
 
 /*
- * Copyright (c) 2011-2019 Pablo Ariel Duboue <pablo.duboue@gmail.com>
+ * Copyright (c) 2011-2020 Pablo Ariel Duboue <pablo.duboue@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -23,8 +23,10 @@
  *
  */
 
-require 'ontology.php';
-require 'lexicon.php';
+namespace NLGen;
+
+use NLGen\Ontology;
+use NLGen\Lexicon;
 
 abstract class Generator {
 
@@ -240,7 +242,7 @@ abstract class Generator {
     //NOTE: this savepoint technique doesn't deal with complex semantic manipulations done
     // directly on $this->semantics.
     // The easy option of deep cloning semantics won't work because the linking between frames
-    // are done with pointers.
+    // is  done with pointers.
 
     if(isset($this->context['debug'])) {
       error_log("semantics at save point: "); error_log(print_r($this->semantics,true));

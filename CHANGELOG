@@ -1,3 +1,34 @@
+php-nlgen (0.11)
+
+	* Uppercase names for packagist release
+	* composer.json
+
+-- Pablo Duboue, 2020/09/06
+
+php-nlgen (0.10)
+
+	* Renamed php-nlgen to nlgen to match package name
+
+-- Pablo Duboue, 2019/09/01
+
+php-nlgen (0.9)
+
+	* Botman example
+
+-- Pablo Duboue, 2019/03/27
+
+php-nlgen (0.8)
+
+	* WebNLG example
+
+-- Pablo Duboue, 2017/08/18
+
+php-nlgen (0.7)
+
+	* Sentence compression example
+
+-- Pablo Duboue, 2016/11/30
+
 php-nlgen (0.6)
 
 	* Improved error logging

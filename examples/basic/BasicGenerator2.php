@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2011-19 Pablo Ariel Duboue <pablo.duboue@gmail.com>
+ * Copyright (c) 2011-2020 Pablo Ariel Duboue <pablo.duboue@gmail.com>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining 
  * a copy of this software and associated documentation files (the "Software"), 
@@ -23,12 +23,13 @@
  * 
  */
 
-use nlgen\Generator;
-require '../../nlgen/generator.php';
+require __DIR__ . '/vendor/autoload.php';
 
-class BasicGenerator extends Generator {
+use NLGen\Generator;
 
-  function top($data){
+class BasicGenerator2 extends Generator {
+
+  protected function top($data){
     return
       ucfirst($this->person($data[0]). " " .
 	      $this->action($data[1], $data[2]). " " .
@@ -36,9 +37,7 @@ class BasicGenerator extends Generator {
   }
 
   protected function person($agent){
-    return 
-      ($this->onto->find_by_path(array($agent, "class", "requires_determiner")) == "yes"?"the ":"") . 
-      $this->lex->string_for_id($agent);
+    return $this->lex->string_for_id($agent);
   }
   
   protected function action($event, $action){
@@ -46,9 +45,7 @@ class BasicGenerator extends Generator {
   }
   
   protected function item($theme){
-    return
-     ($this->onto->find_by_path(array($theme, "class", "requires_determiner")) == "yes"?"the ":"") .
-      $this->lex->string_for_id($theme);
+    return $this->lex->string_for_id($theme);
   }
 }
 
@@ -58,7 +55,7 @@ $lexicon_json = <<<HERE
 {
   "juan" :        {"string" : "Juan Perez"},
   "pedro" :       {"string" : "Pedro Gomez"},
-  "helpdesk" :    {"string" : "helpdesk operator"},
+  "helpdesk" :    {"string" : "the helpdesk operator"},
   "start" :       {"string" : "started"},
   "ongoing" :     {"string" : "is"},
   "finish":       {"string" : "finished"},
@@ -67,29 +64,12 @@ $lexicon_json = <<<HERE
   "qa" :          {"string" : "doing QA on"},
   "comp_abc" :    {"string" : "Component ABC"},
   "itm_25" :      {"string" : "Item 25"},
-  "sub_delivery": {"string" : "delivery subsystem"}
+  "sub_delivery": {"string" : "the delivery subsystem"}
 }
 HERE
 ;
 
-$onto_json = <<<HERE
-{
-  "juan" :        {"class" : "person"},
-  "pedro" :       {"class" : "person"},
-  "helpdesk" :    {"class" : "role"},
-  "comp_abc" :    {"class" : "component"},
-  "itm_25" :      {"class" : "item"},
-  "sub_delivery": {"class" : "subsystem"},
-  "person" :      { "requires_determiner":  "no" },
-  "role" :        { "requires_determiner":  "yes" },
-  "component" :   { "requires_determiner":  "no" },
-  "item" :        { "requires_determiner":  "no" },
-  "subsystem" :   { "requires_determiner":  "yes" }
-}
-HERE
-;
-
-$gen = BasicGenerator::NewSealed($onto_json,$lexicon_json);
+$gen = BasicGenerator2::NewSealed('',$lexicon_json);
 
 // example inputs juan ongoing code sub_delivery
 //                helpdesk finish qa itm_25
