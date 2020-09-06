@@ -19,8 +19,8 @@ For details on the multilingual example see the Make Web Not War talk. [2]
 This is work in progress, see the ROADMAP for some insights in future
 development.
 
-[1] http://duboue.net/blog5.html
-[2] http://duboue.net/papers/makewebnotwar20111128.html
+* [1] http://duboue.net/blog5.html
+* [2] http://duboue.net/papers/makewebnotwar20111128.html
 
 
 ## How to use it
@@ -58,7 +58,7 @@ This example is grafted from the `examples/basic` folder. To be
 invoked command-line with `php basic.php 0 0 0 0` (it produces _Juan
 started working on Component ABC_).
 
-```
+```php
 class BasicGenerator extends Generator {
 
   var $agents = array('Juan','Pedro','The helpdesk operator');
@@ -97,7 +97,7 @@ Last but not least, you might be interested in the author's blog [4]
 and the class notes of his recent NLG course [5].
 
 
-[2] http://www.siggen.org/
-[3] http://aclweb.org/aclwiki/index.php?title=Natural_Language_Generation_Portal
-[4] http://duboue.net/blog.html
-[5] http://wiki.duboue.net/index.php/2011_FaMAF_Intro_to_NLG
+* [2] http://www.siggen.org/
+* [3] http://aclweb.org/aclwiki/index.php?title=Natural_Language_Generation_Portal
+* [4] http://duboue.net/blog.html
+* [5] http://wiki.duboue.net/index.php/2011_FaMAF_Intro_to_NLG
