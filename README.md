@@ -25,8 +25,8 @@ development.
 
 ## How to use it
 
-Look at the examples/ folder, but in a nutshell, subclass the
-`NLGen\\Generator` class and implemented a function named `top`. This
+Look at the `examples/` folder, but in a nutshell, subclass the
+`NLGen\Generator` class and implemented a function named `top`. This
 function can return either a string or an array with a `text` and
 `sem` for semantic annotations on the returned text.
 
@@ -101,3 +101,15 @@ and the class notes of his recent NLG course [5].
 * [3] http://aclweb.org/aclwiki/index.php?title=Natural_Language_Generation_Portal
 * [4] http://duboue.net/blog.html
 * [5] http://wiki.duboue.net/index.php/2011_FaMAF_Intro_to_NLG
+
+
+## Sponsorship
+
+Work on NLGen is sponsored by [Textualization Software Ltd.](http://textualization.com).
+
+
+## License
+
+This library is licensed under the MIT License - See the [LICENSE](LICENSE) file for details.
+
+
