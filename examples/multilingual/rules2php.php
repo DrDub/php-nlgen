@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2011-2019 Pablo Ariel Duboue <pablo.duboue@gmail.com>
+ * Copyright (c) 2011-2020 Pablo Ariel Duboue <pablo.duboue@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -22,6 +22,8 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
+require __DIR__ . '/vendor/autoload.php';
 
 echo '<?php' . "\n";
 

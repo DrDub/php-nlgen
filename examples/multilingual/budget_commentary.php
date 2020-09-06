@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2011-2019 Pablo Ariel Duboue <pablo.duboue@gmail.com>
+ * Copyright (c) 2011-2020 Pablo Ariel Duboue <pablo.duboue@gmail.com>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining 
  * a copy of this software and associated documentation files (the "Software"), 
@@ -23,9 +23,9 @@
  * 
  */
 
-require 'budget_commentary_generator.php';
+require __DIR__ . '/vendor/autoload.php';
 
-$ontology = file_get_contents("ontology.json");
+$ontology   = file_get_contents("ontology.json");
 $lexicon_en = file_get_contents("lexicon_en.json");
 $lexicon_fr = file_get_contents("lexicon_fr.json");
 

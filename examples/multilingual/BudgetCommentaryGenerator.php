@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2011-2019 Pablo Ariel Duboue <pablo.duboue@gmail.com>
+ * Copyright (c) 2011-2020 Pablo Ariel Duboue <pablo.duboue@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -23,20 +23,9 @@
  *
  */
 
-use nlgen\Generator;
-require '../../nlgen/generator.php';
+require __DIR__ . '/vendor/autoload.php';
 
-class Predicate {
-  var $predicate;
-  var $args;
-  function __construct($pred, $args=array()) {
-    $this->predicate = $pred;
-    $this->args = $args;
-  }
-  function __toString() {
-    return $this->predicate . '(' . join(",", $this->args) . ')';
-  }
-}
+use NLGen\Generator;
 
 class BudgetCommentaryGenerator extends Generator {
 
