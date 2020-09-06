@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2019 Pablo Ariel Duboue <pablo.duboue@gmail.com>
+ * Copyright (c) 2019-2020 Pablo Ariel Duboue <pablo.duboue@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -23,8 +23,9 @@
  *
  */
 
-require_once '../../nlgen/generator.php';
-use nlgen\Generator;
+require __DIR__ . '/vendor/autoload.php';
+
+use NLGen\Generator;
 
 class TruckConfigGenerator extends Generator {
 

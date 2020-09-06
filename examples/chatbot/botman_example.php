@@ -1,8 +1,7 @@
 <?php
 
 require __DIR__ . '/vendor/autoload.php';
-require __DIR__ . '/../bocasucia/bocasucia_generator.php';
-require __DIR__ . '/truck_config_generator.php';
+require __DIR__ . '/../bocasucia/BocaSuciaGenerator.php';
 
 use BotMan\BotMan\BotMan;
 use BotMan\BotMan\BotManFactory;
@@ -21,7 +20,7 @@ $botman = BotManFactory::create($config);
 $botman->hears('turd', function (BotMan $bot) {
 
     $ontology = file_get_contents("../bocasucia/ontology.json");
-    $lexicon = file_get_contents("../bocasucia/lexicon.json");
+    $lexicon  = file_get_contents("../bocasucia/lexicon.json");
 
     $gen = new BocaSuciaGenerator($ontology, $lexicon);
     
