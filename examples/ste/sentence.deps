@@ -1,0 +1,7 @@
+root(ROOT, generates)
+det(sentence, a)
+dobj(generates, sentence)
+det(library, the)
+amod(library, nlgen)
+nsubj(generates, library)
+
