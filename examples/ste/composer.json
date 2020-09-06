@@ -1,0 +1,46 @@
+{
+    "name": "nlgen/nlgen-example-ste",
+    "description": "Example use of the Simple Technical English grmmar",
+    "type": "project",
+    "keywords": [],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pablo Duboue",
+            "email": "pablo.duboue@gmail.com",
+            "homepage": "http://duboue.net",
+            "role": "Developer"
+        }
+    ],
+    "repositories" : [
+        {
+            "type":"package",
+            "package" : {
+                "name":"nlgen/nlgen",
+                "version":"0.4",
+                "dist":{              
+                    "url":"../local_install/nlgen.zip",
+                    "type":"zip"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "NLGen\\": "src/",
+                        "NLGen\\Grammars\\": "src/Grammars/"
+                    }
+                }
+            }
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "nlgen/nlgen":"*"
+    },
+    "scripts": {    
+        "archive-package": [
+            "mkdir -p ../local_install",
+            "@composer archive --working-dir=../.. --dir=examples/local_install --file=nlgen --format=zip"
+        ],
+        "pre-install-cmd": "@archive-package",
+        "pre-update-cmd": "@archive-package"
+    }
+}

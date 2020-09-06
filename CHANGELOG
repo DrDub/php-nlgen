@@ -1,3 +1,10 @@
+php-nlgen (0.12)
+
+	* Published the SimpleTechnicalEnglish as a grammar part of the
+	library instead of an example.
+
+-- Pablo Duboue, 2020/09/06
+
 php-nlgen (0.11)
 
 	* Uppercase names for packagist release

@@ -68,7 +68,8 @@ abstract class Generator {
     $reflection = new \ReflectionClass(get_called_class());
     $top_reflection = new \ReflectionClass(get_class());
     $BASE = $reflection->getName();
-    $target_class_name = $BASE . "Sealed";
+    $base_path = explode('\\', $BASE);
+    $target_class_name = array_pop($base_path) . "Sealed";
 
     $code_to_eval = "class $target_class_name extends $BASE {\n";
 
