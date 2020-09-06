@@ -1,0 +1,29 @@
+{
+    "name": "nlgen/nlgen",
+    "description": "A library for creating recursive-descent natural language generators",
+    "type": "library",
+    "keywords": [
+        "artificial intelligence", "nlp", "natural language generation", "nlg", "generation", "text construction", "grammar"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pablo Duboue",
+            "email": "pablo.duboue@gmail.com",
+            "homepage": "http://duboue.net",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.2"
+    },    
+    "autoload": {
+        "psr-4": {
+            "NLGen\\": "src/"
+        },
+        "exclude-from-classmap": ["/examples/*"]
+    },
+    "archive" : {
+        "exclude": ["/examples/*"]
+    }
+}

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2011-19 Pablo Ariel Duboue <pablo.duboue@gmail.com>
+ * Copyright (c) 2011-2020 Pablo Ariel Duboue <pablo.duboue@gmail.com>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining 
  * a copy of this software and associated documentation files (the "Software"), 
@@ -23,12 +23,13 @@
  * 
  */
 
-use nlgen\Generator;
-require '../../nlgen/generator.php';
+require __DIR__ . '/vendor/autoload.php';
+
+use NLGen\Generator;
 
 // execute as php basic0.php 0 0 0 0
 
-class BasicGenerator extends Generator {
+class BasicGenerator1 extends Generator {
 
   var $agents = array('Juan','Pedro','The helpdesk operator');
   var $events = array('started','is','finished');
@@ -57,7 +58,7 @@ class BasicGenerator extends Generator {
 
 global $argv,$argc;
 
-$gen = BasicGenerator::NewSealed();
+$gen = BasicGenerator1::NewSealed();
 
 print $gen->generate(array_splice($argv,1) /*,array("debug"=>1)*/)."\n";
 

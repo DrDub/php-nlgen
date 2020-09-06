@@ -1,5 +1,4 @@
-WebNLG Challenge Driver
-=======================
+# WebNLG Challenge Driver
 
 A not particularly very succesfull attempt at the WebNLG challenge.
 
@@ -7,11 +6,11 @@ The memory.jsons file was obtained by parsing the provided data and it is thus d
 
 To execute the driver you will also need the delex_dict.json from their baseline system.
 
-php webnlg_driver.php memory.jsons benchmark.xml delex_dict.json
+`php webnlg_driver.php memory.jsons benchmark.xml delex_dict.json`
 
 will show the verbalizations to stdout
 
-php webnlg_driver.php memory.jsons benchmark.xml delex_dict.json folder/to/store/reference
+`php webnlg_driver.php memory.jsons benchmark.xml delex_dict.json folder/to/store/reference`
 
 will show the verbalizations to stdout and write reference files in the same format needed by the BLEU evaluation scripts.
 
