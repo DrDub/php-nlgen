@@ -1,8 +1,8 @@
 <?php
 
-require 'budget_commentary_generator.php';
+require __DIR__ . '/vendor/autoload.php';
 
-$ontology = file_get_contents("ontology.json");
+$ontology   = file_get_contents("ontology.json");
 $lexicon_en = file_get_contents("lexicon_en.json");
 $lexicon_fr = file_get_contents("lexicon_fr.json");
 

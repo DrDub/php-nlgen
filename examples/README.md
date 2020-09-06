@@ -103,15 +103,9 @@ functional than the tarot reader (for all the functionality rendered
 by a program that just generates insults, that is).
 
 
-Multilingual extensions are showcased in the multilingual/ folder.  It
-is a budget modifications commentary generator to go with an existing
-Web site (http://budgetplateau.com).  This example was done
-independently from that site and it is not affiliated with them in any
-way.  The original site allows people to experiment with budget
-changes.  The example code produces fictional potential reactions to
-the budget changes, both in English and French.  The example code
-shows how to deal with multiple lexicons and how functions can be
-reused across languages or split for specific ones, as necessary.
+Multilingual extensions are showcased in the `multilingual/` folder.
+It is a budget modifications commentary generator to go along an
+existing Web site (http://budgetplateau.com, unrelated to the author).
 
 The ste folder contains Simple Technical English Linearizer built
 duing the first NLG hackathon at INLG'16.

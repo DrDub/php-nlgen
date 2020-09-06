@@ -3,7 +3,7 @@
     "description": "A library for creating recursive-descent natural language generators",
     "type": "library",
     "keywords": [
-        "artificial intelligence", "nlp", "natural language generation", "nlg", "generation", "text construction", "grammar"
+        "artificial intelligence", "nlp", "natural language generation", "nlg", "generation", "text construction", "grammar", "chatbot", "natural language processing", "recursive descent"
     ],
     "license": "MIT",
     "authors": [
