@@ -23,10 +23,10 @@
  * 
  */
 
-require 'tarot_generator.php';
+require __DIR__ . '/vendor/autoload.php';
 
 $ontology = file_get_contents("ontology.json");
-$lexicon = file_get_contents("lexicon.json");
+$lexicon  = file_get_contents("lexicon.json");
 
 $gen = new TarotGenerator($ontology, $lexicon);
 
