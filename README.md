@@ -1,3 +1,5 @@
+[![Latest Stable Version](http://poser.pugx.org/nlgen/nlgen/v)](https://packagist.org/packages/nlgen/nlgen) [![Total Downloads](http://poser.pugx.org/nlgen/nlgen/downloads)](https://packagist.org/packages/nlgen/nlgen) [![Latest Unstable Version](http://poser.pugx.org/nlgen/nlgen/v/unstable)](https://packagist.org/packages/nlgen/nlgen) [![License](http://poser.pugx.org/nlgen/nlgen/license)](https://packagist.org/packages/nlgen/nlgen)
+
 # NLGen: a library for creating recursive-descent natural language generators
 
 These are pure PHP helper classes to implement recursive-descent
