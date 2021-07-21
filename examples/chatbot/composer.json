@@ -1,4 +1,17 @@
 {
+    "name": "nlgen/nlgen-example-botmain",
+    "description": "Example generation grammars with botman",
+    "type": "project",
+    "keywords": [],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pablo Duboue",
+            "email": "pablo.duboue@gmail.com",
+            "homepage": "http://duboue.net",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "botman/botman": "^2.4",
         "botman/driver-web": "^1.5",
