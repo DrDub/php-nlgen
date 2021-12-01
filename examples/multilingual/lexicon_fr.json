@@ -8,7 +8,7 @@
   "will_decrease" : { "string" : "diminueront", "pl":"diminueront", 
     "sing":"diminuera", "class" : "verb"  },
   "maison_culture" : { "string" : "la Maison de la Culture", "class" : "place" },
-  "heated_pool" : { "string" : "la piscine interieure", "class" : "place" },
+  "heated_pool" : { "string" : "la piscine intérieure", "class" : "place" },
   "top" : { "string" : "élevée", "class" : "position" },
   "bottom" : { "string" : "bas", "class" : "position" },
   "city" : { "string" : "ville", "class" : "region" },
