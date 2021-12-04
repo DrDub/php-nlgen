@@ -1,7 +1,7 @@
 {
   "employees" : { "string" : "fonctionaires", "class" : "actor" },
   "conjunction" : { "string" : "et" , "class" : "conj" },
-  "on_strike" : { "string" : "iront en grêve", "class" : "phrase"  },
+  "on_strike" : { "string" : "iront en grève", "class" : "phrase"  },
   "will_be" : { "string" : "seront", "pl":"seront", "sing":"sera", "class" : "verb"  },
   "will_increase" : { "string" : "augmenteront", "pl":"augmenteront", 
     "sing":"va augmenter", "class" : "verb"  },
