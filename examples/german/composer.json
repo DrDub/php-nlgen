@@ -1,0 +1,24 @@
+{
+    "name": "nlgen/nlgen-example-multilingual-botman",
+    "description": "Example multilingual generation grammars with botman",
+    "type": "project",
+    "keywords": [],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pablo Duboue",
+            "email": "pablo.duboue@gmail.com",
+            "homepage": "http://duboue.net",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "botman/botman": "^2.4",
+        "botman/driver-web": "^1.5",
+        "nlgen/nlgen" : ">0.12"
+    },
+    "autoload": {
+        "classmap": [ "." ]
+    },
+    "minimum-stability" : "dev"
+}

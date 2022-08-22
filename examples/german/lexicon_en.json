@@ -1,0 +1,16 @@
+{ "greet"       : { "class" : "phrase", "string" : "Hello there. Ask me to sell you a pickup truck." }
+, "actionq"     : { "class" : "phrase", "string" : "Do you want to buy, finance or lease?" }
+, "reset"       : { "class" : "phrase", "string" : "Say \"hello\"" }
+, "drivetrainq" : { "class" : "phrase", "string" : "It comes standard with 4x2 drivetrain, do you want a 4x4 one?" }
+, "boxq"        : { "class" : "phrase", "string" : "It comes standard with a long box (6'4\"). Do you want a short box (5'7\")?" }
+, "cabinq"      : { "class" : "phrase", "string" : "Do you want a quad or crew cabin? The standard is the quad cabin." }
+, "yes"         : { "class" : "answer", "string" : "yes" }
+, "no"          : { "class" : "answer", "string" : "no" }
+, "buy"         : { "class" : "answer", "string" : "buy" }
+, "finance"     : { "class" : "answer", "string" : "finance" }
+, "lease"       : { "class" : "answer", "string" : "lease" }
+, "long"        : { "class" : "answer", "string" : "long" }
+, "short"       : { "class" : "answer", "string" : "short" }
+, "quad"        : { "class" : "answer", "string" : "quad" }
+, "crew"        : { "class" : "answer", "string" : "crew" }
+}

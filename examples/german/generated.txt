@@ -1,0 +1,96 @@
+buy 4x4 short quad
+	You want to buy a short-box pickup truck with four wheel-drive.
+buy 4x4 short crew
+	You want to buy a short-box pickup truck with a crew cabin. It is a four wheel-drive.
+buy 4x4 long quad
+	You want to buy a four wheel-drive pickup truck.
+buy 4x4 long crew
+	You want to buy a crew-cabin pickup truck. It is a four wheel-drive.
+buy 4x2 short quad
+	You want to buy a short-box pickup truck.
+buy 4x2 short crew
+	You want to buy a short-box pickup truck with a crew cabin.
+buy 4x2 long quad
+	You want to buy a pickup truck.
+buy 4x2 long crew
+	You want to buy a crew-cabin pickup truck.
+finance 4x4 short quad
+	You want to finance a short-box pickup truck with four wheel-drive.
+finance 4x4 short crew
+	You want to finance a short-box pickup truck with a crew cabin. It is a four wheel-drive.
+finance 4x4 long quad
+	You want to finance a four wheel-drive pickup truck.
+finance 4x4 long crew
+	You want to finance a crew-cabin pickup truck. It is a four wheel-drive.
+finance 4x2 short quad
+	You want to finance a short-box pickup truck.
+finance 4x2 short crew
+	You want to finance a short-box pickup truck with a crew cabin.
+finance 4x2 long quad
+	You want to finance a pickup truck.
+finance 4x2 long crew
+	You want to finance a crew-cabin pickup truck.
+lease 4x4 short quad
+	You want to lease a short-box pickup truck with four wheel-drive.
+lease 4x4 short crew
+	You want to lease a short-box pickup truck with a crew cabin. It is a four wheel-drive.
+lease 4x4 long quad
+	You want to lease a four wheel-drive pickup truck.
+lease 4x4 long crew
+	You want to lease a crew-cabin pickup truck. It is a four wheel-drive.
+lease 4x2 short quad
+	You want to lease a short-box pickup truck.
+lease 4x2 short crew
+	You want to lease a short-box pickup truck with a crew cabin.
+lease 4x2 long quad
+	You want to lease a pickup truck.
+lease 4x2 long crew
+	You want to lease a crew-cabin pickup truck.
+kaufen 4x4 kurze viererkabine
+	Sie möchten einen Allrad-Pick-up mit kurze Ladefläche kaufen.
+kaufen 4x4 kurze mannschaftskabine
+	Sie möchten einen Allrad-Pick-up mit kurze Ladefläche und Mannschaftskabine kaufen.
+kaufen 4x4 langen viererkabine
+	Sie möchten einen Allrad-Pick-up kaufen.
+kaufen 4x4 langen mannschaftskabine
+	Sie möchten einen Allrad-Pick-up mit mannschaftskabine Ladefläche kaufen.
+kaufen 4x2 kurze viererkabine
+	Sie möchten einen Pick-up mit kurze Ladefläche kaufen.
+kaufen 4x2 kurze mannschaftskabine
+	Sie möchten einen Pick-up mit kurze Ladefläche und Mannschaftskabine kaufen.
+kaufen 4x2 langen viererkabine
+	Sie möchten einen Pick-up kaufen.
+kaufen 4x2 langen mannschaftskabine
+	Sie möchten einen Pick-up mit mannschaftskabine Ladefläche kaufen.
+finanzieren 4x4 kurze viererkabine
+	Sie möchten einen Allrad-Pick-up mit kurze Ladefläche finanzieren.
+finanzieren 4x4 kurze mannschaftskabine
+	Sie möchten einen Allrad-Pick-up mit kurze Ladefläche und Mannschaftskabine finanzieren.
+finanzieren 4x4 langen viererkabine
+	Sie möchten einen Allrad-Pick-up finanzieren.
+finanzieren 4x4 langen mannschaftskabine
+	Sie möchten einen Allrad-Pick-up mit mannschaftskabine Ladefläche finanzieren.
+finanzieren 4x2 kurze viererkabine
+	Sie möchten einen Pick-up mit kurze Ladefläche finanzieren.
+finanzieren 4x2 kurze mannschaftskabine
+	Sie möchten einen Pick-up mit kurze Ladefläche und Mannschaftskabine finanzieren.
+finanzieren 4x2 langen viererkabine
+	Sie möchten einen Pick-up finanzieren.
+finanzieren 4x2 langen mannschaftskabine
+	Sie möchten einen Pick-up mit mannschaftskabine Ladefläche finanzieren.
+leasen 4x4 kurze viererkabine
+	Sie möchten einen Allrad-Pick-up mit kurze Ladefläche leasen.
+leasen 4x4 kurze mannschaftskabine
+	Sie möchten einen Allrad-Pick-up mit kurze Ladefläche und Mannschaftskabine leasen.
+leasen 4x4 langen viererkabine
+	Sie möchten einen Allrad-Pick-up leasen.
+leasen 4x4 langen mannschaftskabine
+	Sie möchten einen Allrad-Pick-up mit mannschaftskabine Ladefläche leasen.
+leasen 4x2 kurze viererkabine
+	Sie möchten einen Pick-up mit kurze Ladefläche leasen.
+leasen 4x2 kurze mannschaftskabine
+	Sie möchten einen Pick-up mit kurze Ladefläche und Mannschaftskabine leasen.
+leasen 4x2 langen viererkabine
+	Sie möchten einen Pick-up leasen.
+leasen 4x2 langen mannschaftskabine
+	Sie möchten einen Pick-up mit mannschaftskabine Ladefläche leasen.

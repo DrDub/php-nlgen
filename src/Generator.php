@@ -70,7 +70,9 @@ abstract class Generator {
     if(is_array($lexicon)){
       $multilingual = true;
       $langs = array_keys($lexicon);
-      error_log("Multilingual: ".implode(", ", $langs));
+      if($debug){
+        error_log("Multilingual: ".implode(", ", $langs));
+      }
     }
     $reflection = new \ReflectionClass(get_called_class());
     $top_reflection = new \ReflectionClass(get_class());
