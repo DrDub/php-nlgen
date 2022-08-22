@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2011-2020 Pablo Ariel Duboue <pablo.duboue@gmail.com>
+ * Copyright (c) 2011-2022 Pablo Ariel Duboue <pablo.duboue@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -65,6 +65,13 @@ abstract class Generator {
   // a better solution will involve the use of the intercept extension.
   // NB: the current code might not play well with optional arguments and default values.
   public static function NewSealed($onto='', $lexicon='',$debug=false,$silent=false){
+    $multilingual = false;
+    $langs = [];
+    if(is_array($lexicon)){
+      $multilingual = true;
+      $langs = array_keys($lexicon);
+      error_log("Multilingual: ".implode(", ", $langs));
+    }
     $reflection = new \ReflectionClass(get_called_class());
     $top_reflection = new \ReflectionClass(get_class());
     $BASE = $reflection->getName();
@@ -81,6 +88,8 @@ abstract class Generator {
     }
     $sealed = 0;
     $methods = $reflection->getMethods();
+    $generated_methods = [];
+    $multilingual_generic_methods = [];
     foreach ($methods as $key => $method) {
       $name=$method->getName();
       if(isset($known[$name]) || substr($name,0,1) == "_" || $method->isStatic() || $method->isPublic()){
@@ -95,6 +104,19 @@ abstract class Generator {
       
       // rename method
       $renamed = $name . "_orig";
+      $generic = '';
+      if($multilingual) {
+        $found_lang = '';
+        foreach($langs as $lang) {
+          if(substr($name, -3) == "_" . $lang) {
+              $generic = substr($name, 0, strlen($name) - 3);
+            $found_lang = $lang;
+          }
+        }
+        if($generic){
+          $renamed = $generic . "_orig_" . $found_lang;
+        }
+      }
       $params="";
       $params_calling = "";
       for($i=0; $i<$method->getNumberOfParameters(); $i++){
@@ -111,17 +133,37 @@ abstract class Generator {
       // if the last parameter name is 'sem', it is kept as the semantics for $this->gen
       $method_params = $method->getParameters();
       $num_method_params = count($method_params);
-      $has_sem = FALSE;
+      $has_sem = false;
       if($num_method_params>0 && $method_params[$num_method_params-1]->getName() == 'sem'){
-        $has_sem = TRUE;
+        $has_sem = true;
       }
-      $code_to_eval .= "  function $name($params){\n    ";
+      $generated_methods[] = $name;
+      $code_to_eval .= "  function $name($params){\n";
       $code_to_eval .= "    if(isset(\$this->context['debug'])) {\n      error_log(print_r(func_get_args(),true));\n    }\n";
       $code_to_eval .= '    return $this->gen("' . $renamed . '", func_get_args()';
       if($has_sem){
         $code_to_eval .= ',$p' . strval($num_method_params-1);
       }
       $code_to_eval .= ");\n  }\n\n";
+
+      if($multilingual && $generic) {
+        $multilingual_generic_methods[$generic] = [ 'params' => $params, 'has_sem' => $has_sem,
+                                                    'num_method_params' => $num_method_params ];
+      }
+    }
+    foreach($multilingual_generic_methods as $name => $m) {
+      if(!isset($generated_methods[$name])) {
+        if($debug){
+          error_log("Adding ".$name ."\n");
+        }
+        $code_to_eval .= "  function $name(" . $m['params'] . "){\n";
+        $code_to_eval .= "    if(isset(\$this->context['debug'])) {\n      error_log(print_r(func_get_args(),true));\n    }\n";
+        $code_to_eval .= '    return $this->gen("' . $name . '_orig", func_get_args()';
+        if($m['has_sem']){
+          $code_to_eval .= ',$p' . strval($m['num_method_params']-1);
+        }
+        $code_to_eval .= ");\n  }\n\n";
+      }         
     }
     $code_to_eval .= "  protected function is_sealed() { return TRUE; }\n}\n";
     if(! $sealed && ! $silent){
@@ -163,7 +205,7 @@ abstract class Generator {
     // multilingual
     if(isset($this->context['lang'])){
       $func_ml = $func . "_" . $this->context['lang'];
-      if(method_exists($this,$func_ml)) {
+      if(method_exists($this, $func_ml)) {
         $func = $func_ml;
       }
     }

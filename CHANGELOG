@@ -1,3 +1,9 @@
+php-nlgen (0.13)
+
+	* Method interception now works with multilingual extensions.
+
+-- Pablo Duboue, 2022/08/22
+
 php-nlgen (0.12)
 
 	* Published the SimpleTechnicalEnglish as a grammar part of the
