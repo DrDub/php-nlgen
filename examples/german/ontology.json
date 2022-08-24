@@ -1,0 +1,30 @@
+{ "vehicle"     : { "class" : "question", "order" : 0 }
+, "action"      : { "class" : "question", "order" : 1 }
+, "engine"      : { "class" : "question", "order" : 2, "applies" : { "vehicle" : "boat" } }
+, "drivetrain"  : { "class" : "question", "order" : 2, "applies" : { "vehicle" : "truck" } }
+, "box"         : { "class" : "question", "order" : 3 }
+, "cabin"       : { "class" : "question", "order" : 4 }
+, "color"       : { "class" : "question", "order" : 5 }
+
+, "boat"        : { "class" : "option", "question" : "vehicle" }
+, "truck"       : { "class" : "option", "question" : "vehicle" }
+
+, "buy"         : { "class" : "option", "question" : "action" }
+, "finance"     : { "class" : "option", "question" : "action" }
+, "lease"       : { "class" : "option", "question" : "action" }
+
+, "inboard"     : { "class" : "option", "question" : "engine" }
+, "outboard"    : { "class" : "option", "question" : "engine", "default" : true }
+
+, "4x2"         : { "class" : "option", "question" : "drivetrain", "default" : true  }
+, "4x4"         : { "class" : "option", "question" : "drivetrain" }
+
+, "short"       : { "class" : "option", "question" : "box" }
+, "long"        : { "class" : "option", "question" : "box", "default" : true }
+
+, "crew"        : { "class" : "option", "question" : "cabin"}
+, "quad"        : { "class" : "option", "question" : "cabin", "default" : true }
+
+, "white"       : { "class" : "option", "question" : "color", "default" : true }
+, "red"         : { "class" : "option", "question" : "color" }
+}

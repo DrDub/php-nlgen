@@ -1,4 +1,6 @@
 { "greet"       : { "class" : "phrase", "string" : "Hello there. Ask me to sell you a pickup truck." }
+, "config"      : { "class" : "phrase", "mixed"  : [
+                                                   "You want to ", { "slot" : "action" },  " ", { "slot" : "configured" }, "." ] }
 , "actionq"     : { "class" : "phrase", "string" : "Do you want to buy, finance or lease?" }
 , "reset"       : { "class" : "phrase", "string" : "Say \"hello\"" }
 , "drivetrainq" : { "class" : "phrase", "string" : "It comes standard with 4x2 drivetrain, do you want a 4x4 one?" }

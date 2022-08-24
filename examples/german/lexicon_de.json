@@ -1,9 +1,20 @@
-{ "greet"       : { "class" : "phrase", "string" : "Hallo. Bitten Sie mich, Ihnen einen Pick-up zu verkaufen." }
-, "actionq"     : { "class" : "phrase", "string" : "Sie wollen kaufen, finanzieren oder leasen?" }
+{ "greet"       : { "class" : "phrase", "string" : "Hallo." }
 , "reset"       : { "class" : "phrase", "string" : "Sag ,,hallo''" }
-, "drivetrainq" : { "class" : "phrase", "string" : "Es ist standardmäßig mit einem 4x2-Antrieb ausgestattet. Möchten Sie einen 4x4-Antrieb?" }
-, "boxq"        : { "class" : "phrase", "string" : "Es wird standardmäßig mit einer langen Ladefläche (6'4\") geliefert. Möchten Sie Ladefläche eine kurze (5'7\")?" }
-, "cabinq"      : { "class" : "phrase", "string" : "Möchten Sie eine Viererkabine oder Mannschaftskabine? Der Standard ist die Viererkabine." }
+, "q_vehicle"   : { "class" : "phrase", "mixed"  : [
+                                                   "Was willst du? (", { "slot" : "options" }, ")" ] }
+, "q_action"    : { "class" : "phrase", "mixed"  : [
+                                                   "Sie wollen ", { "slot" : "options" }, "?" ] }
+, "standard"    : { "class" : "phrase", "mixed"  : [
+                                                   "Es ist standardmäßig mit ", { "slot" : "option" }, " ausgestattet." ] }
+, "altern"      : { "class" : "phrase", "mixed"  : [
+                                                   "Möchten Sie ", { "slot" : "option" }, "?" ] }
+, "standardc"   : { "class" : "phrase", "mixed"  : [
+                                                   "Die Standardfarbe ist ", { "slot" : "color" }, "." ] }
+, "alternc"     : { "class" : "phrase", "mixed"  : [
+                                                   "Bevorzugen Sie ",  { "slot" : "colorobj" }, "?" ] }
+, "config"      : { "class" : "phrase", "mixed"  : [
+                                                   "Sie möchten ", { "slot" : "configured" },  " ", { "slot" : "action" }, "." ] }
+
 , "yes"         : { "class" : "answer", "string" : "ja" }
 , "no"          : { "class" : "answer", "string" : "nein" }
 , "buy"         : { "class" : "answer", "string" : "kaufen" }
@@ -13,4 +24,68 @@
 , "short"       : { "class" : "answer", "string" : "kurze" }
 , "quad"        : { "class" : "answer", "string" : "viererkabine" }
 , "crew"        : { "class" : "answer", "string" : "mannschaftskabine" }
+, "inboard"     : { "class" : "answer", "string" : "innenbordmotor" }
+, "outboard"    : { "class" : "answer", "string" : "außenbordmotor" }
+
+, "opt_truck"   : { "class" : "option", "string" : "Pickup",            "gender" : "m", "onto" : "truck" }
+, "opt_boat"    : { "class" : "option", "string" : "Boot",              "gender" : "n", "onto" : "boat" }
+, "opt_inboard" : { "class" : "option", "string" : "Innenbordmotor",    "gender" : "m", "onto" : "inboard" }
+, "opt_outboard": { "class" : "option", "string" : "Außenbordmotor",    "gender" : "m", "onto" : "outboard" }
+, "opt_4x4"     : { "class" : "option", "string" : "4x4-Antrieb",       "gender" : "m", "onto" : "4x4" }
+, "opt_4x2"     : { "class" : "option", "string" : "4x2-Antrieb",       "gender" : "m", "onto" : "4x2" }
+, "opt_short"   : { "class" : "option", "string" : "kurze Ladefläche",  "gender" : "f", "onto" : "short" }
+, "opt_long"    : { "class" : "option", "string" : "langen Ladefläche", "gender" : "f", "onto" : "long" }
+, "opt_quad"    : { "class" : "option", "string" : "Viererkabine",      "gender" : "f", "onto" : "quad" }
+, "opt_crew"    : { "class" : "option", "string" : "Mannschaftskabine", "gender" : "f", "onto" : "crew" }
+, "opt_red"     : { "class" : "option", "string" : "roter",             "gender" : "m", "onto" : "red" }
+, "opt_white"   : { "class" : "option", "string" : "weißer",            "gender" : "m", "onto" : "white" }
+
+, "truck"       : { "class" : "noun",   "string" : "Pickup",  "gender" : "m" }
+, "boat"        : { "class" : "noun",   "string" : "Boot",    "gender" : "n" }
+
+, "or"          : { "class" : "conj",   "string" : "oder" }
+, "and"         : { "class" : "conj",   "string" : "und" }
+, "with"        : { "class" : "prep",   "string" : "mit" }
+
+, "white"       : [
+                  { "class" : "adj",    "string" : "weiß",    "root"   : "y" }
+,                 { "class" : "adj",    "string" : "weißer",  "gender" : "m", "case" : "nom", "ending" : "strong" }
+,                 { "class" : "adj",    "string" : "weiße",   "gender" : "m", "case" : "nom", "ending" : "weak" }
+,                 { "class" : "adj",    "string" : "weiße",   "gender" : "n", "case" : "nom", "ending" : "strong" }
+,                 { "class" : "adj",    "string" : "weißes",  "gender" : "n", "case" : "nom", "ending" : "weak" }
+,                 { "class" : "adj",    "string" : "weiße",   "gender" : "f", "case" : "nom", "ending" : "mixed" }
+,                 { "class" : "adj",    "string" : "weißen",  "gender" : "m", "case" : "dat", "ending" : "mixed" }
+,                 { "class" : "adj",    "string" : "weißen",  "gender" : "n", "case" : "dat", "ending" : "mixed" }
+,                 { "class" : "adj",    "string" : "weißer",  "gender" : "f", "case" : "dat", "ending" : "strong" }
+,                 { "class" : "adj",    "string" : "weißen",  "gender" : "f", "case" : "dat", "ending" : "weak" }
+                  ]
+, "red"         : [
+                  { "class" : "adj",    "string" : "rot",     "root"   : "y" }
+,                 { "class" : "adj",    "string" : "roter",   "gender" : "m", "case" : "nom", "ending" : "strong" }
+,                 { "class" : "adj",    "string" : "rote",    "gender" : "m", "case" : "nom", "ending" : "weak" }
+,                 { "class" : "adj",    "string" : "rotes",   "gender" : "n", "case" : "nom", "ending" : "strong" }
+,                 { "class" : "adj",    "string" : "rote",    "gender" : "n", "case" : "nom", "ending" : "weak" }
+,                 { "class" : "adj",    "string" : "rote",    "gender" : "f", "case" : "nom", "ending" : "mixed" }
+,                 { "class" : "adj",    "string" : "roter",   "gender" : "m", "case" : "dat", "ending" : "strong" }
+,                 { "class" : "adj",    "string" : "roten",   "gender" : "m", "case" : "dat", "ending" : "weak" }
+,                 { "class" : "adj",    "string" : "roten",   "gender" : "n", "case" : "dat", "ending" : "mixed" }
+,                 { "class" : "adj",    "string" : "roter",   "gender" : "f", "case" : "dat", "ending" : "strong" }
+,                 { "class" : "adj",    "string" : "roten",   "gender" : "f", "case" : "dat", "ending" : "weak" }
+                  ]
+
+, "det_indef"   : [
+                  { "class" : "det",    "string" : "ein",     "gender" : "m", "case" : "nom", "ending" : "weak",   "def": "n" }
+,                 { "class" : "det",    "string" : "einen",   "gender" : "m", "case" : "acc", "ending" : "weak",   "def": "n" }
+,                 { "class" : "det",    "string" : "eines",   "gender" : "m", "case" : "gen", "ending" : "strong", "def": "n" }
+,                 { "class" : "det",    "string" : "einem",   "gender" : "m", "case" : "dat", "ending" : "strong", "def": "n" }
+,                 { "class" : "det",    "string" : "eine",    "gender" : "f", "case" : "nom", "ending" : "weak",   "def": "n" }
+,                 { "class" : "det",    "string" : "eine",    "gender" : "f", "case" : "acc", "ending" : "weak",   "def": "n" }
+,                 { "class" : "det",    "string" : "einer",   "gender" : "f", "case" : "gen", "ending" : "strong", "def": "n" }
+,                 { "class" : "det",    "string" : "einer",   "gender" : "f", "case" : "dat", "ending" : "strong", "def": "n" }
+,                 { "class" : "det",    "string" : "ein",     "gender" : "n", "case" : "nom", "ending" : "weak",   "def": "n" }
+,                 { "class" : "det",    "string" : "ein",     "gender" : "n", "case" : "acc", "ending" : "weak",   "def": "n" }
+,                 { "class" : "det",    "string" : "eines",   "gender" : "n", "case" : "gen", "ending" : "strong", "def": "n" }
+,                 { "class" : "det",    "string" : "einem",   "gender" : "n", "case" : "dat", "ending" : "strong", "def": "n" }
+                  ]
+
 }

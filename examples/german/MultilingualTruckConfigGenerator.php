@@ -29,46 +29,166 @@ use NLGen\Generator;
 
 class MultilingualTruckConfigGenerator extends Generator {
     
-  # data are different dimensions changed plus new values
-  function top($data){
-      # check for templates
-      if(! is_array($data)) {
-          return $this->lex->string_for_id($data);
-      }      
-      # check and remove defaults
-      $info = array();
-      if($data['box'] == $this->lex->string_for_id('short') || $data['box'] == 'short'){
-          $info['box'] = 'short';
-      }
-      if($data['cabin'] == $this->lex->string_for_id('crew') || $data['cabin'] == 'crew'){
-          $info['cabin'] = 'crew';
-      }
-      if($data['drivetrain'] == '4x4'){
-          $info['drivetrain'] = '4x4';
-      }
+    # data includes 'type' (question or configuration)
+    function top($data){
+        # check for templates
+        if(! is_array($data)) {
+            return $this->lex->string_for_id($data);
+        }      
+        if($data['type'] == 'question') {
+            return $this->question($data);
+        }
+        # check and remove defaults
+        # TODO replace this code with an ontology lookup
+        $info = [ 'vehicle' => $data['vehicle'] ];
+        $box        = $data['box'] ?? "";
+        $cabin      = $data['cabin'] ?? "";
+        $drivetrain = $data['drivetrain'] ?? ""; 
+        $engine     = $data['engine'] ?? ""; 
+        $color      = $data['color'] ?? ""; 
+        if($box == $this->lex->string_for_id('short') || $box == 'short'){
+            $info['box'] = 'short';
+        }
+        if($cabin == $this->lex->string_for_id('crew') || $cabin == 'crew'){
+            $info['cabin'] = 'crew';
+        }
+        if($color == $this->lex->string_for_id('red') || $color == 'red'){
+            $info['color'] = 'red';
+        }
+        if($engine == $this->lex->string_for_id('inboard') || $engine == 'inboard'){
+            $info['engine'] = 'inboard';
+        }
+        if($drivetrain == '4x4'){
+            $info['drivetrain'] = '4x4';
+        }
+        //error_log(print_r($info, TRUE));
+        
+        return $this->sentence($data['action'], $info);
+    }
 
-      return $this->sentence($data['action'], $info);
-  }
+    function get_options($question) {
+        $all_opts = $this->onto->find_all_by_class('option');
+        //print_r($all_opts);
+        
+        $opts = [];        
+        $has_default=false;
+        $default = NULL;
+        $other = NULL;
+        foreach($all_opts as $id) {
+            $frame = $this->onto->find($id);
+            if($frame['question'] == $question){
+                //print_r($frame);
+                $entry = NULL;
+                if($this->lex->has("opt_".$frame['id'])){
+                    $entry = $this->lex->find("opt_".$frame['id']);
+                }else{
+                    $entry = $this->lex->find($frame['id']);
+                }
+                $entry['onto'] = $frame['id'];
+                $entry['default'] = isset($frame['default']);
+                if($entry['default']){
+                    $has_default=true;
+                    $default = $entry;
+                }else{
+                    $other = $entry;
+                }
+                $opts[] = $entry;
+            }
+        }
+        //print_r($opts);
+        return [ $opts, $has_default, $default, $other ];
+    }
 
-  protected function sentence_en($action, $info) {      
-      $result =  "You want to " . $action . " " . $this->truck($info) . '.';
-      $sem = $this->current_semantics()['truck_orig_en'];
+    protected function question($data) {
+        $question = $data['need'];
+        $object   = $data['target'] ?? NULL;
+
+        [ $opts, $has_default, $default, $other ] = $this->get_options($question);
+        
+        $key = "q_" . $question;
+        $text = "";
+        $sem = [];
+        if($has_default) {
+            $text = $this->standard($default, $question, $object) . " " . $this->alternative($other, $question, $object);
+            $sem  = [ 'default' => $default, 'other' => $other ];
+        }else{
+            $text = $this->lex->string_for_id($key, [ "options" => $this->list($opts, 'or') ]);
+        }
+        $sem['opts'] = $opts;
+        
+        if($question == "vehicle") {
+            $text = $this->lex->string_for_id("greet") . " " . $text;
+        }
+        return [ 'text' => $text, 'sem' => $sem ];
+    }
+
+    protected function standard($entry, $type, $object) {
+        if($type == "color"){
+            return $this->standard_color($entry, $object);
+        }
+        $option = $this->option($entry);
+        return $this->lex->string_for_id("standard", [ "option" => $option ]);
+    }
+
+    protected function alternative($entry, $type, $object) {
+        if($type == "color"){
+            return $this->alternative_color($entry, $object);
+        }
+        $option = $this->option($entry);
+        return $this->lex->string_for_id("altern", [ "option" => $option ]);
+    }
+
+    protected function standard_color($entry, $object) {
+        $color = $this->lex->query([ 'id' => $entry['onto'], 'root' => 'y' ])[0]['string'];
+        return $this->lex->string_for_id("standardc", [ "color" => $color ]);
+    }
+
+    protected function alternative_color($entry, $object) {
+        $object = $this->lex->find($object);
+        
+        $colorobj = $this->determiner([ 'def' => 'n',  'gender' => $object['gender'], 'case' => 'nom' ]) . " " .
+                  $this->lex->query([ 'id' => $entry['onto'], 'gender' => $object['gender'], 'case' => 'nom' ])[0]['string'] . " " .
+                  $object['string'];
+        return $this->lex->string_for_id("alternc", [ "colorobj" => $colorobj ]);
+    }
+    
+    protected function option_de($entry) {
+        return $this->determiner([ 'def' => 'n', 'gender' => $entry['gender'], 'case' => 'dat' ]). " " . $entry['string'];
+    }
+
+    protected function determiner($data) {
+        $query = $data;
+        $query['class'] = 'det';
+        return $this->lex->query($query)[0]['string'];
+    }
+
+    protected function list($opts, $conj) {
+        $len = count($opts);
+        if($len < 1) return "";
+        $copy = $opts;
+        $last = array_pop($copy);
+        $list = [];
+        foreach($copy as $entry){
+            $list[] = $entry['string'];
+        }
+        if($len < 2) {
+            return $last['string'];
+        }
+        return implode(", ", $list)." ".$this->lex->string_for_id($conj)." ". $last['string'];
+    }
+
+  protected function sentence($action, $info) {
+      $action = $this->lex->string_for_id($action);
+      $configured = $this->vehicle($info);
+      $result = $this->lex->string_for_id('config', ['configured' => $configured, 'action' => $action ]);
+      $sem = $this->current_semantics()['vehicle'];
       if(isset($sem['leftover'])){
-          $result = $result . " " . $this->truck_s($sem['leftover']);
+          $result = $result . " " . $this->vehicle_s($sem['leftover']);
       }
       return $result;
   }
 
-  protected function sentence_de($action, $info) {      
-      $result =  "Sie möchten "  . $this->truck($info) . " " . $action . '.';
-      $sem = $this->current_semantics()['truck_orig_de'];
-      if(isset($sem['leftover'])){
-          $result = $result . " " . $this->truck_s($sem['leftover']);
-      }
-      return $result;
-  }
-
-  protected function truck_en($data) {
+  protected function vehicle_en($data) {
       if(count($data) == 3){
           return array('text' => "a " . $this->box_ap($data['box']) . " pickup truck " . $this->cabin_pp($data['cabin']),
           'sem' => array('leftover' => array('drivetrain' => $data['drivetrain'])));
@@ -97,21 +217,34 @@ class MultilingualTruckConfigGenerator extends Generator {
       return "a pickup truck";
   }
 
-  protected function truck_de($data) {
-      $result = "einen ";
-      if(isset($data['drivetrain'])) {
-          $result = $result . $this->drivetrain_ap($data['drivetrain']);
+  protected function vehicle_de($data) {
+      $object = $this->lex->find($data['vehicle']);
+      unset($data['vehicle']);
+      
+      $result = $this->determiner([ 'def' => 'n',  'gender' => $object['gender'], 'case' => 'nom' ]) . " ";
+      if(isset($data['color'])){
+          $result .= $this->lex->query([ 'id' => $data['color'], 'gender' => $object['gender'], 'case' => 'nom' ])[0]['string']. " ";
+          unset($data['color']);
       }
-      $result .= "Pick-up";
-      if(isset($data['box'])){
-          $result .= " " . $this->box_pp($data['box']);
-          if(isset($data['cabin'])) {
-              $result .= " und " . ucfirst($this->lex->string_for_id($data['cabin']));
+      if (isset($data['drivetrain'])) {
+          $result .= $this->drivetrain_ap($data['drivetrain']);
+          unset($data['drivetrain']);
+      }
+      $result .= $object['string'];
+
+      $opts = count($data);
+      if($opts) {
+          $result .= " " . $this->lex->string_for_id('with') . " ";
+
+          $opts=[];
+          foreach($data as $key => $value) {
+              switch ($key) {
+              case 'box':        $opts[] = [ 'string' => $this->box_ap($value) ]; break;
+              case 'cabin':      $opts[] = [ 'string' => ucfirst($this->lex->string_for_id($value)) ]; break;
+              case 'engine':     $opts[] = [ 'string' => ucfirst($this->lex->string_for_id($value)) ]; break;
+              }
           }
-          return $result;
-      }
-      if(isset($data['cabin'])){
-          $result .= " " . $this->box_pp($data['cabin']);
+          $result .= $this->list($opts, 'and');
       }
       return $result;
   }
@@ -156,7 +289,7 @@ class MultilingualTruckConfigGenerator extends Generator {
       return "mit " . $this->lex->string_for_id($box). " Ladefläche";
   }
 
-  protected function truck_s($data) {
+  protected function vehicle_s($data) {
       if(isset($data['cabin'])){
           return "It comes " . $this->cabin_pp($data['cabin']) . ".";
       }
@@ -169,3 +302,22 @@ class MultilingualTruckConfigGenerator extends Generator {
       return "";
   }
 }
+
+/*
+$ontology   = file_get_contents("ontology.json");
+$lexicon_en = file_get_contents("lexicon_en.json");
+$lexicon_de = file_get_contents("lexicon_de.json");
+$gen = MultilingualTruckConfigGenerator::NewSealed($ontology,
+                                                  [ 'en' => $lexicon_en, 'de' => $lexicon_de ] );
+echo $gen->generate([ 'type' => 'question', 'need' => 'drivetrain', 'target' => 'pickup' ], ['lang'=>'de']) . "\n\n";
+echo $gen->generate([ 'type' => 'question', 'need' => 'action', 'target' => 'pickup' ], ['lang'=>'de']) . "\n\n";
+echo $gen->generate([ 'type' => 'configuration', 'action' => 'lease',
+                      'vehicle' => 'boat', 'box' => 'short', 'color' => 'red' ], ['lang'=>'de']) . "\n\n";
+echo $gen->generate([ 'type' => 'configuration', 'action' => 'buy',
+                      'vehicle' => 'boat', 'box' => 'short', 'engine' => 'inboard', 'color' => 'white' ], ['lang'=>'de']) . "\n\n";
+echo $gen->generate([ 'type' => 'configuration', 'action' => 'buy',
+                      'vehicle' => 'truck', 'box' => 'long', 'drivetrain' => '4x4', 'color' => 'red',
+                      'cabin' => 'crew' ], ['lang'=>'de']) . "\n\n";
+echo $gen->generate([ 'type' => 'question', 'need' => 'color', 'target' => 'truck' ], ['lang'=>'de']) . "\n\n";
+echo $gen->generate([ 'type' => 'question', 'need' => 'color', 'target' => 'boat' ], ['lang'=>'de']) . "\n\n";
+*/

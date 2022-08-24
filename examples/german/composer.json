@@ -15,7 +15,7 @@
     "require": {
         "botman/botman": "^2.4",
         "botman/driver-web": "^1.5",
-        "nlgen/nlgen" : ">0.12"
+        "nlgen/nlgen" : ">0.14"
     },
     "autoload": {
         "classmap": [ "." ]
