@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2011-2020 Pablo Ariel Duboue <pablo.duboue@gmail.com>
+ * Copyright (c) 2011-2022 Pablo Ariel Duboue <pablo.duboue@gmail.com>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining 
  * a copy of this software and associated documentation files (the "Software"), 
@@ -26,8 +26,6 @@
 require __DIR__ . '/vendor/autoload.php';
 
 use NLGen\Generator;
-
-// execute as php basic0.php 0 0 0 0
 
 class BasicGenerator1 extends Generator {
 
@@ -58,10 +56,18 @@ class BasicGenerator1 extends Generator {
 
 global $argv,$argc;
 
-$gen = BasicGenerator1::NewSealed();
+// execute as php BasicGenerator1.php 0 0 0 0
 
-print $gen->generate(array_splice($argv,1) /*,array("debug"=>1)*/)."\n";
+if($argc > 1) {
+    $gen = BasicGenerator1::NewSealed();
+    $context = [];
+    if($argc > 5) {
+        $context['debug'] = true;
+    }
+    print $gen->generate(array_splice($argv,1), $context)."\n";
 
-print_r($gen->semantics());
-
+    print_r($gen->semantics());
+}else{
+    echo BasicGenerator1::Compile()[0];
+}
 

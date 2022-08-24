@@ -1,3 +1,12 @@
+php-nlgen (0.14)
+
+	* Method interception now does not pollute the semantic stack with
+	'_orig' or the language used.
+	* Added new static 'Compile' method to use in servers with no 'eval' enabled.
+	* Improved basic examples.
+
+-- Pablo Duboue, 2022/08/24
+
 php-nlgen (0.13)
 
 	* Method interception now works with multilingual extensions.

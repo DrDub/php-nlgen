@@ -60,20 +60,10 @@ abstract class Generator {
     }
   }
 
-  // method interception for a more streamlined framework.
-  // the use of 'eval' is reserved at construction time and doesn't involve any user-provided data,
-  // a better solution will involve the use of the intercept extension.
-  // NB: the current code might not play well with optional arguments and default values.
-  public static function NewSealed($onto='', $lexicon='',$debug=false,$silent=false){
-    $multilingual = false;
-    $langs = [];
-    if(is_array($lexicon)){
-      $multilingual = true;
-      $langs = array_keys($lexicon);
-      if($debug){
-        error_log("Multilingual: ".implode(", ", $langs));
-      }
-    }
+  public static function Compile($langs=NULL,$debug=false,$silent=false){
+    $langs = $langs ?? [];
+    $multilingual = $langs;
+    
     $reflection = new \ReflectionClass(get_called_class());
     $top_reflection = new \ReflectionClass(get_class());
     $BASE = $reflection->getName();
@@ -132,25 +122,12 @@ abstract class Generator {
       $code_to_eval .= "  function $renamed(". '$params' ."){\n    return $BASE::$name($params_calling);\n  }\n\n";
 
       // regular method calls $this->gen with renamed and array of parameters
-      // if the last parameter name is 'sem', it is kept as the semantics for $this->gen
-      $method_params = $method->getParameters();
-      $num_method_params = count($method_params);
-      $has_sem = false;
-      if($num_method_params>0 && $method_params[$num_method_params-1]->getName() == 'sem'){
-        $has_sem = true;
-      }
       $generated_methods[] = $name;
       $code_to_eval .= "  function $name($params){\n";
       $code_to_eval .= "    if(isset(\$this->context['debug'])) {\n      error_log(print_r(func_get_args(),true));\n    }\n";
-      $code_to_eval .= '    return $this->gen("' . $renamed . '", func_get_args()';
-      if($has_sem){
-        $code_to_eval .= ',$p' . strval($num_method_params-1);
-      }
-      $code_to_eval .= ");\n  }\n\n";
-
+      $code_to_eval .= '    return $this->gen("' . $renamed . '", func_get_args(), "'.$name.'");'."\n  }\n\n";
       if($multilingual && $generic) {
-        $multilingual_generic_methods[$generic] = [ 'params' => $params, 'has_sem' => $has_sem,
-                                                    'num_method_params' => $num_method_params ];
+        $multilingual_generic_methods[$generic] = [ 'params' => $params ];
       }
     }
     foreach($multilingual_generic_methods as $name => $m) {
@@ -160,11 +137,7 @@ abstract class Generator {
         }
         $code_to_eval .= "  function $name(" . $m['params'] . "){\n";
         $code_to_eval .= "    if(isset(\$this->context['debug'])) {\n      error_log(print_r(func_get_args(),true));\n    }\n";
-        $code_to_eval .= '    return $this->gen("' . $name . '_orig", func_get_args()';
-        if($m['has_sem']){
-          $code_to_eval .= ',$p' . strval($m['num_method_params']-1);
-        }
-        $code_to_eval .= ");\n  }\n\n";
+        $code_to_eval .= '    return $this->gen("' . $name . '_orig", func_get_args(), "'.$name.'");'."\n  }\n\n";
       }         
     }
     $code_to_eval .= "  protected function is_sealed() { return TRUE; }\n}\n";
@@ -175,6 +148,24 @@ abstract class Generator {
       error_log("SEALED!\n");
       error_log($code_to_eval);
     }
+    return [ $code_to_eval, $target_class_name ];
+  }
+    
+  // method interception for a more streamlined framework.
+  // the use of 'eval' is reserved at construction time and doesn't involve any user-provided data,
+  // a better solution will involve the use of the intercept extension.
+  // NB: the current code might not play well with optional arguments and default values.
+  public static function NewSealed($onto='', $lexicon='',$debug=false,$silent=false){
+    $langs = NULL;
+    if(is_array($lexicon)){
+      $langs = array_keys($lexicon);
+      if($debug){
+        error_log("Multilingual: ".implode(", ", $langs));
+      }
+    }
+    $res = self::Compile($langs,$debug,$silent);
+    $code_to_eval = $res[0];
+    $target_class_name = $res[1];
     eval($code_to_eval);
     return new $target_class_name($onto,$lexicon);
   }
@@ -199,11 +190,6 @@ abstract class Generator {
   }
 
   function gen($func, $data, $name=NULL) {
-    if(isset($this->context['debug'])) {
-      error_log("Calling $func, semantics at start:\n");
-      error_log(print_r($this->semantics,true));
-    }
-
     // multilingual
     if(isset($this->context['lang'])){
       $func_ml = $func . "_" . $this->context['lang'];
@@ -216,6 +202,11 @@ abstract class Generator {
     if($name == NULL){
       $name = $func;
     }
+    if(isset($this->context['debug'])) {
+      error_log("Calling $func/$name, semantics at start:\n");
+      error_log(print_r($this->semantics,true));
+    }
+
     $current_sem = &$this->semantics[count($this->semantics)-1];
     $rec_sem = array();
     $i = "";
@@ -247,7 +238,7 @@ abstract class Generator {
     array_pop($this->semantics);
 
     if(isset($this->context['debug'])) {
-      error_log("Calling $func, semantic at end:\n");
+      error_log("Calling $func/$name, semantics at end:\n");
       error_log(print_r($this->semantics,true));
     }
 

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2011-2020 Pablo Ariel Duboue <pablo.duboue@gmail.com>
+ * Copyright (c) 2011-2022 Pablo Ariel Duboue <pablo.duboue@gmail.com>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining 
  * a copy of this software and associated documentation files (the "Software"), 
@@ -90,13 +90,21 @@ $onto_json = <<<HERE
 HERE
 ;
 
-$gen = BasicGenerator3::NewSealed($onto_json,$lexicon_json);
+global $argv,$argc;
 
-// example inputs juan ongoing code sub_delivery
-//                helpdesk finish qa itm_25
+// execute as php BasicGenerator3.php juan ongoing code sub_delivery
+//                                    helpdesk finish qa itm_25
 
-print $gen->generate(array_splice($argv,1))."\n";
+if($argc > 1) {
+    $gen = BasicGenerator3::NewSealed($onto_json,$lexicon_json);
+    $context = [];
+    if($argc > 5) {
+        $context['debug'] = true;
+    }
+    print $gen->generate(array_splice($argv,1), $context)."\n";
 
-print_r($gen->semantics());
-
+    print_r($gen->semantics());
+}else{
+    echo BasicGenerator3::Compile()[0];
+}
 
