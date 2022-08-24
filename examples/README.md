@@ -112,3 +112,7 @@ duing the first NLG hackathon at INLG'16.
 
 The webnlg contains an attempt at the WebNLG 2017 challenge
 (unsubmitted).
+
+The chatbot folder contains a small chatbot integration example
+presented at the Vancouver PHP Meetup in 2019.
+

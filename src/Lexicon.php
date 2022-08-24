@@ -166,6 +166,8 @@ class Lexicon {
       $frame = $this->execute_function($frame, $data);
     }elseif(Lexicon::is_mixed($frame)){
       $frame = $this->resolve_mixed($frame, $data);
+    }elseif(Lexicon::is_slot($frame)){
+      $frame = $this->resolve_slot($frame, $data);
     }
     return $frame['string'];
   }
@@ -194,12 +196,20 @@ class Lexicon {
     return isset($frame['function']);
   }
 
+  public static function is_slot($frame){
+    return isset($frame['slot']);
+  }
+
   public static function is_mixed($frame){
     return isset($frame['mixed']);
   }
 
   public static function get_mixed($frame){
     return $frame['mixed'];
+  }
+
+  public static function get_slot($frame){
+    return $frame['slot'];
   }
 
   public function execute_function($frame, $data){
@@ -212,6 +222,12 @@ class Lexicon {
     return $result_sem;
   }
 
+  public function resolve_slot($frame, $data){
+    $slot = Lexicon::get_slot($frame);
+    $frame['string'] = $data[$slot];
+    return $frame;
+  }
+  
   public function resolve_mixed($frame, $data){
     $mixed = Lexicon::get_mixed($frame);
 
@@ -221,18 +237,19 @@ class Lexicon {
     $count = 0;
     foreach($mixed as $entry){
       if(is_array($entry)){
-        $exec_data = $data;
+        $exec_data = $data; # clone
         if(count($entry)>1){
           # extra parameters
-          $exec_data = $data; # clone
           foreach($entry as $key=>$value){
-            if($key != 'function' && $key != 'mixed'){
+            if($key != 'function' && $key != 'mixed' && $key != 'slot'){
               $exec_data[$key] = $value;
             }
           }
         }
         if(Lexicon::is_function($entry)){
           $gen = $this->execute_function($entry, $exec_data);
+        }elseif(Lexicon::is_slot($entry)){
+          $gen = $this->resolve_slot($entry, $exec_data);
         }elseif(Lexicon::is_mixed($entry)){
           $gen = $this->resolve_mixed($entry, $exec_data);
         }else{

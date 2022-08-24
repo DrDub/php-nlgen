@@ -1,3 +1,9 @@
+php-nlgen (0.15)
+
+	* Lexicon now takes slotted strings.
+
+-- Pablo Duboue, 2022/08/24
+
 php-nlgen (0.14)
 
 	* Method interception now does not pollute the semantic stack with

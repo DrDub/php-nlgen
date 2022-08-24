@@ -163,9 +163,7 @@ abstract class Generator {
         error_log("Multilingual: ".implode(", ", $langs));
       }
     }
-    $res = self::Compile($langs,$debug,$silent);
-    $code_to_eval = $res[0];
-    $target_class_name = $res[1];
+    [ $code_to_eval, $target_class_name ] = self::Compile($langs,$debug,$silent);
     eval($code_to_eval);
     return new $target_class_name($onto,$lexicon);
   }
