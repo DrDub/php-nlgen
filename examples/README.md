@@ -50,10 +50,10 @@ should how semantic annotations can simplify dealing with number
 agreement and pronominalization. The planned example is a SMS-powered
 package-delivering notification system that should generate:
 
-* _Your two packages were delivered yesterday. The recepient signed
+* _Your two packages were delivered yesterday. The recipient signed
   them in._
 
-* _Your package was delivered two days ago. The recepient signed it in._
+* _Your package was delivered two days ago. The recipient signed it in._
 
 Again, simple example, but here you can profit from semantic
 annotations to the point of simplifying the code and make it much more
