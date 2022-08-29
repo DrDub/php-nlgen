@@ -1,3 +1,9 @@
+php-nlgen (0.16)
+
+	* Lexicon query improvements and error notifications.
+
+-- Pablo Duboue, 2022/08/30
+
 php-nlgen (0.15)
 
 	* Lexicon now takes slotted strings.

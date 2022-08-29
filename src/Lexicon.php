@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2011-2020 Pablo Ariel Duboue <pablo.duboue@gmail.com>
+ * Copyright (c) 2011-2022 Pablo Ariel Duboue <pablo.duboue@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -129,8 +129,11 @@ class Lexicon {
     # go through the whole lexicon
     $result = array();
     foreach($this->id_to_entries as $id => $allentries) {
-      $entries = is_array($allentries) ? $allentries : array($allentries);
-      # print "entries:"; print_r($entries);
+      $entries = is_array($allentries) ? $allentries : [ $allentries ];
+      if(isset($entries['id'])){
+          $entries = [ $entries ];
+      }
+      #print "entries:"; print_r($entries);
       foreach($entries as $entry) {
         if(!is_array($entry)){
           continue;
@@ -140,9 +143,9 @@ class Lexicon {
           $set = isset($entry[$key]);
           if((!$set || !isset($goodvalues[$entry[$key]]))&&
           ($set || !isset($goodvalues["undefined"]))){
-            # print("failed:\n");   print_r($entry);
-            # print("key: ");       print_r($key."\n");
-            # print("goodvalues:"); print_r($goodvalues);
+            #print("failed:\n");   print_r($entry);
+            #print("key: ");       print_r($key."\n");
+            #print("goodvalues:"); print_r($goodvalues);
             $good=false;
             break;
           }
@@ -152,13 +155,19 @@ class Lexicon {
         }
       }
     }
+    #print "query_result:"; print_r($result);
     return $result;
   }
 
   # the rest doesn't need to be overriden in subclasses
 
   public function string_for_id($id,$data=array()){
-    return $this->string($this->find($id),$data);
+    $frame = $this->find($id);
+    if($frame){
+      return $this->string($frame, $data);
+    }else{
+      return "NOT FOUND: '$id'";
+    }
   }
 
   public function string($frame, $data=array()){
