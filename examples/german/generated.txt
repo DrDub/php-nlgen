@@ -1,96 +1,440 @@
-buy 4x4 short quad
+en truck buy 4x4 short quad white
 	You want to buy a short-box pickup truck with four wheel-drive.
-buy 4x4 short crew
+en truck buy 4x4 short quad red
+	You want to buy a red short-box pickup truck with four wheel-drive.
+en truck buy 4x4 short crew white
 	You want to buy a short-box pickup truck with a crew cabin. It is a four wheel-drive.
-buy 4x4 long quad
+en truck buy 4x4 short crew red
+	You want to buy a red short-box pickup truck with a crew cabin. It is a four wheel-drive.
+en truck buy 4x4 long quad white
 	You want to buy a four wheel-drive pickup truck.
-buy 4x4 long crew
+en truck buy 4x4 long quad red
+	You want to buy a red four wheel-drive pickup truck.
+en truck buy 4x4 long crew white
 	You want to buy a crew-cabin pickup truck. It is a four wheel-drive.
-buy 4x2 short quad
+en truck buy 4x4 long crew red
+	You want to buy a red crew-cabin pickup truck. It is a four wheel-drive.
+en truck buy 4x2 short quad white
 	You want to buy a short-box pickup truck.
-buy 4x2 short crew
+en truck buy 4x2 short quad red
+	You want to buy a red short-box pickup truck.
+en truck buy 4x2 short crew white
 	You want to buy a short-box pickup truck with a crew cabin.
-buy 4x2 long quad
+en truck buy 4x2 short crew red
+	You want to buy a red short-box pickup truck with a crew cabin.
+en truck buy 4x2 long quad white
 	You want to buy a pickup truck.
-buy 4x2 long crew
+en truck buy 4x2 long quad red
+	You want to buy a red pickup truck.
+en truck buy 4x2 long crew white
 	You want to buy a crew-cabin pickup truck.
-finance 4x4 short quad
+en truck buy 4x2 long crew red
+	You want to buy a red crew-cabin pickup truck.
+en truck finance 4x4 short quad white
 	You want to finance a short-box pickup truck with four wheel-drive.
-finance 4x4 short crew
+en truck finance 4x4 short quad red
+	You want to finance a red short-box pickup truck with four wheel-drive.
+en truck finance 4x4 short crew white
 	You want to finance a short-box pickup truck with a crew cabin. It is a four wheel-drive.
-finance 4x4 long quad
+en truck finance 4x4 short crew red
+	You want to finance a red short-box pickup truck with a crew cabin. It is a four wheel-drive.
+en truck finance 4x4 long quad white
 	You want to finance a four wheel-drive pickup truck.
-finance 4x4 long crew
+en truck finance 4x4 long quad red
+	You want to finance a red four wheel-drive pickup truck.
+en truck finance 4x4 long crew white
 	You want to finance a crew-cabin pickup truck. It is a four wheel-drive.
-finance 4x2 short quad
+en truck finance 4x4 long crew red
+	You want to finance a red crew-cabin pickup truck. It is a four wheel-drive.
+en truck finance 4x2 short quad white
 	You want to finance a short-box pickup truck.
-finance 4x2 short crew
+en truck finance 4x2 short quad red
+	You want to finance a red short-box pickup truck.
+en truck finance 4x2 short crew white
 	You want to finance a short-box pickup truck with a crew cabin.
-finance 4x2 long quad
+en truck finance 4x2 short crew red
+	You want to finance a red short-box pickup truck with a crew cabin.
+en truck finance 4x2 long quad white
 	You want to finance a pickup truck.
-finance 4x2 long crew
+en truck finance 4x2 long quad red
+	You want to finance a red pickup truck.
+en truck finance 4x2 long crew white
 	You want to finance a crew-cabin pickup truck.
-lease 4x4 short quad
+en truck finance 4x2 long crew red
+	You want to finance a red crew-cabin pickup truck.
+en truck lease 4x4 short quad white
 	You want to lease a short-box pickup truck with four wheel-drive.
-lease 4x4 short crew
+en truck lease 4x4 short quad red
+	You want to lease a red short-box pickup truck with four wheel-drive.
+en truck lease 4x4 short crew white
 	You want to lease a short-box pickup truck with a crew cabin. It is a four wheel-drive.
-lease 4x4 long quad
+en truck lease 4x4 short crew red
+	You want to lease a red short-box pickup truck with a crew cabin. It is a four wheel-drive.
+en truck lease 4x4 long quad white
 	You want to lease a four wheel-drive pickup truck.
-lease 4x4 long crew
+en truck lease 4x4 long quad red
+	You want to lease a red four wheel-drive pickup truck.
+en truck lease 4x4 long crew white
 	You want to lease a crew-cabin pickup truck. It is a four wheel-drive.
-lease 4x2 short quad
+en truck lease 4x4 long crew red
+	You want to lease a red crew-cabin pickup truck. It is a four wheel-drive.
+en truck lease 4x2 short quad white
 	You want to lease a short-box pickup truck.
-lease 4x2 short crew
+en truck lease 4x2 short quad red
+	You want to lease a red short-box pickup truck.
+en truck lease 4x2 short crew white
 	You want to lease a short-box pickup truck with a crew cabin.
-lease 4x2 long quad
+en truck lease 4x2 short crew red
+	You want to lease a red short-box pickup truck with a crew cabin.
+en truck lease 4x2 long quad white
 	You want to lease a pickup truck.
-lease 4x2 long crew
+en truck lease 4x2 long quad red
+	You want to lease a red pickup truck.
+en truck lease 4x2 long crew white
 	You want to lease a crew-cabin pickup truck.
-kaufen 4x4 kurze viererkabine
-	Sie möchten einen Allrad-Pick-up mit kurze Ladefläche kaufen.
-kaufen 4x4 kurze mannschaftskabine
-	Sie möchten einen Allrad-Pick-up mit kurze Ladefläche und Mannschaftskabine kaufen.
-kaufen 4x4 langen viererkabine
-	Sie möchten einen Allrad-Pick-up kaufen.
-kaufen 4x4 langen mannschaftskabine
-	Sie möchten einen Allrad-Pick-up mit mannschaftskabine Ladefläche kaufen.
-kaufen 4x2 kurze viererkabine
-	Sie möchten einen Pick-up mit kurze Ladefläche kaufen.
-kaufen 4x2 kurze mannschaftskabine
-	Sie möchten einen Pick-up mit kurze Ladefläche und Mannschaftskabine kaufen.
-kaufen 4x2 langen viererkabine
-	Sie möchten einen Pick-up kaufen.
-kaufen 4x2 langen mannschaftskabine
-	Sie möchten einen Pick-up mit mannschaftskabine Ladefläche kaufen.
-finanzieren 4x4 kurze viererkabine
-	Sie möchten einen Allrad-Pick-up mit kurze Ladefläche finanzieren.
-finanzieren 4x4 kurze mannschaftskabine
-	Sie möchten einen Allrad-Pick-up mit kurze Ladefläche und Mannschaftskabine finanzieren.
-finanzieren 4x4 langen viererkabine
-	Sie möchten einen Allrad-Pick-up finanzieren.
-finanzieren 4x4 langen mannschaftskabine
-	Sie möchten einen Allrad-Pick-up mit mannschaftskabine Ladefläche finanzieren.
-finanzieren 4x2 kurze viererkabine
-	Sie möchten einen Pick-up mit kurze Ladefläche finanzieren.
-finanzieren 4x2 kurze mannschaftskabine
-	Sie möchten einen Pick-up mit kurze Ladefläche und Mannschaftskabine finanzieren.
-finanzieren 4x2 langen viererkabine
-	Sie möchten einen Pick-up finanzieren.
-finanzieren 4x2 langen mannschaftskabine
-	Sie möchten einen Pick-up mit mannschaftskabine Ladefläche finanzieren.
-leasen 4x4 kurze viererkabine
-	Sie möchten einen Allrad-Pick-up mit kurze Ladefläche leasen.
-leasen 4x4 kurze mannschaftskabine
-	Sie möchten einen Allrad-Pick-up mit kurze Ladefläche und Mannschaftskabine leasen.
-leasen 4x4 langen viererkabine
-	Sie möchten einen Allrad-Pick-up leasen.
-leasen 4x4 langen mannschaftskabine
-	Sie möchten einen Allrad-Pick-up mit mannschaftskabine Ladefläche leasen.
-leasen 4x2 kurze viererkabine
-	Sie möchten einen Pick-up mit kurze Ladefläche leasen.
-leasen 4x2 kurze mannschaftskabine
-	Sie möchten einen Pick-up mit kurze Ladefläche und Mannschaftskabine leasen.
-leasen 4x2 langen viererkabine
-	Sie möchten einen Pick-up leasen.
-leasen 4x2 langen mannschaftskabine
-	Sie möchten einen Pick-up mit mannschaftskabine Ladefläche leasen.
+en truck lease 4x2 long crew red
+	You want to lease a red crew-cabin pickup truck.
+en boat buy 4x2 short quad white
+	You want to buy a short-box boat with inboard engine.
+en boat buy 4x2 short quad red
+	You want to buy a red short-box boat with inboard engine.
+en boat buy 4x2 short crew white
+	You want to buy a short-box boat with a crew cabin. It has an inboard engine.
+en boat buy 4x2 short crew red
+	You want to buy a red short-box boat with a crew cabin. It has an inboard engine.
+en boat buy 4x2 long quad white
+	You want to buy a boat with inboard engine.
+en boat buy 4x2 long quad red
+	You want to buy a red boat with inboard engine.
+en boat buy 4x2 long crew white
+	You want to buy a crew-cabin boat with inboard engine.
+en boat buy 4x2 long crew red
+	You want to buy a red crew-cabin boat with inboard engine.
+en boat buy 4x2 short quad white
+	You want to buy a short-box boat.
+en boat buy 4x2 short quad red
+	You want to buy a red short-box boat.
+en boat buy 4x2 short crew white
+	You want to buy a short-box boat with a crew cabin.
+en boat buy 4x2 short crew red
+	You want to buy a red short-box boat with a crew cabin.
+en boat buy 4x2 long quad white
+	You want to buy a boat.
+en boat buy 4x2 long quad red
+	You want to buy a red boat.
+en boat buy 4x2 long crew white
+	You want to buy a crew-cabin boat.
+en boat buy 4x2 long crew red
+	You want to buy a red crew-cabin boat.
+en boat finance 4x2 short quad white
+	You want to finance a short-box boat with inboard engine.
+en boat finance 4x2 short quad red
+	You want to finance a red short-box boat with inboard engine.
+en boat finance 4x2 short crew white
+	You want to finance a short-box boat with a crew cabin. It has an inboard engine.
+en boat finance 4x2 short crew red
+	You want to finance a red short-box boat with a crew cabin. It has an inboard engine.
+en boat finance 4x2 long quad white
+	You want to finance a boat with inboard engine.
+en boat finance 4x2 long quad red
+	You want to finance a red boat with inboard engine.
+en boat finance 4x2 long crew white
+	You want to finance a crew-cabin boat with inboard engine.
+en boat finance 4x2 long crew red
+	You want to finance a red crew-cabin boat with inboard engine.
+en boat finance 4x2 short quad white
+	You want to finance a short-box boat.
+en boat finance 4x2 short quad red
+	You want to finance a red short-box boat.
+en boat finance 4x2 short crew white
+	You want to finance a short-box boat with a crew cabin.
+en boat finance 4x2 short crew red
+	You want to finance a red short-box boat with a crew cabin.
+en boat finance 4x2 long quad white
+	You want to finance a boat.
+en boat finance 4x2 long quad red
+	You want to finance a red boat.
+en boat finance 4x2 long crew white
+	You want to finance a crew-cabin boat.
+en boat finance 4x2 long crew red
+	You want to finance a red crew-cabin boat.
+en boat lease 4x2 short quad white
+	You want to lease a short-box boat with inboard engine.
+en boat lease 4x2 short quad red
+	You want to lease a red short-box boat with inboard engine.
+en boat lease 4x2 short crew white
+	You want to lease a short-box boat with a crew cabin. It has an inboard engine.
+en boat lease 4x2 short crew red
+	You want to lease a red short-box boat with a crew cabin. It has an inboard engine.
+en boat lease 4x2 long quad white
+	You want to lease a boat with inboard engine.
+en boat lease 4x2 long quad red
+	You want to lease a red boat with inboard engine.
+en boat lease 4x2 long crew white
+	You want to lease a crew-cabin boat with inboard engine.
+en boat lease 4x2 long crew red
+	You want to lease a red crew-cabin boat with inboard engine.
+en boat lease 4x2 short quad white
+	You want to lease a short-box boat.
+en boat lease 4x2 short quad red
+	You want to lease a red short-box boat.
+en boat lease 4x2 short crew white
+	You want to lease a short-box boat with a crew cabin.
+en boat lease 4x2 short crew red
+	You want to lease a red short-box boat with a crew cabin.
+en boat lease 4x2 long quad white
+	You want to lease a boat.
+en boat lease 4x2 long quad red
+	You want to lease a red boat.
+en boat lease 4x2 long crew white
+	You want to lease a crew-cabin boat.
+en boat lease 4x2 long crew red
+	You want to lease a red crew-cabin boat.
+en truck vehicle
+	Hello there. What is it that interests you? (boat or pickup truck)
+en boat vehicle
+	Hello there. What is it that interests you? (boat or pickup truck)
+en truck action
+	Do you want to buy, finance or lease?
+en boat action
+	Do you want to buy, finance or lease?
+en truck engine
+	It comes standard with an outboard engine. Do you want it with an inboard engine?
+en boat engine
+	It comes standard with an outboard engine. Do you want it with an inboard engine?
+en truck drivetrain
+	It comes standard as 2WD. Do you want it a four-wheel drive?
+en boat drivetrain
+	It comes standard as 2WD. Do you want it a four-wheel drive?
+en truck box
+	It comes standard with a long bed. Do you want it with a short bed?
+en boat box
+	It comes standard with a long bed. Do you want it with a short bed?
+en truck cabin
+	It comes standard with a quad-cabin. Do you want it with a crew-cabin?
+en boat cabin
+	It comes standard with a quad-cabin. Do you want it with a crew-cabin?
+en truck color
+	It comes standard in white color. Do you want a red pickup truck?
+en boat color
+	It comes standard in white color. Do you want a red boat?
+de truck buy 4x4 short quad white
+	Sie möchten einen Allrad-Pickup mit kurzer Ladefläche kaufen.
+de truck buy 4x4 short quad red
+	Sie möchten einen roten Allrad-Pickup mit kurzer Ladefläche kaufen.
+de truck buy 4x4 short crew white
+	Sie möchten einen Allrad-Pickup mit kurzer Ladefläche und Mannschaftskabine kaufen.
+de truck buy 4x4 short crew red
+	Sie möchten einen roten Allrad-Pickup mit kurzer Ladefläche und Mannschaftskabine kaufen.
+de truck buy 4x4 long quad white
+	Sie möchten einen Allrad-Pickup kaufen.
+de truck buy 4x4 long quad red
+	Sie möchten einen roten Allrad-Pickup kaufen.
+de truck buy 4x4 long crew white
+	Sie möchten einen Allrad-Pickup mit Mannschaftskabine kaufen.
+de truck buy 4x4 long crew red
+	Sie möchten einen roten Allrad-Pickup mit Mannschaftskabine kaufen.
+de truck buy 4x2 short quad white
+	Sie möchten einen Pickup mit kurzer Ladefläche kaufen.
+de truck buy 4x2 short quad red
+	Sie möchten einen roten Pickup mit kurzer Ladefläche kaufen.
+de truck buy 4x2 short crew white
+	Sie möchten einen Pickup mit kurzer Ladefläche und Mannschaftskabine kaufen.
+de truck buy 4x2 short crew red
+	Sie möchten einen roten Pickup mit kurzer Ladefläche und Mannschaftskabine kaufen.
+de truck buy 4x2 long quad white
+	Sie möchten einen Pickup kaufen.
+de truck buy 4x2 long quad red
+	Sie möchten einen roten Pickup kaufen.
+de truck buy 4x2 long crew white
+	Sie möchten einen Pickup mit Mannschaftskabine kaufen.
+de truck buy 4x2 long crew red
+	Sie möchten einen roten Pickup mit Mannschaftskabine kaufen.
+de truck finance 4x4 short quad white
+	Sie möchten einen Allrad-Pickup mit kurzer Ladefläche finanzieren.
+de truck finance 4x4 short quad red
+	Sie möchten einen roten Allrad-Pickup mit kurzer Ladefläche finanzieren.
+de truck finance 4x4 short crew white
+	Sie möchten einen Allrad-Pickup mit kurzer Ladefläche und Mannschaftskabine finanzieren.
+de truck finance 4x4 short crew red
+	Sie möchten einen roten Allrad-Pickup mit kurzer Ladefläche und Mannschaftskabine finanzieren.
+de truck finance 4x4 long quad white
+	Sie möchten einen Allrad-Pickup finanzieren.
+de truck finance 4x4 long quad red
+	Sie möchten einen roten Allrad-Pickup finanzieren.
+de truck finance 4x4 long crew white
+	Sie möchten einen Allrad-Pickup mit Mannschaftskabine finanzieren.
+de truck finance 4x4 long crew red
+	Sie möchten einen roten Allrad-Pickup mit Mannschaftskabine finanzieren.
+de truck finance 4x2 short quad white
+	Sie möchten einen Pickup mit kurzer Ladefläche finanzieren.
+de truck finance 4x2 short quad red
+	Sie möchten einen roten Pickup mit kurzer Ladefläche finanzieren.
+de truck finance 4x2 short crew white
+	Sie möchten einen Pickup mit kurzer Ladefläche und Mannschaftskabine finanzieren.
+de truck finance 4x2 short crew red
+	Sie möchten einen roten Pickup mit kurzer Ladefläche und Mannschaftskabine finanzieren.
+de truck finance 4x2 long quad white
+	Sie möchten einen Pickup finanzieren.
+de truck finance 4x2 long quad red
+	Sie möchten einen roten Pickup finanzieren.
+de truck finance 4x2 long crew white
+	Sie möchten einen Pickup mit Mannschaftskabine finanzieren.
+de truck finance 4x2 long crew red
+	Sie möchten einen roten Pickup mit Mannschaftskabine finanzieren.
+de truck lease 4x4 short quad white
+	Sie möchten einen Allrad-Pickup mit kurzer Ladefläche leasen.
+de truck lease 4x4 short quad red
+	Sie möchten einen roten Allrad-Pickup mit kurzer Ladefläche leasen.
+de truck lease 4x4 short crew white
+	Sie möchten einen Allrad-Pickup mit kurzer Ladefläche und Mannschaftskabine leasen.
+de truck lease 4x4 short crew red
+	Sie möchten einen roten Allrad-Pickup mit kurzer Ladefläche und Mannschaftskabine leasen.
+de truck lease 4x4 long quad white
+	Sie möchten einen Allrad-Pickup leasen.
+de truck lease 4x4 long quad red
+	Sie möchten einen roten Allrad-Pickup leasen.
+de truck lease 4x4 long crew white
+	Sie möchten einen Allrad-Pickup mit Mannschaftskabine leasen.
+de truck lease 4x4 long crew red
+	Sie möchten einen roten Allrad-Pickup mit Mannschaftskabine leasen.
+de truck lease 4x2 short quad white
+	Sie möchten einen Pickup mit kurzer Ladefläche leasen.
+de truck lease 4x2 short quad red
+	Sie möchten einen roten Pickup mit kurzer Ladefläche leasen.
+de truck lease 4x2 short crew white
+	Sie möchten einen Pickup mit kurzer Ladefläche und Mannschaftskabine leasen.
+de truck lease 4x2 short crew red
+	Sie möchten einen roten Pickup mit kurzer Ladefläche und Mannschaftskabine leasen.
+de truck lease 4x2 long quad white
+	Sie möchten einen Pickup leasen.
+de truck lease 4x2 long quad red
+	Sie möchten einen roten Pickup leasen.
+de truck lease 4x2 long crew white
+	Sie möchten einen Pickup mit Mannschaftskabine leasen.
+de truck lease 4x2 long crew red
+	Sie möchten einen roten Pickup mit Mannschaftskabine leasen.
+de boat buy 4x2 short quad white
+	Sie möchten ein Boot mit kurzer Ladefläche und einem Innenbordmotor kaufen.
+de boat buy 4x2 short quad red
+	Sie möchten ein rotes Boot mit kurzer Ladefläche und einem Innenbordmotor kaufen.
+de boat buy 4x2 short crew white
+	Sie möchten ein Boot mit kurzer Ladefläche, Mannschaftskabine und einem Innenbordmotor kaufen.
+de boat buy 4x2 short crew red
+	Sie möchten ein rotes Boot mit kurzer Ladefläche, Mannschaftskabine und einem Innenbordmotor kaufen.
+de boat buy 4x2 long quad white
+	Sie möchten ein Boot mit einem Innenbordmotor kaufen.
+de boat buy 4x2 long quad red
+	Sie möchten ein rotes Boot mit einem Innenbordmotor kaufen.
+de boat buy 4x2 long crew white
+	Sie möchten ein Boot mit Mannschaftskabine und einem Innenbordmotor kaufen.
+de boat buy 4x2 long crew red
+	Sie möchten ein rotes Boot mit Mannschaftskabine und einem Innenbordmotor kaufen.
+de boat buy 4x2 short quad white
+	Sie möchten ein Boot mit kurzer Ladefläche kaufen.
+de boat buy 4x2 short quad red
+	Sie möchten ein rotes Boot mit kurzer Ladefläche kaufen.
+de boat buy 4x2 short crew white
+	Sie möchten ein Boot mit kurzer Ladefläche und Mannschaftskabine kaufen.
+de boat buy 4x2 short crew red
+	Sie möchten ein rotes Boot mit kurzer Ladefläche und Mannschaftskabine kaufen.
+de boat buy 4x2 long quad white
+	Sie möchten ein Boot kaufen.
+de boat buy 4x2 long quad red
+	Sie möchten ein rotes Boot kaufen.
+de boat buy 4x2 long crew white
+	Sie möchten ein Boot mit Mannschaftskabine kaufen.
+de boat buy 4x2 long crew red
+	Sie möchten ein rotes Boot mit Mannschaftskabine kaufen.
+de boat finance 4x2 short quad white
+	Sie möchten ein Boot mit kurzer Ladefläche und einem Innenbordmotor finanzieren.
+de boat finance 4x2 short quad red
+	Sie möchten ein rotes Boot mit kurzer Ladefläche und einem Innenbordmotor finanzieren.
+de boat finance 4x2 short crew white
+	Sie möchten ein Boot mit kurzer Ladefläche, Mannschaftskabine und einem Innenbordmotor finanzieren.
+de boat finance 4x2 short crew red
+	Sie möchten ein rotes Boot mit kurzer Ladefläche, Mannschaftskabine und einem Innenbordmotor finanzieren.
+de boat finance 4x2 long quad white
+	Sie möchten ein Boot mit einem Innenbordmotor finanzieren.
+de boat finance 4x2 long quad red
+	Sie möchten ein rotes Boot mit einem Innenbordmotor finanzieren.
+de boat finance 4x2 long crew white
+	Sie möchten ein Boot mit Mannschaftskabine und einem Innenbordmotor finanzieren.
+de boat finance 4x2 long crew red
+	Sie möchten ein rotes Boot mit Mannschaftskabine und einem Innenbordmotor finanzieren.
+de boat finance 4x2 short quad white
+	Sie möchten ein Boot mit kurzer Ladefläche finanzieren.
+de boat finance 4x2 short quad red
+	Sie möchten ein rotes Boot mit kurzer Ladefläche finanzieren.
+de boat finance 4x2 short crew white
+	Sie möchten ein Boot mit kurzer Ladefläche und Mannschaftskabine finanzieren.
+de boat finance 4x2 short crew red
+	Sie möchten ein rotes Boot mit kurzer Ladefläche und Mannschaftskabine finanzieren.
+de boat finance 4x2 long quad white
+	Sie möchten ein Boot finanzieren.
+de boat finance 4x2 long quad red
+	Sie möchten ein rotes Boot finanzieren.
+de boat finance 4x2 long crew white
+	Sie möchten ein Boot mit Mannschaftskabine finanzieren.
+de boat finance 4x2 long crew red
+	Sie möchten ein rotes Boot mit Mannschaftskabine finanzieren.
+de boat lease 4x2 short quad white
+	Sie möchten ein Boot mit kurzer Ladefläche und einem Innenbordmotor leasen.
+de boat lease 4x2 short quad red
+	Sie möchten ein rotes Boot mit kurzer Ladefläche und einem Innenbordmotor leasen.
+de boat lease 4x2 short crew white
+	Sie möchten ein Boot mit kurzer Ladefläche, Mannschaftskabine und einem Innenbordmotor leasen.
+de boat lease 4x2 short crew red
+	Sie möchten ein rotes Boot mit kurzer Ladefläche, Mannschaftskabine und einem Innenbordmotor leasen.
+de boat lease 4x2 long quad white
+	Sie möchten ein Boot mit einem Innenbordmotor leasen.
+de boat lease 4x2 long quad red
+	Sie möchten ein rotes Boot mit einem Innenbordmotor leasen.
+de boat lease 4x2 long crew white
+	Sie möchten ein Boot mit Mannschaftskabine und einem Innenbordmotor leasen.
+de boat lease 4x2 long crew red
+	Sie möchten ein rotes Boot mit Mannschaftskabine und einem Innenbordmotor leasen.
+de boat lease 4x2 short quad white
+	Sie möchten ein Boot mit kurzer Ladefläche leasen.
+de boat lease 4x2 short quad red
+	Sie möchten ein rotes Boot mit kurzer Ladefläche leasen.
+de boat lease 4x2 short crew white
+	Sie möchten ein Boot mit kurzer Ladefläche und Mannschaftskabine leasen.
+de boat lease 4x2 short crew red
+	Sie möchten ein rotes Boot mit kurzer Ladefläche und Mannschaftskabine leasen.
+de boat lease 4x2 long quad white
+	Sie möchten ein Boot leasen.
+de boat lease 4x2 long quad red
+	Sie möchten ein rotes Boot leasen.
+de boat lease 4x2 long crew white
+	Sie möchten ein Boot mit Mannschaftskabine leasen.
+de boat lease 4x2 long crew red
+	Sie möchten ein rotes Boot mit Mannschaftskabine leasen.
+de truck vehicle
+	Hallo. Was willst du? (Boot oder Pickup)
+de boat vehicle
+	Hallo. Was willst du? (Boot oder Pickup)
+de truck action
+	Sie wollen kaufen, finanzieren oder leasen?
+de boat action
+	Sie wollen kaufen, finanzieren oder leasen?
+de truck engine
+	Es ist standardmäßig mit einem Außenbordmotor ausgestattet. Möchten Sie einen Innenbordmotor?
+de boat engine
+	Es ist standardmäßig mit einem Außenbordmotor ausgestattet. Möchten Sie einen Innenbordmotor?
+de truck drivetrain
+	Es ist standardmäßig mit einem 4x2-Antrieb ausgestattet. Möchten Sie einen 4x4-Antrieb?
+de boat drivetrain
+	Es ist standardmäßig mit einem 4x2-Antrieb ausgestattet. Möchten Sie einen 4x4-Antrieb?
+de truck box
+	Es ist standardmäßig mit einer langen Ladefläche ausgestattet. Möchten Sie eine kurze Ladefläche?
+de boat box
+	Es ist standardmäßig mit einer langen Ladefläche ausgestattet. Möchten Sie eine kurze Ladefläche?
+de truck cabin
+	Es ist standardmäßig mit einer Viererkabine ausgestattet. Möchten Sie eine Mannschaftskabine?
+de boat cabin
+	Es ist standardmäßig mit einer Viererkabine ausgestattet. Möchten Sie eine Mannschaftskabine?
+de truck color
+	Die Standardfarbe ist weiß. Bevorzugen Sie einen roten Pickup?
+de boat color
+	Die Standardfarbe ist weiß. Bevorzugen Sie ein rotes Boot?

@@ -107,12 +107,15 @@ Multilingual extensions are showcased in the `multilingual/` folder.
 It is a budget modifications commentary generator to go along an
 existing Web site (http://budgetplateau.com, unrelated to the author).
 
-The ste folder contains Simple Technical English Linearizer built
+The `ste` folder contains Simple Technical English Linearizer built
 duing the first NLG hackathon at INLG'16.
 
-The webnlg contains an attempt at the WebNLG 2017 challenge
+The `webnlg` contains an attempt at the WebNLG 2017 challenge
 (unsubmitted).
 
-The chatbot folder contains a small chatbot integration example
+The `chatbot` folder contains a small chatbot integration example
 presented at the Vancouver PHP Meetup in 2019.
 
+The `german` folder contains an expansion of the chatbot to the German
+language. It handles case and gender agreements (including weak and
+strong endings for adjectives).

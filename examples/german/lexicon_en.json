@@ -1,11 +1,21 @@
-{ "greet"       : { "class" : "phrase", "string" : "Hello there. Ask me to sell you a pickup truck." }
+{ "greet"       : { "class" : "phrase", "string" : "Hello there." }
+, "reset"       : { "class" : "phrase", "string" : "Say \"hello\"" }
+, "q_vehicle"   : { "class" : "phrase", "mixed"  : [
+                                                   "What is it that interests you? (", { "slot" : "options" }, ")" ] }
+, "q_action"    : { "class" : "phrase", "mixed"  : [
+                                                   "Do you want to ", { "slot" : "options" }, "?" ] }
+, "standard"    : { "class" : "phrase", "mixed"  : [
+                                                   "It comes standard ", { "slot" : "option" }, "." ] }
+, "altern"      : { "class" : "phrase", "mixed"  : [
+                                                   "Do you want it ", { "slot" : "option" }, "?" ] }
+, "standardc"   : { "class" : "phrase", "mixed"  : [
+                                                   "It comes standard in ", { "slot" : "color" }, " color." ] }
+, "alternc"     : { "class" : "phrase", "mixed"  : [
+                                                   "Do you want ", { "slot" : "colorobj" }, "?" ] }
+, "standardd"    : { "class" : "phrase", "mixed"  : [
+                                                   "It comes standard as ", { "slot" : "option" }, "." ] }
 , "config"      : { "class" : "phrase", "mixed"  : [
                                                    "You want to ", { "slot" : "action" },  " ", { "slot" : "configured" }, "." ] }
-, "actionq"     : { "class" : "phrase", "string" : "Do you want to buy, finance or lease?" }
-, "reset"       : { "class" : "phrase", "string" : "Say \"hello\"" }
-, "drivetrainq" : { "class" : "phrase", "string" : "It comes standard with 4x2 drivetrain, do you want a 4x4 one?" }
-, "boxq"        : { "class" : "phrase", "string" : "It comes standard with a long box (6'4\"). Do you want a short box (5'7\")?" }
-, "cabinq"      : { "class" : "phrase", "string" : "Do you want a quad or crew cabin? The standard is the quad cabin." }
 , "yes"         : { "class" : "answer", "string" : "yes" }
 , "no"          : { "class" : "answer", "string" : "no" }
 , "buy"         : { "class" : "answer", "string" : "buy" }
@@ -15,4 +25,17 @@
 , "short"       : { "class" : "answer", "string" : "short" }
 , "quad"        : { "class" : "answer", "string" : "quad" }
 , "crew"        : { "class" : "answer", "string" : "crew" }
+, "red"         : { "class" : "adj",    "string" : "red" }  
+, "white"       : { "class" : "adj",    "string" : "white" }  
+, "box"         : { "class" : "noun",   "string" : "box" }
+, "truck"       : { "class" : "noun",   "string" : "pickup truck" }
+, "boat"        : { "class" : "noun",   "string" : "boat" }
+, "inboard"     : { "class" : "phrase", "string" : "inboard engine" }
+, "outboard"    : { "class" : "phrase", "string" : "outboard engine" }
+, "or"          : { "class" : "conj",   "string" : "or" }
+, "and"         : { "class" : "conj",   "string" : "and" }
+, "4x2"         : { "class" : "phrase", "string" : "2WD" }
+, "4x4"         : { "class" : "phrase", "string" : "four-wheel drive" }
+, "red"         : { "class" : "adj",    "string" : "red" }
+, "white"       : { "class" : "adj",    "string" : "white" }
 }

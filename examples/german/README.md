@@ -1,4 +1,4 @@
-# Botman NLGen Example
+# German NLGen Example
 
 A small example for the S&S Media article.
 
@@ -8,7 +8,7 @@ composer install
 
 php -S 127.0.0.1:8080
 
-open http://127.0.0.1:8080 on your browser.
+open http://127.0.0.1:8080 on your browser. (You can also say 'hello' to run the dialog in English.)
 
 Note this example uses NLGen from packagist, unlike the other examples.
 
@@ -16,24 +16,38 @@ Note this example uses NLGen from packagist, unlike the other examples.
 Run php run_all.php to obtain all the possible strings that can be generated (see generated.txt).
 
 
-Example dialog:
+## About the code
 
-- Botman: Sag ,,hallo''
-- User: hallo
+This is one of the most complex examples of NLGen to date, as it
+handles case and gender agreements (including weak and strong endings
+for adjectives).
 
-- Botman: Hallo. Bitten Sie mich, Ihnen einen Pick-up zu verkaufen.
-- User: Verkaufe mir einen Pick-up.
+The code was written following German grammatic information from
+various online sources but the author doesn't speak any German. If you
+can speak German and see errors, please file a bug report.
 
-- Botman: Sie wollen kaufen, finanzieren oder leasen?
-- User: kaufen
 
-- Botman: Es ist standardmäßig mit einem 4x2-Antrieb ausgestattet. Möchten Sie einen 4x4-Antrieb?
-- User: nein
+## Example dialog
 
-- Botman: Es wird standardmäßig mit einer langen Ladefläche (6'4") geliefert. Möchten Sie Ladefläche eine kurze (5'7")?
-- User: ja
+* Botman: Sag ,,hallo''
+* User: hallo
 
-- Botman: Möchten Sie eine Viererkabine oder Mannschaftskabine? Der Standard ist die Viererkabine.
-- User: Viererkabine
+* Botman: Hallo. Was willst du? (Boot oder Pickup)
+* User: boot
 
-- Botman: Sie möchten einen Pick-up mit kurze Ladefläche kaufen.
+* Botman: Sie wollen kaufen, finanzieren oder leasen?
+* User: kaufen
+
+* Botman: Es ist standardmäßig mit einem Außenbordmotor ausgestattet. Möchten Sie einen Innenbordmotor?
+* User: ja
+
+* Botman: Es ist standardmäßig mit einer langen Ladefläche ausgestattet. Möchten Sie eine kurze Ladefläche?
+* User: ja
+
+* Botman: Es ist standardmäßig mit einer Viererkabine ausgestattet. Möchten Sie eine Mannschaftskabine?
+* User: ja
+
+* Botman: Die Standardfarbe ist weiß. Bevorzugen Sie ein rotes Boot?
+* User: ja
+
+* Botman: Sie möchten ein rotes Boot mit kurzer Ladefläche, Mannschaftskabine und einem Innenbordmotor kaufen.
