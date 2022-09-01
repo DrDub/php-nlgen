@@ -1,9 +1,9 @@
 { "greet"       : { "class" : "phrase", "string" : "Hallo." }
 , "reset"       : { "class" : "phrase", "string" : "Sag ,,hallo''" }
 , "q_vehicle"   : { "class" : "phrase", "mixed"  : [
-                                                   "Was willst du? (", { "slot" : "options" }, ")" ] }
+                                                   "Was möchten Sie? (", { "slot" : "options" }, ")" ] }
 , "q_action"    : { "class" : "phrase", "mixed"  : [
-                                                   "Sie wollen ", { "slot" : "options" }, "?" ] }
+                                                   "Wollen Sie ", { "slot" : "options" }, "?" ] }
 , "standard"    : { "class" : "phrase", "mixed"  : [
                                                    "Es ist standardmäßig mit ", { "slot" : "option" }, " ausgestattet." ] }
 , "altern"      : { "class" : "phrase", "mixed"  : [
