@@ -68,7 +68,7 @@ class MeetingBlockMessage {
 
         if($this->startTime == $other->startTime) {
             if($this->endTime == $other->endTime) {
-                return $other;
+                return [ $other ];
             }
         }else{
             $result[] = new MeetingBlockMessage($this->startTime, $other->startTime, $this->dows, $this->isFree, $this->purity, false);
@@ -106,7 +106,7 @@ class MeetingBlockMessage {
         }
         
         return ($this->isFree?"FREE([":"BUSY([").implode(",",$dowS)."]=".sprintf("%d:%02d",$this->startTime[0],$this->startTime[1])."-".
-                                               sprintf("%d:%02d", $this->endTime[0],$this->endTime[1])." ".sprintf("%3d",$this->purity*100).
+                                               sprintf("%d:%02d", $this->endTime[0],$this->endTime[1])." ".sprintf("%3d%%",$this->purity*100).
                                                ($this->fullRange?" fullrange":"").")";
     }
 }

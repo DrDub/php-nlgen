@@ -5,6 +5,7 @@ $loader = require __DIR__ . '/vendor/autoload.php';
 use NLGen\Grammars\Availability\AvailabilityGrammar;
 
 mt_srand(5);
+mt_srand(8);
 
 $granularities = [ 5, 10, 15, 30, 60 ];
 $starts = [ 8, 9 ];
@@ -59,6 +60,8 @@ foreach($dows as $dow) {
     $ranges[$dow] = [ [$start, 0], [$end, 0] ];
 }
 
+echo "Granurality: $gran\n";
+echo "Busyness: $busyness\n";
 echo "Ranges: $start-$end\n";
 
 $dow = 0;
@@ -79,10 +82,10 @@ $lexicon = file_get_contents(dirname($path)."/lexicon_en.json");
 
 $gen = AvailabilityGrammar::NewSealed('', $lexicon);
 
-foreach(range(0,3) as $coarseness) {
+foreach(range(0,3) as $coarseness) {    
     echo AvailabilityGrammar::COARSENESS[$coarseness].":\n\n";
-
-    echo $gen->generateAvailability($busyList, $ranges, $coarseness, null);
+    $text = $gen->generateAvailability($busyList, $ranges, $coarseness, null);
+    echo strtoupper(AvailabilityGrammar::COARSENESS[$coarseness])." OUTPUT: $text\n";
     echo "\n------\n";
 }
 

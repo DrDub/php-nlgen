@@ -1,5 +1,6 @@
 {
     "all_week":"all week"
+    ,"all_day":"all day"
     ,"dow0":"Monday"
     ,"dow1":"Tuesday"
     ,"dow2":"Wednesday"
@@ -23,8 +24,10 @@
             ,{"string":"are","number":"pl" } ]
     ,"mostly":"mostly"
     ,"somewhat":"somewhat"
-    ,"free":[{ "string": "free"} , {"string":"available"}]
-    ,"busy":[{"string":"busy"},{"string":"unavailable"},{"string":"taken"},{"string":"committed"}]
+    ,"free_choice":[{ "string": "free"} , {"string":"available"}]
+    ,"busy_choice":[{"string":"busy"},{"string":"unavailable"},{"string":"taken"},{"string":"committed"}]
+    ,"free":{ "string": "free"}
+    ,"busy":{"string":"busy"}
     ,"rest_free":"the rest is free"
     ,"rest_busy":"the rest is busy"
 }

@@ -37,7 +37,7 @@ class AvailabilityGrammar extends Generator {
     public const SPECIFIC = 2;
     public const EXACT    = 3;
 
-    public const COARSENESS = [ "succint", "base", "specific", "exact" ];
+    public const COARSENESS = [ "succinct", "base", "specific", "exact" ];
 
     // generate availability, busyList is an array of triples of int (dow=day-of-the-week),
     // start-time (pair int for hour, minute) and end-time (pair of ints),
@@ -57,45 +57,77 @@ class AvailabilityGrammar extends Generator {
         
         $table = $this->buildTable($busyList, $ranges);
         //print_r($table);
-        $text = "";
-        $sem = [];
+        $texts = [];
         while($table) {
-            $same_days_free     = $this->analyzeDays($table, $coarseness, true);
-            $same_days_busy     = $this->analyzeDays($table, $coarseness, false);
-            $same_segments_free = $this->analyzeSegments($table, $coarseness, true);
-            $same_segments_busy = $this->analyzeSegments($table, $coarseness, false);
+            $same_days_free     = $this->analyzeDays($table,     $ranges, $coarseness, true);
+            $same_days_busy     = $this->analyzeDays($table,     $ranges, $coarseness, false);
+            $same_segments_free = $this->analyzeSegments($table, $ranges, $coarseness, true);
+            $same_segments_busy = $this->analyzeSegments($table, $ranges, $coarseness, false);
 
             // find message with larger number of minutes
             $max_mins = -1;
-            $focused = null;
+            $candidates = [];
             // prefer segments and free lists
             foreach([ $same_segments_free, $same_segments_busy, $same_days_free, $same_days_busy ] as $messages){
                 foreach($messages as $m) {
                     $mins = $m->minutes();
                     if($mins > $max_mins) {
                         $max_mins = $mins;
-                        $focused = $m;
+                        $candidates = [ $m ];
+                    }elseif($mins == $max_mins) {
+                        $candidates[] = $m;
                     }
                 }
             }
-            if($focused) {
+            if($candidates) {
+                $min_blocks = 999;
+                $focused = null;
+                foreach($candidates as $candidate){
+                    $nbl = count($candidate->blocks);
+                    if($nbl < $min_blocks){
+                        $focused = $candidate;
+                        $min_blocks = $nbl;
+                    }
+                }
+
+                
+                $thisText = $this->focusedMessage($focused);
+                //echo "GENERATED: $thisText\n";
+                $texts[] = [ $focused->dows, $thisText, $focused->semantics() ];
+                $table = $this->removeFocused($focused, $table);
+            }else{
+                $text .= "ERROR: " . tableToString($table);
+                print_r([ $same_segments_free, $same_segments_busy, $same_days_free, $same_days_busy ]);
+                break;
+            }
+        }
+        $text="";
+        $sem=[];
+        foreach($ranges as $dow=>$x){
+            $found = null;
+
+            foreach($texts as $idx=>$e){
+                foreach($e[0] as $odow){
+                    if($odow == $dow){
+                        $found = $e;
+                        unset($texts[$idx]);
+                        break;
+                    }
+                }
+                if($found){
+                    break;
+                }
+            }
+            if($found){
                 if($text) {
                     $text .= " ";
                 }
                 $start = strlen($text);
-                $thisText = $this->focusedMessage($focused);
-                //echo "$thisText\n";
-                $text .= $thisText;
-                $sem = $focused->semantics();
+                $text .= $e[1];
                 $end = strlen($text);
-                $sem['offsetStart'] = $start;
-                $sem['offsetEnd'] = $end;
-
-                $table = $this->removeFocused($focused, $table);
-            }else{
-                $text .= "ERROR: " . $this->tableToString($table);
-                print_r([ $same_segments_free, $same_segments_busy, $same_days_free, $same_days_busy ]);
-                break;
+                $e[2]['offsetStart'] = $start;
+                $e[2]['offsetEnd'] = $end;
+                $sem[]=$e[2];
             }
         }
         return [ 'text' => $text, 'sem' => $sem ];
@@ -117,48 +149,68 @@ class AvailabilityGrammar extends Generator {
                     $this->purity($block->purity),
                     $this->lex->string_for_id($block->isFree?"free":"busy")
                 );
-                if(! $block->fullRange) {
+                if($block->fullRange) {
+                    $this->addWS($text, $this->lex->string_for_id("all_day"));
+                }else{
                     $this->addWS($text, $this->timeRange($block->startTime, $block->endTime));
                 }
             }else{
-                $strs = [];
+                $purities = [];
                 foreach($focused->blocks as $block) {
-                    $strs[] = $this->block($block);
+                    $purities[$this->purity($block->purity)] = 1;
+                }
+                $strs = [];
+                if(count($purities) > 1) {
+                    foreach($focused->blocks as $block) {
+                        $strs[] = $this->block($block);
+                    }
+                }else{
+                    $this->addWS(
+                        $text,
+                        array_keys($purities)[0],
+                        $this->lex->string_for_id($block->isFree?"free":"busy")
+                    );
+                    foreach($focused->blocks as $block) {
+                        $strs[] = $this->timeRange($block->startTime, $block->endTime);
+                    }
                 }
                 $strs[count($strs)-1] = "and " . $strs[count($strs)-1];
-                $text .= " " . implode(", ", $strs).";"; // Oxford comma
-                $this->addWS($text, $this->lex->string_for_id($block->isFree?"rest_busy":"rest_free"));
+                $this->addWS(
+                    $text,
+                    implode(", ", $strs).";", // Oxford comma
+                    $this->lex->string_for_id($block->isFree?"rest_busy":"rest_free")
+                );
             }
         }
         return "$text.";
     }
 
     protected function purity($purity) {
+        $purityStr = "{".sprintf("%1.2f",$purity)."}";
         if($purity > 0.95){
+            //return $purityStr;
             return "";
         }elseif($purity > 0.75){
-            return $this->lex->string_for_id("mostly");
+            return $this->lex->string_for_id("mostly"); //." $purityStr";
         }else{
-            return $this->lex->string_for_id("somewhat");
+            return $this->lex->string_for_id("somewhat"); //." $purityStr";
         }
     }
 
     protected function block($block) {
         $text = $this->timeRange($block->startTime, $block->endTime);
-        if($block->purity > 0.95){
-            // perfect
-        }elseif($block->purity > 0.75){
-            $text .= " ".$this->lex->string_for_id("mostly");
-        }else{
-            $text .= " ".$this->lex->string_for_id("somewhat");
-        }
-        $text .= " ".$this->lex->string_for_id($block->isFree?"free":"busy");
+        $this->addWS(
+            $text,
+            $this->purity($block->purity),
+            $this->lex->string_for_id($block->isFree?"free":"busy")
+        );
         return [ 'text'=>$text, 'sem' => $block->semantics() ];
     }
     
     protected function dows($dows){
         sort($dows);
-        if(count($dows) >= 5) {
+        $cdows = count($dows);
+        if($cdows >= 5 && $dows == range(0,$cdows-1)) {
             return [ 'text'=> $this->lex->string_for_id("all_week"),
                      'sem' => ['number' => 'sg'] ];
         }
@@ -166,11 +218,11 @@ class AvailabilityGrammar extends Generator {
         foreach($dows as $dow) {
             $elems[] = $this->lex->string_for_id("dow".$dow);
         }
-        if(count($dows) == 1){
+        if($cdows == 1){
             return [ 'text' => $elems[0], 'sem' => [ 'number' => 'sg' ] ];
         }
         $elems[count($elems)-1] = $this->lex->string_for_id("and"). " " .$elems[count($elems)-1];
-        return [ 'text' => count($dows) == 2 ? implode(" ", $elems): implode(", ", $elems),
+        return [ 'text' => $cdows == 2 ? implode(" ", $elems): implode(", ", $elems),
                  'sem' => [ 'number' => 'pl' ] ];
     }
 
@@ -258,23 +310,31 @@ class AvailabilityGrammar extends Generator {
             echo"\n";*/
             array_splice($table[$dow], $found, 1, $splitted);
         }
-        //echo "Built:\n" . $this->tableToString($table)."\n";
+        // check for full busy days
+        foreach($table as $dow=>$entries){
+            if(count($entries)==1 && $entries[0]->startTime == $ranges[$dow][0] &&  $entries[0]->endTime == $ranges[$dow][1]){
+                $entries[0]->fullRange = true;
+            }
+        }
+        //echo "Built:\n" . tableToString($table)."\n";
         return $table;
     }
 
     //////////// analysis functions
 
-    function analyzeDays($table, $coarseness, $isFree) {
+    function analyzeDays($table, $ranges, $coarseness, $isFree) {
         $distilled=[];
         foreach($table as $dow=>$entries) {
-            $distilled[$dow] = $this->distillDay($dow, $entries, $coarseness, $isFree);
+            $distilled[$dow] = $this->distillDay($dow, $ranges[$dow][0], $ranges[$dow][1], $entries, $coarseness, $isFree);
         }
         $result=[];
         while($distilled){
-            $groupFocused = array_pop($distilled);
+            $groupFocused = array_shift($distilled);
+            //echo "pop ".$this->dows($groupFocused->dows)."\n";
             $cluster = [ $groupFocused ];
             
             foreach($distilled as $focused){
+                //echo "Comparing with " . $this->dows($focused->dows)."\n";
                 [ $compatible, $newGroupFocused ] = $this->compatible($groupFocused, $focused, $cluster, $coarseness);
                 if($compatible) {
                     $groupFocused = $newGroupFocused;
@@ -289,14 +349,12 @@ class AvailabilityGrammar extends Generator {
         return $result;
     }
 
-    function analyzeSegments($table, $coarseness, $isFree) {
+    function analyzeSegments($table, $ranges, $coarseness, $isFree) {
         //TODO
         return [];
     }
 
-    function distillDay(int $dow, array $entries, int $coarseness, bool $isFree) : FocusedSegmentMessage {
-        $startTime = $entries[0]->startTime;
-        $endTime = $entries[count($entries)-1]->endTime;
+    function distillDay(int $dow, array $startTime, array $endTime, array $entries, int $coarseness, bool $isFree) : FocusedSegmentMessage {
         $blocks=[];
         $previous = null;
         $gap = 0;
@@ -320,7 +378,10 @@ class AvailabilityGrammar extends Generator {
                                $this->coarseMinDiff(minDiff($block->endTime, $endTime), $coarseness);
                     $new = new MeetingBlockMessage($previous->startTime, $block->endTime, [ $dow ], $isFree, 0, $fullRange);
                     $covered = $new->minutes();
-                    $new->purity = $covered / ($covered0 + $covered1);
+                    //echo "Previous: " . $previous . " mins=$covered0\n";
+                    //echo "Block: " . $block . " mins=$covered1\n";
+                    $new->purity = ($covered0 + $covered1) / $covered;
+                    //echo "Combined: " .$new. " mins={$new->minutes()}\n";
                     $previous = $new;
                     $gap = 0;
                 }else{
@@ -332,6 +393,12 @@ class AvailabilityGrammar extends Generator {
         if($previous){
             $blocks[] = $previous;
         }
+        /*
+        echo "Dow: $dow, distilled (".count($blocks)."):\n";
+        foreach($blocks as $block){
+            echo "\t$block\n";
+        }
+        */
         return new FocusedSegmentMessage($startTime, $endTime, [ $dow ], true, $blocks);
     }
 
@@ -343,6 +410,8 @@ class AvailabilityGrammar extends Generator {
         // check the new member is close enough to all elements in the cluster
         foreach($cluster as $focused){
             if($this->incompatible($other->blocks, $focused->blocks, $coarseness)) {
+                //echo count($other->blocks)." " . $this->dows($other->dows)." incompatible with " .
+                //                          count($focused->blocks)." " .$this->dows($focused->dows)."\n";
                 return [ false, null ];
             }
         }
@@ -353,7 +422,7 @@ class AvailabilityGrammar extends Generator {
         foreach($current->blocks as $block) {
             // adjust purity based on $other blocks
             $thisBlockAsSet =  $this->blocksToSet([ $block ]);
-            $intersection = $this->intersection($thisBlockAsSet, $allOtherBlocksAsSet);
+            $intersection = intersection($thisBlockAsSet, $allOtherBlocksAsSet);
             $size = count($thisBlockAsSet);
             $purity = $size > 0 ? $intersection * 1.0 / $size : 1.0;
             $newPurity = min($purity, $block->purity);
@@ -368,9 +437,15 @@ class AvailabilityGrammar extends Generator {
         $bl1s = $this->blocksToSet($blocks1);
         $bl2s = $this->blocksToSet($blocks2);
 
-        $intersect = $this->intersection($bl1s, $bl2s);
+        //echo "bl1s ".count($blocks1)."=".implode(",", array_keys($bl1s))."\n";
+        //echo "bl2s ".count($blocks2)."=".implode(",", array_keys($bl2s))."\n";
+
+
+        $intersect = intersection($bl1s, $bl2s);
         $union = count($bl1s) + count($bl2s) - $intersect;
         $jaccard = $union == 0 ? 1.0 : $intersect * 1.0 / $union;
+
+        //echo "jaccard=$jaccard\n";
 
         switch ($coarseness) {
         case self::EXACT: return $jaccard < 1.0; break;
@@ -386,7 +461,7 @@ class AvailabilityGrammar extends Generator {
         foreach($blocks as $block) {
             $time = $block->startTime[0];
             $time_m = $block->startTime[1];
-            while($time != $block->endTime[0] && $time_m >= $block->endTime[1]){
+            while(!($time == $block->endTime[0] && $time_m >= $block->endTime[1])){
                 $next = $time;
                 $next_m = $time_m + 5;
                 if($next_m >= 60) {
@@ -402,21 +477,11 @@ class AvailabilityGrammar extends Generator {
         return $result;
     }
 
-    function intersection(array $a, array $b) : int {
-        $result = 0;
-        foreach($a as $t => $x) {
-            if(isset($a[$t])) {
-                $result++;
-            }
-        }
-        return $result;
-    }
-
     function removeFocused(FocusedSegmentMessage $focused, array $table) : array {
         $block = new MeetingBlockMessage($focused->startTime, $focused->endTime, $focused->dows, false, 1.0, $focused->fullRange);
 
         //echo "Removing: " . strval($block)."\n";
-        //echo "Before:\n".$this->tableToString($table);
+        //echo "Before:\n".tableToString($table);
         
         foreach($focused->dows as $dow) {
             $current = $table[$dow];
@@ -458,23 +523,8 @@ class AvailabilityGrammar extends Generator {
                 unset($table[$dow]);
             }
         }
-        //echo "\n\nAfter:\n".$this->tableToString($table)."\n";
+        //echo "\n\nAfter:\n".tableToString($table)."\n";
         return $table;
-    }
-
-    function tableToString(array $table) : string {
-        $result = "";
-        foreach($table as $dow => $entries) {
-            if($result) {
-                $result .= "\n";
-            }
-            $es = [];
-            foreach($entries as $entry){
-                $es[] = strval($entry);
-            }
-            $result.="$dow: ".implode("; ", $es);
-        }
-        return $result;
     }
 
     // true -> diff is negligible at these coarse level
