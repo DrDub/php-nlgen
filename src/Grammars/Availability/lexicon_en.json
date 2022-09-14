@@ -1,0 +1,29 @@
+{
+    "all_week":"all week"
+    ,"dow0":"Monday"
+    ,"dow1":"Tuesday"
+    ,"dow2":"Wednesday"
+    ,"dow3":"Thursday"
+    ,"dow4":"Friday"
+    ,"dow5":"Saturday"
+    ,"dow6":"Sunday"
+    ,"and":"and"
+    ,"morning":"morning"
+    ,"afternoon":"afternoon"
+    ,"mid_morning":"mid-morning"
+    ,"mid_afternoon":"mid-afternoon"
+    ,"early_morning":"early morning"
+    ,"late_afternoon":"late afternoon"
+    ,"from":"from"
+    ,"to":"to"
+    ,"around":"around"
+    ,"late":"late"
+    ,"is":"is"
+    ,"mostly":"mostly"
+    ,"somewhat":"somewhat"
+    ,"free":[{ "string": "free"} , {"string":"available"}]
+    ,"busy":[{"string":"busy"},{"string":"unavailable"},{"string":"taken"},{"string":"committed"}]
+    ,"rest_free":"the rest is free"
+    ,"rest_busy":"the rest is busy"
+}
+
