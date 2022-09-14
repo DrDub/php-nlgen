@@ -163,6 +163,17 @@ class Lexicon {
   }
 
   # the rest doesn't need to be overriden in subclasses
+  public function query_string($query) {
+    $frames = $this->query($query);
+    if($frames) {
+      if(isset($frames[0]['string'])) {
+        return $frames[0]['string'];
+      }else{
+        return "NOT FOUND string: '".print_r($query, true)."'";
+      }
+    }
+    return "NOT FOUND: '".print_r($query, true)."'";
+  }
 
   public function string_for_id($id,$data=array()){
     $frame = $this->find($id);
