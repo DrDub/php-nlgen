@@ -52,6 +52,9 @@ class Lexicon {
     }
 
     foreach ($array as $id => $value) {
+      if(is_string($value)) {
+        $value = [ 'string' => $value ];
+      }
       if(Lexicon::has_multiple($value)){
         # copy non-array entries from $frame
         $new_value = array();
@@ -192,7 +195,7 @@ class Lexicon {
 
 
   public static function has_multiple($frame){
-    return isset($frame[0]);
+    return isset($frame[0]) && !is_string($frame);
   }
 
   public static function get_random($frame){
