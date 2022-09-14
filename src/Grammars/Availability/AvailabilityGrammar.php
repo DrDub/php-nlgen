@@ -25,6 +25,8 @@
 
 namespace NLGen\Grammars\Availability;
 
+require_once __DIR__ . "/util.php";
+
 use NLGen\Generator;
 
 class AvailabilityGrammar extends Generator {
@@ -76,20 +78,25 @@ class AvailabilityGrammar extends Generator {
                     }
                 }
             }
+            if($focused) {
+                if($text) {
+                    $text .= " ";
+                }
+                $start = strlen($text);
+                $thisText = $this->focusedMessage($focused);
+                //echo "$thisText\n";
+                $text .= $thisText;
+                $sem = $focused->semantics();
+                $end = strlen($text);
+                $sem['offsetStart'] = $start;
+                $sem['offsetEnd'] = $end;
 
-            if($text) {
-                $text .= " ";
+                $table = $this->removeFocused($focused, $table);
+            }else{
+                $text .= "ERROR: " . $this->tableToString($table);
+                print_r([ $same_segments_free, $same_segments_busy, $same_days_free, $same_days_busy ]);
+                break;
             }
-            $start = strlen($text);
-            $thisText = $this->focusedMessage($focused);
-            echo "$thisText\n";
-            $text .= $thisText;
-            $sem = $focused->semantics();
-            $end = strlen($text);
-            $sem['offsetStart'] = $start;
-            $sem['offsetEnd'] = $end;
-
-            $table = $this->removeFocused($focused, $table); 
         }
         return [ 'text' => $text, 'sem' => $sem ];
     }
@@ -100,16 +107,44 @@ class AvailabilityGrammar extends Generator {
         $text = "";
         if($focused->fullRange) {
             // day-centered
-            $text="for days: " . $this->dows($focused->dows).";";
-            foreach($focused->blocks as $block) {
-                $text.= " " . $this->block($block);
+            $text=ucfirst($this->dows($focused->dows));
+            $this->addWS($text,
+                         $this->lex->query_string(['id'=>'be','number'=>$this->current_semantics()['dows']['number']]));
+            if(count($focused->blocks) == 1) {
+                $block = $focused->blocks[0];
+                $this->addWS(
+                    $text,
+                    $this->purity($block->purity),
+                    $this->lex->string_for_id($block->isFree?"free":"busy")
+                );
+                if(! $block->fullRange) {
+                    $this->addWS($text, $this->timeRange($block->startTime, $block->endTime));
+                }
+            }else{
+                $strs = [];
+                foreach($focused->blocks as $block) {
+                    $strs[] = $this->block($block);
+                }
+                $strs[count($strs)-1] = "and " . $strs[count($strs)-1];
+                $text .= " " . implode(", ", $strs).";"; // Oxford comma
+                $this->addWS($text, $this->lex->string_for_id($block->isFree?"rest_busy":"rest_free"));
             }
         }
-        return $text;
+        return "$text.";
+    }
+
+    protected function purity($purity) {
+        if($purity > 0.95){
+            return "";
+        }elseif($purity > 0.75){
+            return $this->lex->string_for_id("mostly");
+        }else{
+            return $this->lex->string_for_id("somewhat");
+        }
     }
 
     protected function block($block) {
-        $text = $this->timeRange($block->startTime, $block->endTime)." ".$this->lex->string_for_id("is");
+        $text = $this->timeRange($block->startTime, $block->endTime);
         if($block->purity > 0.95){
             // perfect
         }elseif($block->purity > 0.75){
@@ -118,27 +153,25 @@ class AvailabilityGrammar extends Generator {
             $text .= " ".$this->lex->string_for_id("somewhat");
         }
         $text .= " ".$this->lex->string_for_id($block->isFree?"free":"busy");
-        $text .= " ".$this->lex->string_for_id($block->isFree?"rest_busy":"rest_free");
         return [ 'text'=>$text, 'sem' => $block->semantics() ];
     }
     
     protected function dows($dows){
+        sort($dows);
         if(count($dows) >= 5) {
-            return $this->lex->string_for_id("all_week");
+            return [ 'text'=> $this->lex->string_for_id("all_week"),
+                     'sem' => ['number' => 'sg'] ];
         }
         $elems=[];
         foreach($dows as $dow) {
             $elems[] = $this->lex->string_for_id("dow".$dow);
         }
         if(count($dows) == 1){
-            return $elems[0];
+            return [ 'text' => $elems[0], 'sem' => [ 'number' => 'sg' ] ];
         }
         $elems[count($elems)-1] = $this->lex->string_for_id("and"). " " .$elems[count($elems)-1];
-        if(count($dows) == 2){
-            return implode(" ", $elems);
-        }else{
-            return implode(", ", $elems); // oxford comma
-        }
+        return [ 'text' => count($dows) == 2 ? implode(" ", $elems): implode(", ", $elems),
+                 'sem' => [ 'number' => 'pl' ] ];
     }
 
     protected function timeRange($start, $end) {
@@ -176,7 +209,7 @@ class AvailabilityGrammar extends Generator {
             }elseif($hour[1] > 5 && $hour[1] < 25) {
                 $text .= $this->lex->string_for_id("around")." ";
             }elseif($hour[1] >= 25 && $hour[1] <= 35) {
-                $text .= $this->lex->string_for_id("half past")." ";
+                $text .= $this->lex->string_for_id("half_past")." ";
             }else{
                 $text .= $this->lex->string_for_id("late")." ";
             }
@@ -272,13 +305,7 @@ class AvailabilityGrammar extends Generator {
                 if($previous) {
                     // check if the gap can be absorbed due to coarseness
                     $gap += $block->minutes();
-                    $absorbed = false;
-                    switch ($coarseness) {
-                    case self::EXACT: $absorbed = $gap <= 5; break;
-                    case self::SPECIFIC: $absorbed = $gap <= 15; break;
-                    case self::BASE: $absorbed = $gap <= 30; break;
-                    case self::SUCCINCT: $absorbed = $gap <= 60; break;
-                    }
+                    $absorbed = $this->coarseMinDiff($gap, $coarseness);
                     if(! $absorbed) {
                         $blocks[] = $previous;
                         $previous = null;
@@ -289,8 +316,9 @@ class AvailabilityGrammar extends Generator {
                 if($previous){
                     $covered0 = $previous->minutes() * $previous->purity;
                     $covered1 = $block->minutes() * $block->purity;
-                    $new = new MeetingBlockMessage($previous->startTime, $block->endTime, [ $dow ], $isFree, 0,
-                                                   $previous->startTime == $startTime && $block->endTime== $endTime);
+                    $fullRange = $this->coarseMinDiff(minDiff($previous->startTime, $startTime), $coarseness) &&
+                               $this->coarseMinDiff(minDiff($block->endTime, $endTime), $coarseness);
+                    $new = new MeetingBlockMessage($previous->startTime, $block->endTime, [ $dow ], $isFree, 0, $fullRange);
                     $covered = $new->minutes();
                     $new->purity = $covered / ($covered0 + $covered1);
                     $previous = $new;
@@ -448,4 +476,15 @@ class AvailabilityGrammar extends Generator {
         }
         return $result;
     }
+
+    // true -> diff is negligible at these coarse level
+    function coarseMinDiff($diff, $coarseness) : bool {
+        switch ($coarseness) {
+        case self::EXACT:    return $diff <=  5; break;
+        case self::SPECIFIC: return $diff <= 15; break;
+        case self::BASE:     return $diff <= 30; break;
+        case self::SUCCINCT: return $diff <= 60; break;
+        }
+    }
+
 }

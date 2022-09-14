@@ -25,6 +25,8 @@
 
 namespace NLGen\Grammars\Availability;
 
+require_once __DIR__ . "/util.php";
+
 class MeetingBlockMessage {
 
     public array $startTime; // array int (hour), int (minute)
@@ -94,7 +96,7 @@ class MeetingBlockMessage {
     }
 
     public function minutes() : int {
-        return ($this->endTime[0] - $this->startTime[0] - $this->startTime[1] + $this->endTime[1]) * count($this->dows);
+        return minDiff($this->startTime, $this->endTime) * count($this->dows);
     }
 
     public function __toString() : string {

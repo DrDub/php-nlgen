@@ -59,6 +59,8 @@ foreach($dows as $dow) {
     $ranges[$dow] = [ [$start, 0], [$end, 0] ];
 }
 
+echo "Ranges: $start-$end\n";
+
 $dow = 0;
 echo "\n$dow: ";
 foreach($busyList as $e) {
@@ -77,7 +79,7 @@ $lexicon = file_get_contents(dirname($path)."/lexicon_en.json");
 
 $gen = AvailabilityGrammar::NewSealed('', $lexicon);
 
-foreach(range(0,0) as $coarseness) {
+foreach(range(0,3) as $coarseness) {
     echo AvailabilityGrammar::COARSENESS[$coarseness].":\n\n";
 
     echo $gen->generateAvailability($busyList, $ranges, $coarseness, null);

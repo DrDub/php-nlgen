@@ -310,6 +310,16 @@ abstract class Generator {
     }
   }
 
+  // add with space, if any of the strings are non-empty, it concatenates them with a space
+  public function addWS(&$accum, string... $str) {
+    foreach($str as $s) {
+      if($s){
+        $accum .= " $s";
+      }
+    }
+    return $accum;
+  }
+
   // to be overriden in sealed classes
   protected function is_sealed() {
     return FALSE;
