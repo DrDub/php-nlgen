@@ -20,11 +20,17 @@
     "autoload": {
         "psr-4": {
             "NLGen\\": "src/",
-            "NLGen\\Grammars\\": "src/Grammars"
+            "NLGen\\Grammars\\": "src/Grammars",
+            "NLGen\\Grammars\\Availability\\": "src/Grammars/Availability"
         },
         "exclude-from-classmap": ["/examples/*"]
     },
     "archive" : {
         "exclude": ["/examples/*"]
+    },
+    "scripts": {    
+        "compile-grammars": [
+            "@php scripts/compileGrammars.php"
+        ]
     }
 }
