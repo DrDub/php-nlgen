@@ -1,6 +1,6 @@
 # German NLGen Example
 
-A small example for the S&S Media article.
+A small example for the S&S Media PHP Magazin article [Textgenerierungsgrammatik mit NLGen](https://entwickler.de/machine-learning/natural-language-generation-php).
 
 To run the example:
 
