@@ -52,6 +52,9 @@ class Lexicon {
     }
 
     foreach ($array as $id => $value) {
+      if(is_string($value)) {
+        $value = [ 'string' => $value ];
+      }
       if(Lexicon::has_multiple($value)){
         # copy non-array entries from $frame
         $new_value = array();
@@ -160,6 +163,17 @@ class Lexicon {
   }
 
   # the rest doesn't need to be overriden in subclasses
+  public function query_string($query) {
+    $frames = $this->query($query);
+    if($frames) {
+      if(isset($frames[0]['string'])) {
+        return $frames[0]['string'];
+      }else{
+        return "NOT FOUND string: '".print_r($query, true)."'";
+      }
+    }
+    return "NOT FOUND: '".print_r($query, true)."'";
+  }
 
   public function string_for_id($id,$data=array()){
     $frame = $this->find($id);
@@ -192,7 +206,7 @@ class Lexicon {
 
 
   public static function has_multiple($frame){
-    return isset($frame[0]);
+    return isset($frame[0]) && !is_string($frame);
   }
 
   public static function get_random($frame){

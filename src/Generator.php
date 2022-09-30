@@ -60,20 +60,62 @@ abstract class Generator {
     }
   }
 
-  public static function Compile($langs=NULL,$debug=false,$silent=false){
-    $langs = $langs ?? [];
-    $multilingual = $langs;
-    
+  public static function Compile($langs=NULL, $debug=false, $silent=false){
     $reflection = new \ReflectionClass(get_called_class());
     $top_reflection = new \ReflectionClass(get_class());
     $BASE = $reflection->getName();
     $base_path = explode('\\', $BASE);
     $target_class_name = array_pop($base_path) . "Sealed";
 
-    $code_to_eval = "class $target_class_name extends $BASE {\n";
+    return [ self::CompileWithName($target_class_name, null, $langs, $debug, $silent), $target_class_name ];
+  }
+  
+    public static function CompileWithName($target_class_name, $name_space=null, $langs=null,$debug=false,$silent=false,$onto_str=null,$lexicon_str=null){
+    $reflection = new \ReflectionClass(get_called_class());
+    $top_reflection = new \ReflectionClass(get_class());
+    $BASE = $reflection->getName();
+    if($name_space){
+        $base_path = explode('\\', $BASE);
+        $BASE = array_pop($base_path);
+    }
+      
+    $langs = $langs ?? [];
+    $multilingual = $langs;
+     
+    $code_to_eval = "";
+    if($name_space){
+      $code_to_eval .= '<?php'."\n";
+      $code_to_eval .= "namespace $name_space;\n";
+    }
+    $code_to_eval .= "class $target_class_name extends $BASE {\n";
+
+    if($onto_str || $lexicon_str) {
+      $code_to_eval .= "  public function __construct() {\n";
+      $code_to_eval .= "    parent::__construct(";
+      if($onto_str) {
+        $code_to_eval .= '<<' . "<'EOD_ONTO'\n". $onto_str . "\nEOD_ONTO";
+      }else{
+        $code_to_eval .= 'null';
+      }
+      $code_to_eval .= ",";
+      if($lexicon_str){
+        if(is_array($lexicon_str)){
+          $code_to_eval .= "[\n";
+          $strs=[];
+          foreach($lexicon_str as $lan=>$str){
+            $strs[] = "$lan => ".'<<'."<'EOD_LEX'\n". $str . "\nEOD_LEX";
+          }
+          $code_to_eval .= implode(",\n", $strs)."\n]";
+        }else{
+          $code_to_eval .= '<<'."<'EOD_LEX'\n" . $lexicon_str . "\nEOD_LEX";
+        }
+      }else{
+        $code_to_eval .= 'null';
+      }
+      $code_to_eval .= ');'."\n  }\n";
+    }
 
     $methods = $top_reflection->getMethods();
-    
     $known = array();
     foreach ($methods as $key => $method) {
       $known[$method->getName()] = 1;
@@ -148,13 +190,13 @@ abstract class Generator {
       error_log("SEALED!\n");
       error_log($code_to_eval);
     }
-    return [ $code_to_eval, $target_class_name ];
+    return $code_to_eval;
   }
-    
-  // method interception for a more streamlined framework.
+  
+  // method interception
   // the use of 'eval' is reserved at construction time and doesn't involve any user-provided data,
   // a better solution will involve the use of the intercept extension.
-  // NB: the current code might not play well with optional arguments and default values.
+  // NB: the current code might not play well with optional arguments, default values and type hints.
   public static function NewSealed($onto='', $lexicon='',$debug=false,$silent=false){
     $langs = NULL;
     if(is_array($lexicon)){
@@ -308,6 +350,16 @@ abstract class Generator {
     if(isset($this->context['debug'])) {
       error_log("semantics after rollback: "); error_log(print_r($this->semantics,true));
     }
+  }
+
+  // add with space, if any of the strings are non-empty, it concatenates them with a space
+  public function addWS(&$accum, string... $str) {
+    foreach($str as $s) {
+      if($s){
+        $accum .= " $s";
+      }
+    }
+    return $accum;
   }
 
   // to be overriden in sealed classes
