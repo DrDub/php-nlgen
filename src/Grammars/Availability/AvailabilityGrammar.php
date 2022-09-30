@@ -161,8 +161,18 @@ class AvailabilityGrammar extends Generator {
                 }
                 $strs = [];
                 if(count($purities) > 1) {
+                    $first = true;
                     foreach($focused->blocks as $block) {
-                        $strs[] = $this->block($block);
+                        $prevPurity = null;
+                        $prevBusy = null;
+                        if($first){
+                            $first = false;
+                        }else{
+                            $key = array_key_last($this->current_semantics());
+                            $prevPurity = $this->current_semantics()[$key]['purity']['level'];
+                            $prevBusy = $this->current_semantics()[$key]['block']['isFree'];
+                        }
+                        $strs[] = $this->block($block, $prevPurity, $prevBusy);
                     }
                 }else{
                     $this->addWS(
@@ -189,22 +199,31 @@ class AvailabilityGrammar extends Generator {
         $purityStr = "{".sprintf("%1.2f",$purity)."}";
         if($purity > 0.95){
             //return $purityStr;
-            return "";
+            return [ 'text'=>"", 'sem'=> [ 'level' => 'full', 'str'=>$purityStr ] ];
         }elseif($purity > 0.75){
-            return $this->lex->string_for_id("mostly"); //." $purityStr";
+            return [ 'text'=>$this->lex->string_for_id("mostly"),
+                     'sem'=> [ 'level' => 'medium', 'str'=>$purityStr ] ];
         }else{
-            return $this->lex->string_for_id("somewhat"); //." $purityStr";
+            return [ 'text'=>$this->lex->string_for_id("somewhat"),
+                     'sem'=> [ 'level' => 'low', 'str'=>$purityStr ] ];
         }
     }
 
-    protected function block($block) {
+    protected function block($block, $prevPurity, $prevBusy) {
         $text = $this->timeRange($block->startTime, $block->endTime);
+        $purity = $this->purity($block->purity);
+        $also = "";
+        if($this->current_semantics()['purity']['level'] == $prevPurity and
+           $block->isFree == $prevBusy){
+            $also = $this->lex->string_for_id("also");
+        }
         $this->addWS(
             $text,
-            $this->purity($block->purity),
+            $also,
+            $purity,
             $this->lex->string_for_id($block->isFree?"free":"busy")
         );
-        return [ 'text'=>$text, 'sem' => $block->semantics() ];
+        return [ 'text'=>$text, 'sem' => [ 'block' => $block->semantics() ] ];
     }
     
     protected function dows($dows){

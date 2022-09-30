@@ -26,9 +26,11 @@
 $loader = require __DIR__ . '/vendor/autoload.php';
 
 use NLGen\Grammars\Availability\AvailabilityGenerator;
+use NLGen\Grammars\Availability\AvailabilityGrammar;
 
 mt_srand(5);
-mt_srand(8);
+//mt_srand(8);
+//mt_srand(9);
 
 $granularities = [ 5, 10, 15, 30, 60 ];
 $starts = [ 8, 9 ];
@@ -99,7 +101,14 @@ foreach($busyList as $e) {
 echo "\n";
 //print_r($busyList);
 
-$gen = new AvailabilityGenerator();
+if(false){
+    $gen = new AvailabilityGenerator();
+}else{
+    $class = AvailabilityGrammar::class;
+    $path = realpath($loader->findFile($class));
+    $lexicon = file_get_contents(dirname($path)."/lexicon_en.json");
+    $gen = AvailabilityGrammar::NewSealed('', $lexicon);
+}
 
 foreach(range(0,3) as $coarseness) {    
     echo AvailabilityGenerator::COARSENESS[$coarseness].":\n\n";

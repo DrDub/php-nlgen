@@ -22,8 +22,9 @@
     ,"half_past":"half past"
     ,"be":[  { "string":"is", "number":"sg" }
             ,{"string":"are","number":"pl" } ]
-    ,"mostly":"mostly"
+    ,"mostly":[ { "string": "mostly", "likelihood": 2.0}, {"string":"quite"}]
     ,"somewhat":"somewhat"
+    ,"also":"also"
     ,"free_choice":[{ "string": "free"} , {"string":"available"}]
     ,"busy_choice":[{"string":"busy"},{"string":"unavailable"},{"string":"taken"},{"string":"committed"}]
     ,"free":{ "string": "free"}

@@ -292,7 +292,7 @@ class Lexicon {
   # will add a likelihood entry of 1.0 for entries that don't have it
   # ignores non-array entries
   public static function sample($frame){
-    # print "frame: "; print_r($frame);
+    #print "frame: "; print_r($frame);
     $total = 0;
     foreach($frame as &$entry){
       if(!is_array($entry)){
@@ -303,11 +303,11 @@ class Lexicon {
       }
       $total += floatval($entry["likelihood"]);
     }
-    # print "total: $total\n";
+    #print "total: $total\n";
 
     $result = NULL;
     $rand = rand(0,1000 * $total);
-    # print "rand: $rand\n";
+    #print "rand: $rand\n";
     $accum = 0;
     foreach($frame as &$entry){
       if(!is_array($entry)){
@@ -319,7 +319,7 @@ class Lexicon {
         break;
       }
     }
-    # print "result: "; print_r($result);
+    #print "result: "; print_r($result);
     return $result;
   }
 

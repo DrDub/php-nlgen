@@ -27,8 +27,9 @@ class AvailabilityGenerator extends AvailabilityGrammar {
     ,"half_past":"half past"
     ,"be":[  { "string":"is", "number":"sg" }
             ,{"string":"are","number":"pl" } ]
-    ,"mostly":"mostly"
+    ,"mostly":[ { "string": "mostly", "likelihood": 2.0}, {"string":"quite"}]
     ,"somewhat":"somewhat"
+    ,"also":"also"
     ,"free_choice":[{ "string": "free"} , {"string":"available"}]
     ,"busy_choice":[{"string":"busy"},{"string":"unavailable"},{"string":"taken"},{"string":"committed"}]
     ,"free":{ "string": "free"}
@@ -63,10 +64,10 @@ EOD_LEX);
   }
 
   function block_orig($params){
-    return AvailabilityGrammar::block($params[0]);
+    return AvailabilityGrammar::block($params[0],$params[1],$params[2]);
   }
 
-  function block($p0){
+  function block($p0,$p1,$p2){
     if(isset($this->context['debug'])) {
       error_log(print_r(func_get_args(),true));
     }
