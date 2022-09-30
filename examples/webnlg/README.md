@@ -6,6 +6,8 @@ The memory.jsons file was obtained by parsing the provided data and it
 is thus distributed under the same license: 
 
   CC Attribution-Noncommercial-Share Alike 4.0 International.
+  
+As the file is 15Mb in size, it is stored elsewhere: http://duboue.net/download/memory.jsons
 
 To execute the driver you will also need the delex_dict.json from
 their baseline system.
@@ -29,5 +31,3 @@ do
   php webnlg_driver.php memory.jsons benchmark.xml delex_dict.json /path/to/references >> /path/to/reference/relexicalised_predictions.txt
 done
 ```
-
-
