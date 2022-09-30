@@ -59,8 +59,8 @@ class AvailabilityGrammar extends Generator {
         //print_r($table);
         $texts = [];
         while($table) {
-            $same_days_free     = $this->analyzeDays($table,     $ranges, $coarseness, true);
-            $same_days_busy     = $this->analyzeDays($table,     $ranges, $coarseness, false);
+            $same_days_free     = $this->analyzeDays(    $table, $ranges, $coarseness, true);
+            $same_days_busy     = $this->analyzeDays(    $table, $ranges, $coarseness, false);
             $same_segments_free = $this->analyzeSegments($table, $ranges, $coarseness, true);
             $same_segments_busy = $this->analyzeSegments($table, $ranges, $coarseness, false);
 
@@ -369,8 +369,70 @@ class AvailabilityGrammar extends Generator {
     }
 
     function analyzeSegments($table, $ranges, $coarseness, $isFree) {
-        //TODO
-        return [];
+        $start = 9999;
+        $end = -9999;
+        foreach($ranges as $dow=>$range) {
+            $start = min($range[0][0], $start);
+            $end =   max($range[1][0], $end);
+        }
+        $segments = [];
+        if($start < 12) { // mornings
+            $segments[] = [ $start, 12 ];
+        }
+        if($end > 2) { // afternoons
+            $segments[] = [12, $end];
+        }
+
+        $result=[];
+        foreach($segments as $pair) {
+            [ $start, $end ] = $pair;
+            $segmentBlock = new MeetingBlockMessage([$start, 0], [$end, 0], array_keys($ranges), $isFree, 0.0, false);
+
+            $distilled=[];
+            foreach($table as $dow=>$entries) {
+                $truncatedEntries = [];
+                foreach($entries as $block) {
+                    if($block->endTime[0] < $start or ($block->endTime[0] == $start and $block->endTime[1] == 0)) {
+                        continue; // before the segment
+                    }
+                    if($block->startTime[0] > $end or ($block->startTime[0] == $end and $block->endTime[1] == 0)) {
+                        continue; // after the segment
+                    }
+                    if($segmentBlock->includesOther($block)) {
+                        $truncatedEntries[] = $block; // goes fully
+                    }else{
+                        $truncatedStart = [ max($block->startTime[0], $start), $block->startTime[0] >= $start ? $block->startTime[1] : 0 ];
+                        $truncatedEnd =   [ min($block->endTime[0],   $end),   $block->endTime[0]   <  $end   ? $block->endTime[1]   : 0 ];
+
+                        if($truncatedStart != $truncatedEnd) {
+                            $truncatedEntries[] = new MeetingBlockMessage($truncatedStart, $truncatedEnd, $block->dows, $block->isFree, $block->purity, false);
+                        }
+                    }
+                }
+
+                $distilled[$dow] = $this->distillDay($dow, [ $start, 0 ], [ $end, 0 ], $truncatedEntries, $coarseness, $isFree);
+            }
+            // check all distilled are compatible
+            $allCompat = true;
+            $groupFocused = array_shift($distilled);
+            $cluster = [ $groupFocused ];
+            
+            foreach($distilled as $focused){
+                //echo "Comparing with " . $this->dows($focused->dows)."\n";
+                [ $compatible, $newGroupFocused ] = $this->compatible($groupFocused, $focused, $cluster, $coarseness);
+                if($compatible) {
+                    $groupFocused = $newGroupFocused;
+                    $cluster[] = $focused;
+                }else{
+                    $allCompat = false;
+                    break;
+                }
+            }
+            if($allCompat){
+                $result[] = $groupFocused;
+            }
+        }
+        return $result;
     }
 
     function distillDay(int $dow, array $startTime, array $endTime, array $entries, int $coarseness, bool $isFree) : FocusedSegmentMessage {
@@ -392,7 +454,7 @@ class AvailabilityGrammar extends Generator {
             }else{
                 if($previous){
                     $covered0 = $previous->minutes() * $previous->purity;
-                    $covered1 = $block->minutes() * $block->purity;
+                    $covered1 = $block->minutes()    * $block->purity;
                     $fullRange = $this->coarseMinDiff(minDiff($previous->startTime, $startTime), $coarseness) &&
                                $this->coarseMinDiff(minDiff($block->endTime, $endTime), $coarseness);
                     $new = new MeetingBlockMessage($previous->startTime, $block->endTime, [ $dow ], $isFree, 0, $fullRange);
@@ -419,10 +481,6 @@ class AvailabilityGrammar extends Generator {
         }
         */
         return new FocusedSegmentMessage($startTime, $endTime, [ $dow ], true, $blocks);
-    }
-
-    function distillSegment(array $startTime, array $endTime, array $entries, int $coarseness, bool $isFree) : FocusedSegmentMessage {
-        //TODO
     }
 
     function compatible(FocusedSegmentMessage $current, FocusedSegmentMessage $other, array $cluster, int $coarseness) : array {

@@ -29,8 +29,8 @@ use NLGen\Grammars\Availability\AvailabilityGenerator;
 use NLGen\Grammars\Availability\AvailabilityGrammar;
 
 mt_srand(5);
-//mt_srand(8);
-//mt_srand(9);
+mt_srand(8);
+mt_srand(9);
 
 $granularities = [ 5, 10, 15, 30, 60 ];
 $starts = [ 8, 9 ];
@@ -99,7 +99,10 @@ foreach($busyList as $e) {
     echo sprintf("%d:%02d",$e[1][0],$e[1][1])."-".sprintf("%d:%02d", $e[2][0],$e[2][1]).", ";
 }
 echo "\n";
-//print_r($busyList);
+//$s=var_export($ranges, true);
+//echo '$ranges = '.preg_replace('/\s+/', ' ', implode(" ", explode("\n", $s)))."\n";
+//$s=var_export($busyList, true);
+//echo '$busyList = '.preg_replace('/\s+/', ' ', implode(" ", explode("\n", $s)))."\n";
 
 if(false){
     $gen = new AvailabilityGenerator();
