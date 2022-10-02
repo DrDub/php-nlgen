@@ -54,6 +54,8 @@ class AvailabilityGrammar extends Generator {
         $coarseness = $data['coarseness'];
 
         $this->context['coarseness'] = $coarseness;
+
+        $busyList = $this->cleanBusyList($busyList, $ranges);
         
         $table = $this->buildTable($busyList, $ranges);
         //print_r($table);
@@ -296,7 +298,7 @@ class AvailabilityGrammar extends Generator {
         return [ 'text' => $text, 'sem' => $hour ];
     }
 
-    function buildTable($busyList, $ranges) {
+    function cleanBusyList($busyList, $ranges) : array {
         // clean any overlaps
         $perDay = [];
         foreach($busyList as $busy) {
@@ -304,9 +306,17 @@ class AvailabilityGrammar extends Generator {
             if(! isset($perDay[$dow])) {
                 $perDay[$dow] = [];
             }
-            $perDay[$dow][] = $busy;
+            if($end[0] < $start[0] or // looped, set to end
+               $end[0] > $ranges[$dow][1][0]) { 
+                $end = $ranges[$dow][1];
+            }
+            if($start[0] < $ranges[$dow][0][0]){
+                $start = $ranges[$dow][0];
+            }
+            
+            $perDay[$dow][] = [ $dow, $start, $end ];
         }
-        $busyList = [];
+        $result = [];
         foreach($perDay as $dow => $dayBusyList) {
             $i = 0;
             while($i < count($dayBusyList)) {
@@ -329,9 +339,11 @@ class AvailabilityGrammar extends Generator {
                 }
                 $i++;
             }
-            array_push($busyList, ...$dayBusyList);
-            
+            array_push($result, ...$dayBusyList);            
         }
+        return $result;
+    }
+    function buildTable($busyList, $ranges) : array {
         $table = [];
         foreach($ranges as $dow => $startEnd) {
             $table[$dow] = [ new MeetingBlockMessage($startEnd[0], $startEnd[1], [$dow], true, 1.0, true) ];
@@ -390,6 +402,7 @@ class AvailabilityGrammar extends Generator {
             foreach($distilled as $focused){
                 //echo "Comparing with " . $this->dows($focused->dows)."\n";
                 [ $compatible, $newGroupFocused ] = $this->compatible($groupFocused, $focused, $cluster, $coarseness);
+                //echo "done\n";
                 if($compatible) {
                     $groupFocused = $newGroupFocused;
                     $cluster[] = $focused;
@@ -551,7 +564,6 @@ class AvailabilityGrammar extends Generator {
 
         //echo "bl1s ".count($blocks1)."=".implode(",", array_keys($bl1s))."\n";
         //echo "bl2s ".count($blocks2)."=".implode(",", array_keys($bl2s))."\n";
-
 
         $intersect = intersection($bl1s, $bl2s);
         $union = count($bl1s) + count($bl2s) - $intersect;
