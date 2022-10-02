@@ -62,4 +62,44 @@ function tableToString(array $table) : string {
     return $result;
 }
 
+function containsTime(array $start, array $end, array $time): bool {
+    return (($start[0] < $time[0] or ($start[0] == $time[0] and $start[1] <= $time[1])) and
+            ($time[0]  < $end[0]  or ($end[0]   == $time[0] and $time[1]  <= $end[1])));
+}
+
+function overlaps(array $start1, array $end1, array $start2, array $end2): bool {
+    return containsTime($start1, $end1, $start2) or containsTime($start1, $end1, $end2);
+}
+
+function maxTime(array $time1, array $time2) {
+    if($time1[0] < $time2[0]){
+        return $time2;
+    }
+    if($time1[0] > $time2[0]){
+        return $time1;
+    }
+    if($time1[1] < $time2[1]){
+        return $time2;
+    }
+    if($time1[1] > $time2[1]){
+        return $time1;
+    }
+    return $time1;
+}
+
+function minTime(array $time1, array $time2) {
+    if($time1[0] > $time2[0]){
+        return $time2;
+    }
+    if($time1[0] < $time2[0]){
+        return $time1;
+    }
+    if($time1[1] > $time2[1]){
+        return $time2;
+    }
+    if($time1[1] < $time2[1]){
+        return $time1;
+    }
+    return $time1;
+}
 

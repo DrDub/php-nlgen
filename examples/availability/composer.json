@@ -32,7 +32,8 @@
     ],
     "require": {
         "php": ">=7.2",
-        "nlgen/nlgen":"*"
+        "nlgen/nlgen":"*",
+	   "johngrogg/ics-parser": "^3"
     },
     "autoload": {
     },

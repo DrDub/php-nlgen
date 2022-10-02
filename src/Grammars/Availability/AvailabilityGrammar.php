@@ -61,8 +61,8 @@ class AvailabilityGrammar extends Generator {
         while($table) {
             $same_days_free     = $this->analyzeDays(    $table, $ranges, $coarseness, true);
             $same_days_busy     = $this->analyzeDays(    $table, $ranges, $coarseness, false);
-            $same_segments_free = $this->analyzeSegments($table, $ranges, $coarseness, true);
-            $same_segments_busy = $this->analyzeSegments($table, $ranges, $coarseness, false);
+            $same_segments_free = []; //$this->analyzeSegments($table, $ranges, $coarseness, true);
+            $same_segments_busy = []; //$this->analyzeSegments($table, $ranges, $coarseness, false);
 
             // find message with larger number of minutes
             $max_mins = -1;
@@ -297,6 +297,41 @@ class AvailabilityGrammar extends Generator {
     }
 
     function buildTable($busyList, $ranges) {
+        // clean any overlaps
+        $perDay = [];
+        foreach($busyList as $busy) {
+            [$dow, $start, $end] = $busy;
+            if(! isset($perDay[$dow])) {
+                $perDay[$dow] = [];
+            }
+            $perDay[$dow][] = $busy;
+        }
+        $busyList = [];
+        foreach($perDay as $dow => $dayBusyList) {
+            $i = 0;
+            while($i < count($dayBusyList)) {
+                $currentS = $dayBusyList[$i][1];
+                $currentE = $dayBusyList[$i][2];
+                $j = $i+1;
+                while($j < count($dayBusyList)) {
+                    $otherS = $dayBusyList[$j][1];
+                    $otherE = $dayBusyList[$j][2];
+                    if(overlaps($currentS, $currentE, $otherS, $otherE)) {
+                        [ $currentS, $currentE ] = [ minTime( $currentS, $otherS ), maxTime( $currentE, $otherE ) ];
+                        $c = [ $currentS, $currentE ];
+                        $dayBusyList[$i] = [ $dow, $currentS, $currentE ];
+                        $l = count($dayBusyList) - 1;
+                        $dayBusyList[$j] = $dayBusyList[$l];
+                        unset($dayBusyList[$l]);
+                    }else{
+                        $j++;
+                    }
+                }
+                $i++;
+            }
+            array_push($busyList, ...$dayBusyList);
+            
+        }
         $table = [];
         foreach($ranges as $dow => $startEnd) {
             $table[$dow] = [ new MeetingBlockMessage($startEnd[0], $startEnd[1], [$dow], true, 1.0, true) ];
@@ -317,9 +352,9 @@ class AvailabilityGrammar extends Generator {
             }
             if($found < 0) {
                 // bug
-                print_r($table);
-                print_r($busy);
-                die("not found!");
+                $ts = print_r($table, true);
+                $bs = print_r($busy,  true);
+                throw new \Exception("Busy entry not found for entry $bs and table $ts");
             }
             $splitted = $foundEntry->split($start, $end, false);
             /*echo "For " . $foundEntry . " split at ".sprintf("%d:%02d", $start[0], $start[1])."-".sprintf("%d:%02d", $end[0], $end[1])." got: ";
