@@ -356,7 +356,11 @@ abstract class Generator {
   public function addWS(&$accum, string... $str) {
     foreach($str as $s) {
       if($s){
-        $accum .= " $s";
+        if($accum){
+          $accum .= " $s";
+        }else{
+          $accum = $s;
+        }              
       }
     }
     return $accum;

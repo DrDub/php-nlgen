@@ -61,7 +61,7 @@ foreach($events as $evt){
 }
 #print_r($busyList);
 
-if(false){
+if(true){
     $gen = new AvailabilityGenerator();
 }else{
     $class = AvailabilityGrammar::class;

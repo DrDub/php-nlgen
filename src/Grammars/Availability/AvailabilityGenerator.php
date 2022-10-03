@@ -16,6 +16,8 @@ class AvailabilityGenerator extends AvailabilityGrammar {
     ,"and":"and"
     ,"morning":"in the morning"
     ,"afternoon":"in the afternoon"
+    ,"mornings":"the mornings"
+    ,"afternoons":"the afternoons"
     ,"mid_morning":"in the mid-morning"
     ,"mid_afternoon":"in the mid-afternoon"
     ,"early_morning":"in the early morning"
@@ -26,14 +28,14 @@ class AvailabilityGenerator extends AvailabilityGrammar {
     ,"late":"late"
     ,"half_past":"half past"
     ,"be":[  { "string":"is", "number":"sg" }
-            ,{"string":"are","number":"pl" } ]
+            ,{ "string":"are","number":"pl" } ]
     ,"mostly":[ { "string": "mostly", "likelihood": 2.0}, {"string":"quite"}]
     ,"somewhat":"somewhat"
     ,"also":"also"
-    ,"free_choice":[{ "string": "free"} , {"string":"available"}]
-    ,"busy_choice":[{"string":"busy"},{"string":"unavailable"},{"string":"taken"},{"string":"committed"}]
-    ,"free":{ "string": "free"}
-    ,"busy":{"string":"busy"}
+    ,"free_choice":[{ "string": "free"} , {"string": "available" }]
+    ,"busy_choice":[{ "string": "busy"},  {"string": "unavailable" }, {"string":"taken"}, {"string":"committed"} ]
+    ,"free":{ "string": "free" }
+    ,"busy":{ "string": "busy" }
     ,"rest_free":"the rest is free"
     ,"rest_busy":"the rest is busy"
 }
@@ -42,14 +44,25 @@ class AvailabilityGenerator extends AvailabilityGrammar {
 EOD_LEX);
   }
   function focusedMessage_orig($params){
-    return AvailabilityGrammar::focusedMessage($params[0]);
+    return AvailabilityGrammar::focusedMessage($params[0],$params[1]);
   }
 
-  function focusedMessage($p0){
+  function focusedMessage($p0,$p1){
     if(isset($this->context['debug'])) {
       error_log(print_r(func_get_args(),true));
     }
     return $this->gen("focusedMessage_orig", func_get_args(), "focusedMessage");
+  }
+
+  function blocks_orig($params){
+    return AvailabilityGrammar::blocks($params[0],$params[1]);
+  }
+
+  function blocks($p0,$p1){
+    if(isset($this->context['debug'])) {
+      error_log(print_r(func_get_args(),true));
+    }
+    return $this->gen("blocks_orig", func_get_args(), "blocks");
   }
 
   function purity_orig($params){

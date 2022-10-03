@@ -27,13 +27,20 @@ namespace NLGen\Grammars\Availability;
 
 class FocusedSegmentMessage {
 
+    // focus constants
+    public const DAYS = 0;
+    public const SEGMENT = 1;
+    public const WEEK = 2;
+
+    public int $focus; // one of the constants above
     public array $startTime; // array int (hour), int (minute)
     public array $endTime;
     public array $dows; // array int (day-of-the-week)
     public bool $fullRange; // do the start and end cover the full range of the day?
     public array $blocks; // fine grain details
 
-    public function __construct(array $startTime, array $endTime, array $dows, bool $fullRange, array $blocks) {
+    public function __construct(int $focus, array $startTime, array $endTime, array $dows, bool $fullRange, array $blocks) {
+        $this->focus = $focus;
         $this->startTime = $startTime;
         $this->endTime = $endTime;
         $this->dows = $dows;

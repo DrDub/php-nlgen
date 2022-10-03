@@ -30,9 +30,9 @@ use NLGen\Grammars\Availability\AvailabilityGrammar;
 
 mt_srand(5);
 mt_srand(8);
-mt_srand(9);
+//mt_srand(9);
 
-$granularities = [ 5, 10, 15, 30, 60 ];
+$granularities = [ 10, 15, 30, 60 ];
 $starts = [ 8, 9 ];
 $ends = [ 16, 17, 18 ];
 $dowss = [ range(0,4), range(0,5) ];
