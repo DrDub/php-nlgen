@@ -25,16 +25,18 @@
 
 namespace NLGen;
 
-class Ontology {
+class Ontology
+{
 
   var $id_to_frames = array();
 
-  public function __construct($json_text) {
+  public function __construct($json_text)
+  {
     if(! $json_text){
       return;
     }
 
-    $array = json_decode($json_text,TRUE);
+    $array = json_decode($json_text,true);
 
     if(! $array){
       print "$json_text";
@@ -58,15 +60,18 @@ class Ontology {
   
   # to implement a subclass, override these methods
 
-  public function find($id){
-    return $this->has($id)?$this->id_to_frames[$id]:NULL;
+  public function find($id)
+  {
+    return $this->has($id)?$this->id_to_frames[$id]:null;
   }
 
-  public function has($id){
+  public function has($id)
+  {
     return isset($this->id_to_frames[$id]);
   }
 
-  public function find_all_by_class($class){
+  public function find_all_by_class($class)
+  {
     $result=array();
     foreach($this->id_to_frames as $id => $frame){
       if($frame['class'] == $class){
@@ -77,19 +82,20 @@ class Ontology {
   }
   
   # this method doesn't need overriding (but might profit from optimizations)
-  public function find_by_path($array) {
+  public function find_by_path($array)
+  {
     $current = $this->find($array[0]);
     $path = array_values($array);
     unset($path[0]);
     foreach ($path as $i => $value) {
       if(! is_array($current)) {
         if(! $this->has($current)){
-          return NULL;
+          return null;
         }
         $current = $this->find($current);
       }
       if(! isset($current[$value])) {
-        return NULL;
+        return null;
       }
       $current = $current[$value];
     }

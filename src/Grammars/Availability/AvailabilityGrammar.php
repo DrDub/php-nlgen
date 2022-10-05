@@ -29,7 +29,8 @@ require_once __DIR__ . "/util.php";
 
 use NLGen\Generator;
 
-class AvailabilityGrammar extends Generator {
+class AvailabilityGrammar extends Generator
+{
 
     // coarseness 
     public const SUCCINCT = 0;
@@ -44,11 +45,13 @@ class AvailabilityGrammar extends Generator {
     // ranges is an array from dow to tuple start-time, end-time (earliest start and end of
     // meetings for that day),
     // coarseness is one of the above constant.
-    public function generateAvailability($busyList, $ranges, $coarseness=self::BASE, $context) {
+    public function generateAvailability($busyList, $ranges, $coarseness=self::BASE, $context)
+    {
         return $this->generate([ 'busyList' => $busyList, 'ranges' => $ranges, 'coarseness' => $coarseness ], $context);
     }
 
-    function top($data) {
+    function top($data)
+    {
         $busyList =   $data['busyList'];
         $ranges =     $data['ranges'];
         $coarseness = $data['coarseness'];
@@ -255,7 +258,8 @@ class AvailabilityGrammar extends Generator {
 
     //////////// grammar
 
-    protected function focusedMessage($focused, $inSegment) {
+    protected function focusedMessage($focused, $inSegment)
+    {
         $text = "";
         switch($focused->focus){
         case FocusedSegmentMessage::WEEK:
@@ -294,7 +298,8 @@ class AvailabilityGrammar extends Generator {
         return "$text.";
     }
 
-    protected function blocks($blocks, $isSegment) {
+    protected function blocks($blocks, $isSegment)
+    {
         if(! $blocks){
             return "{ERROR: no blocks given}";
         }
@@ -353,7 +358,8 @@ class AvailabilityGrammar extends Generator {
         return $text;
     }
 
-    protected function purity($purity) {
+    protected function purity($purity)
+    {
         $purityStr = "{".sprintf("%1.2f",$purity)."}";
         if($purity > 0.95){
             //return $purityStr;
@@ -367,7 +373,8 @@ class AvailabilityGrammar extends Generator {
         }
     }
 
-    protected function block($block, $prevPurity, $prevBusy) {
+    protected function block($block, $prevPurity, $prevBusy)
+    {
         $text = $this->timeRange($block->startTime, $block->endTime);
         $purity = $this->purity($block->purity);
         $also = "";
@@ -384,7 +391,8 @@ class AvailabilityGrammar extends Generator {
         return [ 'text'=>$text, 'sem' => [ 'block' => $block->semantics() ] ];
     }
     
-    protected function dows($dows){
+    protected function dows($dows)
+    {
         sort($dows);
         $cdows = count($dows);
         if($cdows >= 5 && $dows == range(0,$cdows-1)) {
@@ -403,7 +411,8 @@ class AvailabilityGrammar extends Generator {
                  'sem' => [ 'number' => 'pl' ] ];
     }
 
-    protected function timeRange($start, $end) {
+    protected function timeRange($start, $end)
+    {
         if($start[0] <= 9 && $end[0] <= 13 && $end[0] >= 12) {
             return $this->lex->string_for_id("morning");
         }
@@ -430,7 +439,8 @@ class AvailabilityGrammar extends Generator {
         return [ 'text' => $text, 'sem' => [ $start, $end ] ];
     }
 
-    protected function hour($hour) {
+    protected function hour($hour)
+    {
         $text = "";
         if($this->context['coarseness'] < 3) {
             if($hour[1] <= 5) {
@@ -454,7 +464,8 @@ class AvailabilityGrammar extends Generator {
         return [ 'text' => $text, 'sem' => $hour ];
     }
 
-    function cleanBusyList($busyList, $ranges) : array {
+    function cleanBusyList($busyList, $ranges) : array
+    {
         // clean any overlaps
         $perDay = [];
         foreach($busyList as $busy) {
@@ -499,7 +510,8 @@ class AvailabilityGrammar extends Generator {
         }
         return $result;
     }
-    function buildTable($busyList, $ranges) : array {
+    function buildTable($busyList, $ranges) : array
+    {
         $table = [];
         foreach($ranges as $dow => $startEnd) {
             $table[$dow] = [ new MeetingBlockMessage($startEnd[0], $startEnd[1], [$dow], true, 1.0, true) ];
@@ -544,7 +556,8 @@ class AvailabilityGrammar extends Generator {
 
     //////////// analysis functions
 
-    function analyzeDays($table, $ranges, $coarseness, $isFree) {
+    function analyzeDays($table, $ranges, $coarseness, $isFree)
+    {
         $distilled=[];
         foreach($table as $dow=>$entries) {
             $dist = $this->distillDay($dow, $ranges[$dow][0], $ranges[$dow][1], $entries, $coarseness, $isFree);
@@ -575,7 +588,8 @@ class AvailabilityGrammar extends Generator {
         return $result;
     }
 
-    function analyzeWeek($table, $ranges, $coarseness, $isFree) {
+    function analyzeWeek($table, $ranges, $coarseness, $isFree)
+    {
         $distilled=[];
         foreach($table as $dow=>$entries) {
             $dist = $this->distillDay($dow, $ranges[$dow][0], $ranges[$dow][1], $entries, $coarseness, $isFree);
@@ -630,7 +644,8 @@ class AvailabilityGrammar extends Generator {
         }
     }
 
-    function analyzeSegments($table, $ranges, $coarseness, $isFree) {
+    function analyzeSegments($table, $ranges, $coarseness, $isFree)
+    {
         $start =  9999;
         $end   = -9999;
         foreach($ranges as $dow=>$range) {
@@ -709,7 +724,8 @@ class AvailabilityGrammar extends Generator {
         return $result;
     }
 
-    function distillDay(int $dow, array $startTime, array $endTime, array $entries, int $coarseness, bool $isFree) : FocusedSegmentMessage {
+    function distillDay(int $dow, array $startTime, array $endTime, array $entries, int $coarseness, bool $isFree) : FocusedSegmentMessage
+    {
         $blocks=[];
         $previous = null;
         $gap = 0;
@@ -757,7 +773,8 @@ class AvailabilityGrammar extends Generator {
         return new FocusedSegmentMessage(FocusedSegmentMessage::DAYS, $startTime, $endTime, [ $dow ], true, $blocks);
     }
 
-    function compatible(FocusedSegmentMessage $current, FocusedSegmentMessage $other, array $cluster, int $coarseness) : array {
+    function compatible(FocusedSegmentMessage $current, FocusedSegmentMessage $other, array $cluster, int $coarseness) : array
+    {
         // check the new member is close enough to all elements in the cluster
         foreach($cluster as $focused){
             if($this->incompatible($other->blocks, $focused->blocks, $coarseness)) {
@@ -785,7 +802,8 @@ class AvailabilityGrammar extends Generator {
                                                  $current->fullRange, $newBlocks) ];
     }
 
-    function incompatible(array $blocks1, array $blocks2, int $coarseness) : bool {
+    function incompatible(array $blocks1, array $blocks2, int $coarseness) : bool
+    {
         $bl1s = $this->blocksToSet($blocks1);
         $bl2s = $this->blocksToSet($blocks2);
 
@@ -807,7 +825,8 @@ class AvailabilityGrammar extends Generator {
         return true;
     }
 
-    function blocksToSet(array $blocks) : array {
+    function blocksToSet(array $blocks) : array
+    {
         $result = [];
         foreach($blocks as $block) {
             $time = $block->startTime[0];
@@ -828,7 +847,8 @@ class AvailabilityGrammar extends Generator {
         return $result;
     }
 
-    function removeFocused(FocusedSegmentMessage $focused, array $table) : array {
+    function removeFocused(FocusedSegmentMessage $focused, array $table) : array
+    {
         $block = new MeetingBlockMessage($focused->startTime, $focused->endTime, $focused->dows, false, 1.0, $focused->fullRange);
 
         //echo "Removing: " . strval($block)."\n"; echo "Before:\n".tableToString($table);
@@ -878,7 +898,8 @@ class AvailabilityGrammar extends Generator {
     }
 
     // true -> diff is negligible at these coarse level
-    function coarseMinDiff($diff, $coarseness) : bool {
+    function coarseMinDiff($diff, $coarseness) : bool
+    {
         switch ($coarseness) {
         case self::EXACT:    return $diff <=  5; break;
         case self::SPECIFIC: return $diff <= 15; break;

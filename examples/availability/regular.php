@@ -80,7 +80,7 @@ $busyList = [
     [5, [15, 50], [16, 50]]];
 
 
-if(false){
+if(true){
     $gen = new AvailabilityGenerator();
 }else{
     $class = AvailabilityGrammar::class;
