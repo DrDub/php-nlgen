@@ -1,3 +1,12 @@
+php-nlgen (0.17)
+
+	* A full grammar for generating availability descriptions based on schedules.
+	* Lexicon: added query_string to streamline calls.
+	* Generator: compilation with namespaces and wired-in lexicons and ontology.
+	* Basic test cases.
+
+-- Pablo Duboue, 2022/10/05
+
 php-nlgen (0.16)
 
 	* Lexicon query improvements and error notifications.
