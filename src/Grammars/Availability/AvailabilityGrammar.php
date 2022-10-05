@@ -490,21 +490,25 @@ class AvailabilityGrammar extends Generator
                 $currentS = $dayBusyList[$i][1];
                 $currentE = $dayBusyList[$i][2];
                 $j = $i+1;
+                $merged = false;
                 while($j < count($dayBusyList)) {
                     $otherS = $dayBusyList[$j][1];
                     $otherE = $dayBusyList[$j][2];
+                    
                     if(overlaps($currentS, $currentE, $otherS, $otherE)) {
-                        [ $currentS, $currentE ] = [ minTime( $currentS, $otherS ), maxTime( $currentE, $otherE ) ];
-                        $c = [ $currentS, $currentE ];
+                        [ $currentS, $currentE ] = [ minTime( $currentS, $otherS ), maxTime( $currentE, $otherE ) ];                        
                         $dayBusyList[$i] = [ $dow, $currentS, $currentE ];
                         $l = count($dayBusyList) - 1;
                         $dayBusyList[$j] = $dayBusyList[$l];
                         unset($dayBusyList[$l]);
+                        $merged = true;
                     }else{
                         $j++;
                     }
                 }
-                $i++;
+                if(!$merged) {
+                    $i++;
+                }
             }
             array_push($result, ...$dayBusyList);            
         }

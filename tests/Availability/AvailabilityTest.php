@@ -154,8 +154,6 @@ class AvailabilityTest extends TestCase
      */
     public function overlapFiltering() : void
     {
-        static::markTestSkipped('code assumes larger blocks appear first, needs to be improved.');
-        
         $gen = new AvailabilityGenerator();
         mt_srand(4);
         $busyList = $this->regularWeek;

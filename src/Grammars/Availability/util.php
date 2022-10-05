@@ -68,7 +68,10 @@ function containsTime(array $start, array $end, array $time): bool {
 }
 
 function overlaps(array $start1, array $end1, array $start2, array $end2): bool {
-    return containsTime($start1, $end1, $start2) or containsTime($start1, $end1, $end2);
+    return containsTime($start1, $end1, $start2) or
+        containsTime($start1, $end1, $end2) or
+        containsTime($start2, $end2, $start1) or
+        containsTime($start2, $end2, $end1);
 }
 
 function maxTime(array $time1, array $time2) {
