@@ -31,5 +31,3 @@ do
   php webnlg_driver.php memory.jsons benchmark.xml delex_dict.json /path/to/references >> /path/to/reference/relexicalised_predictions.txt
 done
 ```
-
-

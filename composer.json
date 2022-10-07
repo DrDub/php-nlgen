@@ -1,11 +1,14 @@
 {
     "name": "nlgen/nlgen",
-    "description": "A library for creating recursive-descent natural language generators",
     "type": "library",
-    "keywords": [
-        "artificial intelligence", "nlp", "natural language generation", "nlg", "generation", "text construction", "grammar", "chatbot", "natural language processing", "recursive descent"
-    ],
+    "description": "A library for creating recursive-descent natural language generators.",
+    "homepage": "http://wiki.duboue.net/PHP-NLGen",
     "license": "MIT",
+    "keywords": [
+        "artificial intelligence", "nlp", "natural language generation", "nlg", "generation",
+        "text construction", "grammar", "chatbot", "natural language processing",
+        "computational linguistics", "recursive descent"
+    ],
     "authors": [
         {
             "name": "Pablo Duboue",
@@ -16,15 +19,42 @@
     ],
     "require": {
         "php": ">=7.2"
-    },    
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0"
+    },
     "autoload": {
         "psr-4": {
-            "NLGen\\": "src/",
-            "NLGen\\Grammars\\": "src/Grammars"
+            "NLGen\\": "src/"
         },
         "exclude-from-classmap": ["/examples/*"]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "NLGen\\Tests\\": "tests/"
+        }
+    },
     "archive" : {
         "exclude": ["/examples/*"]
-    }
+    },
+    "scripts": {    
+        "compile-grammars": [
+            "@php scripts/compileGrammars.php"
+        ],
+        "build": [
+            "@compile-grammars",
+            "@test"
+        ],
+        "test": "phpunit"
+    },
+    "support": {
+        "issues": "https://github.com/DrDub/PHP-NLGen/issues",
+        "source": "https://github.com/DrDub/PHP-NLGen"
+    },
+    "funding": [
+        {
+            "type": "ko-fi",
+            "url": "https://ko-fi.com/textualization"
+        }
+    ]
 }

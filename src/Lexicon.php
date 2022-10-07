@@ -25,11 +25,13 @@
 
 namespace NLGen;
 
-class Lexicon {
+class Lexicon
+{
   var $id_to_entries = array();
   var $generator;
 
-  public function __construct($generator, $json_text) {
+  public function __construct($generator, $json_text)
+  {
     $this->generator = $generator;
 
     if(! $json_text){
@@ -52,6 +54,9 @@ class Lexicon {
     }
 
     foreach ($array as $id => $value) {
+      if(is_string($value)) {
+        $value = [ 'string' => $value ];
+      }
       if(Lexicon::has_multiple($value)){
         # copy non-array entries from $frame
         $new_value = array();
@@ -89,7 +94,8 @@ class Lexicon {
   # these functions might need to be overriden
 
   # return one, at random
-  public function find($id) {
+  public function find($id)
+  {
     if(isset($this->id_to_entries[$id])){
       $frame = $this->id_to_entries[$id];
       if(Lexicon::has_multiple($frame)){
@@ -101,18 +107,21 @@ class Lexicon {
     return NULL;
   }
 
-  public function has($id){
+  public function has($id)
+  {
     return isset($this->id_to_entries[$id]);
   }
 
   # return all
-  public function find_all($id) {
+  public function find_all($id)
+  {
     return isset($this->id_to_entries[$id])?$this->id_to_entries[$id]:NULL;
   }
 
   # complex query, all the keys in the query have to be defined in the entries.
   # if a value is itself an array, it is understood as an OR of the values
-  public function query($query) {
+  public function query($query)
+  {
     # compile query
     $compiled_query = array();
     foreach($query as $key => $value) {
@@ -160,8 +169,21 @@ class Lexicon {
   }
 
   # the rest doesn't need to be overriden in subclasses
+  public function query_string($query)
+  {
+    $frames = $this->query($query);
+    if($frames) {
+      if(isset($frames[0]['string'])) {
+        return $frames[0]['string'];
+      }else{
+        return "NOT FOUND string: '".print_r($query, true)."'";
+      }
+    }
+    return "NOT FOUND: '".print_r($query, true)."'";
+  }
 
-  public function string_for_id($id,$data=array()){
+  public function string_for_id($id,$data=array())
+  {
     $frame = $this->find($id);
     if($frame){
       return $this->string($frame, $data);
@@ -170,7 +192,8 @@ class Lexicon {
     }
   }
 
-  public function string($frame, $data=array()){
+  public function string($frame, $data=array())
+  {
     if(Lexicon::is_function($frame)){
       $frame = $this->execute_function($frame, $data);
     }elseif(Lexicon::is_mixed($frame)){
@@ -181,7 +204,8 @@ class Lexicon {
     return $frame['string'];
   }
 
-  public function resolve($frame, $data=array()){
+  public function resolve($frame, $data=array())
+  {
     if(Lexicon::is_function($frame)){
       $frame = $this->execute_function($frame, $data);
     }elseif(Lexicon::is_mixed($frame)){
@@ -191,37 +215,45 @@ class Lexicon {
   }
 
 
-  public static function has_multiple($frame){
-    return isset($frame[0]);
+  public static function has_multiple($frame)
+  {
+    return isset($frame[0]) && !is_string($frame);
   }
 
-  public static function get_random($frame){
+  public static function get_random($frame)
+  {
     # use likelihoods
     $result = Lexicon::sample($frame);
     return $result;
   }
 
-  public static function is_function($frame){
+  public static function is_function($frame)
+  {
     return isset($frame['function']);
   }
 
-  public static function is_slot($frame){
+  public static function is_slot($frame)
+  {
     return isset($frame['slot']);
   }
 
-  public static function is_mixed($frame){
+  public static function is_mixed($frame)
+  {
     return isset($frame['mixed']);
   }
 
-  public static function get_mixed($frame){
+  public static function get_mixed($frame)
+  {
     return $frame['mixed'];
   }
 
-  public static function get_slot($frame){
+  public static function get_slot($frame)
+  {
     return $frame['slot'];
   }
 
-  public function execute_function($frame, $data){
+  public function execute_function($frame, $data)
+  {
     $savepoint = $this->generator->savepoint();
     $result_string = $this->generator->gen($frame['function'], $data,"tmp");
     $len = count($this->generator->semantics);
@@ -237,7 +269,8 @@ class Lexicon {
     return $frame;
   }
   
-  public function resolve_mixed($frame, $data){
+  public function resolve_mixed($frame, $data)
+  {
     $mixed = Lexicon::get_mixed($frame);
 
     $result = $frame;
@@ -277,8 +310,9 @@ class Lexicon {
   # take an array with 'likelihood' entries and uniformly sample one
   # will add a likelihood entry of 1.0 for entries that don't have it
   # ignores non-array entries
-  public static function sample($frame){
-    # print "frame: "; print_r($frame);
+  public static function sample($frame)
+  {
+    #print "frame: "; print_r($frame);
     $total = 0;
     foreach($frame as &$entry){
       if(!is_array($entry)){
@@ -289,11 +323,11 @@ class Lexicon {
       }
       $total += floatval($entry["likelihood"]);
     }
-    # print "total: $total\n";
+    #print "total: $total\n";
 
     $result = NULL;
     $rand = rand(0,1000 * $total);
-    # print "rand: $rand\n";
+    #print "rand: $rand\n";
     $accum = 0;
     foreach($frame as &$entry){
       if(!is_array($entry)){
@@ -305,18 +339,20 @@ class Lexicon {
         break;
       }
     }
-    # print "result: "; print_r($result);
+    #print "result: "; print_r($result);
     return $result;
   }
 
 
   # The rest is WIP
 
-  public static function get_POS($frame){
+  public static function get_POS($frame)
+  {
     return $frame['POS'];
   }
 
-  public static function pluralize($frame){
+  public static function pluralize($frame)
+  {
     if(isset($frame['plural'])){
       return $frame['plural'];
     }
@@ -324,7 +360,8 @@ class Lexicon {
     return $frame['string']."s";
   }
 
-  public static function past($frame, $person){
+  public static function past($frame, $person)
+  {
     if($person){
       if(isset($frame['past'.$person])) {
         return $frame['past'.$person];
@@ -337,7 +374,8 @@ class Lexicon {
     return $frame['string']."ed";
   }
 
-  public static function present($frame, $person){
+  public static function present($frame, $person)
+  {
     if($person){
       if(isset($frame['present'.$person])) {
         return $frame['present'.$person];
@@ -355,7 +393,8 @@ class Lexicon {
     return $present;
   }
 
-  public static function continuous($frame){
+  public static function continuous($frame)
+  {
     if(isset($frame['continuous'])){
       return $frame['continuous'];
     }
@@ -366,7 +405,8 @@ class Lexicon {
   "six","seven","eight","ten","twelve","thirteen","fourteen","fifeteen",
   "sixteen","eighteen","nineteen");
 
-  public function number_to_string($num){
+  public function number_to_string($num)
+  {
     if(isset($this->_basic_numbers[$num])){
       return $this->_basic_numbers[$num];
     }

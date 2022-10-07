@@ -25,7 +25,46 @@ development.
 * [2] http://duboue.net/papers/makewebnotwar20111128.html
 
 
-## How to use it
+## Available Generation Grammars
+
+The NLGen ships with a generation grammar ready to use, that
+constructs text descriptions for weekly schedules. The grammar is
+accessible by importing `\NLGen\Grammars\Availability\AvailabilityGenerator`.
+
+The method `generateAvailability` receives a list of "busy times" in
+the form of
+
+`[ day-of-week, [ start hour, start minute ], [ end hour, end minute ] ]`
+
+a list of ranges indicating when the scheduled day starts and ends (in
+the form of `[ day-of-week => [ start hour, start minute ], [ end
+hour, end minute ] ]`) and a constant indicating how "coarse" should
+be the text (one liner summarizing or very detailed).
+
+See `examples/availability` and `tests/Availability/AvailabilityTest`.
+
+Example:
+
+```php
+use NLGen\Grammars\Availability\AvailabilityGenerator;
+
+$gen = new AvailabilityGenerator();
+$busyList = [
+  [3, [16, 30], [17, 30] ],
+  [6, [ 6, 55], [11, 41] ],
+  [6, [14, 32], [22, 05] ]
+];
+$fullRanges = [];
+foreach(range(0, 6) as $dow) {
+ $fullRanges[$dow] = [ [6, 0], [24, 0] ];
+}
+echp $gen->generateAvailability($busyList, $this->fullRanges, AvailabilityGenerator::BASE, null);
+```
+
+Produces _All week is mostly free all day. Sunday is busy from late 6 AM to late 11 AM, and from half past 14 PM to 22 PM; the rest is free._
+
+
+## Using it in your own projects
 
 Look at the `examples/` folder, but in a nutshell, subclass the
 `NLGen\Generator` class and implemented a function named `top`. This
