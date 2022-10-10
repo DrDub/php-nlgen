@@ -355,21 +355,24 @@ class AvailabilityGrammar extends Generator
                 $this->lex->string_for_id($block->isFree?"rest_busy":"rest_free")
             );
         }
-        return $text;
+        $sem = [];
+        foreach($blocks as $block){
+            $sem['value'] = $block->semantics();
+        }
+        return ['text'=>$text, 'sem'=>$sem ];
     }
 
     protected function purity($purity)
     {
-        $purityStr = "{".sprintf("%1.2f",$purity)."}";
         if($purity > 0.95){
             //return $purityStr;
-            return [ 'text'=>"", 'sem'=> [ 'level' => 'full', 'str'=>$purityStr ] ];
+            return [ 'text'=>"", 'sem'=> [ 'level' => 'full', 'value'=>$purity ] ];
         }elseif($purity > 0.75){
             return [ 'text'=> $this->lex->string_for_id("mostly"),
-                     'sem'=>  [ 'level' => 'medium', 'str'=>$purityStr ] ];
+                     'sem'=>  [ 'level' => 'medium', 'value'=>$purity ] ];
         }else{
             return [ 'text'=> $this->lex->string_for_id("somewhat"),
-                     'sem'=>  [ 'level' => 'low', 'str'=>$purityStr ] ];
+                     'sem'=>  [ 'level' => 'low', 'value'=>$purity ] ];
         }
     }
 
