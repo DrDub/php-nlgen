@@ -14,7 +14,7 @@
     ],
     "require": {
         "php": ">=7.2",
-        "nlgen/nlgen":">=0.17",
+        "nlgen/nlgen":"*",
 	"johngrogg/ics-parser": "^3"
     },
     "autoload": {

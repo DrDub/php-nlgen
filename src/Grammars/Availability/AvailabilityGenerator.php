@@ -31,6 +31,7 @@ class AvailabilityGenerator extends AvailabilityGrammar {
             ,{ "string":"are","number":"pl" } ]
     ,"mostly":[ { "string": "mostly", "likelihood": 2.0}, {"string":"quite"}]
     ,"somewhat":"somewhat"
+    ,"almost":"almost"
     ,"also":"also"
     ,"free_choice":[{ "string": "free"} , {"string": "available" }]
     ,"busy_choice":[{ "string": "busy"},  {"string": "unavailable" }, {"string":"taken"}, {"string":"committed"} ]

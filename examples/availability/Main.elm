@@ -1,24 +1,17 @@
 module Main exposing(main)
 
 import Browser
-
---import Html exposing (..)
-import Css as C
-import Html as H
-import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (..)
-import Html.Styled.Events exposing (onInput, onClick, on)
 import Http
 import Json.Decode as D
 import Json.Encode as J
-import Time
 import Maybe
-import Task
-import Tuple
 import Array
-import Date exposing (Date, day, month, weekday, year, Interval(..))
 import Time exposing (Weekday(..))
-import DatePicker exposing (DateEvent(..), defaultSettings)
+import Css as C
+import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (..)
+import Html.Styled.Events exposing (onInput, onClick, on)
+import Date exposing (Date, day, month, weekday, year, Interval(..))
 
 main =
   Browser.document
@@ -31,10 +24,8 @@ main =
 -- MODEL
 
 type alias Model =
-    { current    : Page
-    , monday     : Maybe Date.Date
-    , datePicker : DatePicker.DatePicker
-    , busyList   : List Interval
+    { busyList   : List Interval
+    , coarseness : Int
     , generated  : Maybe Generated
     , message    : String
     }
@@ -57,22 +48,14 @@ type alias Slot =
     , hour : Hour
     }
     
-type Page = SelectWeek
-          | MainPage
-    
 init : () -> (Model, Cmd Msg)
 init _ =
-    let
-        (datePicker, datePickerFx) = DatePicker.init
-    in
-        ( { current    = SelectWeek
-          , monday     = Nothing
-          , datePicker = datePicker
-          , busyList   = []
+        ( { busyList   = []
           , generated  = Nothing
+          , coarseness = 1
           , message    = "" 
           }
-        , Cmd.map ToDatePicker datePickerFx
+        , fetchGeneration 1 []
         )
         
 -- SUBSCRIPTIONS
@@ -82,8 +65,8 @@ subscriptions model = Sub.none
 
 -- UPDATE
 
-type Msg = ToDatePicker DatePicker.Msg
-         | ToggleSlot Slot
+type Msg = ToggleSlot Slot
+         | SelectCoarseness Int
          | FetchedGeneration (Result Http.Error (ApiResult Generated))
 type alias Generated =
     { text : String
@@ -107,15 +90,8 @@ dowRanges = List.range 0 5
 dayStart = (Hour 9 0)
 dayEnd = (Hour 17 0)
 fullRanges = List.map (\dow-> Range dow dayStart dayEnd) dowRanges
-
-settings : DatePicker.Settings
-settings =
-    let
-        isDisabled date =
-            [ Sat, Sun ]
-                |> List.member (weekday date)
-    in
-        { defaultSettings | isDisabled = isDisabled }  
+dowNames = Array.fromList [ "M", "T", "W", "T", "F", "S" ]
+coarseNames = Array.fromList [ "SUCCINCT", "BASE", "SPECIFIC", "EXACT" ]
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -128,35 +104,25 @@ update msg model =
                 Err e -> ( { model | message = (toStr e) },  Cmd.none ) 
     in 
         case msg of
-            ToDatePicker subMsg ->
-                let
-                    (newDatePicker, dateEvent) = DatePicker.update settings subMsg model.datePicker
-                    (newDate, newPage) =
-                        case dateEvent of
-                            Picked changedDate -> (Just changedDate, MainPage)
-                            _ -> (Nothing, SelectWeek)
-                in
-                    ( { model
-                          | current = newPage
-                          , monday = Maybe.map (\d -> Date.floor Monday d) newDate
-                          , datePicker = newDatePicker
-                      }
-                    , Cmd.none
-                    )
             FetchedGeneration v ->
-                coalesceHttpError v (\g -> ( { model | generated = Just g }, Cmd.none ))
+                coalesceHttpError v (\g -> ( { model
+                                                 | message = ""
+                                                 , generated = Just g }, Cmd.none ))
+            SelectCoarseness coarseness ->
+                    ( { model | coarseness = coarseness }, fetchGeneration coarseness model.busyList )
             ToggleSlot slot ->
                 let
                     available = List.filter (\i -> i.start == slot.hour && i.dow == slot.dow) model.busyList |> List.isEmpty
                     end = if minute slot.hour == 0 then Hour (hour slot.hour) 30 else Hour ((hour slot.hour)+1) 0
-                    newBusyList = if available then model.busyList ++ [ { dow = slot.dow
-                                                                        , start = slot.hour
-                                                                        , end = end
-                                                                        } ]
+                    newBusyList = if available then
+                                      model.busyList ++ [ { dow = slot.dow
+                                                          , start = slot.hour
+                                                          , end = end
+                                                          } ]
                                   else
-                                      List.filter (\i -> i.start /= slot.hour) model.busyList
+                                      List.filter (\i -> i.start /= slot.hour || i.dow /= slot.dow) model.busyList
                 in
-                    ( { model | busyList = newBusyList }, fetchGeneration model.busyList )
+                    ( { model | busyList = newBusyList }, fetchGeneration model.coarseness newBusyList )
       
 toStr : Http.Error -> String
 toStr e =
@@ -167,8 +133,8 @@ toStr e =
         Http.BadStatus s -> "Bad status: " ++ (String.fromInt s)
         Http.BadBody s -> "Bad body: " ++ s
 
-fetchGeneration : List Interval -> Cmd Msg
-fetchGeneration busyList =
+fetchGeneration : Int -> List Interval -> Cmd Msg
+fetchGeneration coarseness busyList =
     let
         h2j : Hour -> J.Value
         h2j (Hour h m) = J.list J.int [ h, m ]
@@ -177,7 +143,7 @@ fetchGeneration busyList =
             { url = "/api.php"
             , body = Http.jsonBody 
                      (J.list (\i->i)
-                          [ J.int 1
+                          [ J.int coarseness
                           , J.object (List.map (\r ->
                                                    case r of
                                                        Range dow h1 h2 ->
@@ -232,36 +198,38 @@ viewHtml : Model -> Html Msg
 viewHtml model =
     div [ css centeredLayout ]
         ([ h1 [ css [ C.textAlign C.center ] ] [ text "PHP-NLGen AvailabilityGenerator Demo" ]
-        , p [] [ text model.message ]
-        ] ++
-        (case model.current of
-           SelectWeek ->
-             [ DatePicker.view model.monday settings model.datePicker |> Html.Styled.fromUnstyled |> Html.Styled.map ToDatePicker  ]
-           MainPage ->
-             [ p [ css [ C.textAlign C.center ] ] [ text "Click on the cells to toggle availability" ]
-             , case model.monday of
-                 Just date -> h1 [] [ text <| Date.format "MMM d, yyyy" date ]
-                 _ -> p [] [ text "No date selected" ]
-             , table [ css [ C.width (C.pc 50) ] ]
-                   ([ tr []
-                         ([td [] [ text "Hour"]] ++ (List.map (\dow -> td [] [ text <| String.fromInt (dow+1) ]) dowRanges))
-                    ] ++ (List.map
-                             (\segment ->
-                                  let
-                                      hs = hour dayStart
-                                      h = hs + (segment // 2)
-                                      m = if remainderBy 2 segment == 1 then 30 else 0
-                                      hh = Hour h m
-                                      available dow  = List.filter (\i -> i.start == hh && i.dow == dow) model.busyList |> List.isEmpty
-                                  in
-                                      (tr []
-                                           ([td [] [ text (toString hh) ]] ++
-                                           (List.map ( \dow -> td [ onClick (ToggleSlot { dow = dow, hour = hh }) ]
-                                                          [ text (if available dow then "_" else "X") ]) dowRanges))))
-                             (List.range 0 ((hour dayEnd - hour dayStart) * 2))))
-             , div [] [
-                    text <| Maybe.withDefault "" (Maybe.map (\g->g.text) model.generated) ]
-             ]))
+         , p [] [ text model.message ]
+         , p [ css [ C.textAlign C.center ] ] [ text "Click on the cells to toggle availability. See below for the generated text." ]
+         , p [ css [ C.textAlign C.center ] ] ([ text "Coarse level (click to select): " ] ++
+                                                   (List.concat <| List.map (\(idx,str) ->
+                                                                                 [ span
+                                                                                      (if idx == model.coarseness then
+                                                                                           [ css [ C.padding (C.px 5)]]
+                                                                                       else
+                                                                                           [ css [ C.padding (C.px 5), C.backgroundColor (C.hex "A0A0A0") ], onClick (SelectCoarseness idx) ])
+                                                                                      [ text str ]
+                                                                                 , span [] [text " "]]) (Array.toIndexedList coarseNames)))
+         ,  table [ css [ C.verticalAlign C.center ] ]
+             ([ tr []
+                    ([td [css [ C.width (C.px 50)]] [ text "Hour"]] ++ (List.map (\dow -> td [ css [ C.width (C.px 20) ] ] [ Array.get dow dowNames |> Maybe.withDefault "?" |> text ]) dowRanges))
+              ] ++ (List.map
+                        (\segment ->
+                             let
+                                 hs = hour dayStart
+                                 h = hs + (segment // 2)
+                                 odd = remainderBy 2 segment == 1
+                                 m = if odd then 30 else 0
+                                 hh = Hour h m
+                                 available dow  = List.filter (\i -> i.start == hh && i.dow == dow) model.busyList |> List.isEmpty
+                             in
+                                 (tr (if odd then [css [C.backgroundColor (C.hex "A0A0A0")]] else [])
+                                      ([td [] [ text (toString hh) ]] ++
+                                           (List.map ( \dow -> td [ onClick (ToggleSlot { dow = dow, hour = hh }), css [ C.width (C.px 20) ] ]
+                                                           [ text (if available dow then "_" else "X") ]) dowRanges))))
+                        (List.range 0 ((hour dayEnd - hour dayStart) * 2))))
+         , div [] [
+                text <| Maybe.withDefault "" (Maybe.map (\g->g.text) model.generated) ]
+         ])
 
 centeredLayout : List C.Style
 centeredLayout =

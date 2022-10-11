@@ -70,7 +70,25 @@ class AvailabilityTest extends TestCase
             [5, [12, 10], [12, 40]],
             [5, [15, 10], [15, 50]],
             [5, [15, 50], [16, 50]]];
-        
+
+    private function apiCall(AvailabilityGenerator $gen, string $json) : string
+    {
+        $data = json_decode($json, True);
+        $coarseness = $data[0];
+        $ranges = [];
+        foreach($data[1] as $dow=>$pair) {
+            $ranges[intval($dow)] = $pair;
+        }
+        $busyList = $data[2];
+        return $gen->generateAvailability($busyList, $ranges, $coarseness, null);
+    }
+    private function normalize(string $str) : string
+    {
+        $str = preg_replace("/quite/", "mostly", $str);
+        return $str;
+    }
+
+    
     /**
      * @test
      */
@@ -110,7 +128,8 @@ class AvailabilityTest extends TestCase
      */
     public function fullWeirdWeek() : void
     {
-        static::markTestSkipped('Aggregation code needs to be improved.');
+        static::markTestSkipped('The current generator lacks opportunistic aggregation.');
+        // currently produces: All week is mostly busy all day. Saturday is busy all day.
         
         $gen = new AvailabilityGenerator();
         $weirdRanges = [
@@ -130,12 +149,6 @@ class AvailabilityTest extends TestCase
         $this->assertEquals($out, "All week is busy all day.");
     }
     
-    private function normalize(string $str) : string
-    {
-        $str = preg_replace("/quite/", "mostly", $str);
-        return $str;
-    }
-
     /**
      * @test
      */
@@ -146,7 +159,7 @@ class AvailabilityTest extends TestCase
         $out = $gen->generateAvailability($this->regularWeek, $this->ranges, AvailabilityGenerator::BASE, null);
         $out = $this->normalize($out);
         
-        $this->assertEquals($out, "Monday and Wednesday are in the morning mostly free, and from 13 PM to late 16 PM somewhat free; the rest is busy. Tuesday and Saturday are in the early morning busy, from 11 AM to late 13 PM somewhat busy, and from 15 PM to late 16 PM mostly busy; the rest is free. Thursday is in the early morning somewhat free, from 10 AM to half past 12 PM mostly free, and in the afternoon also mostly free; the rest is busy. Friday is in the morning mostly free, in the mid-afternoon free, and in the late afternoon also free; the rest is busy.");
+        $this->assertEquals($out, "Monday and Wednesday are in the morning mostly free, and from 13 PM to late 16 PM somewhat free; the rest is busy. Tuesday and Saturday are in the early morning busy, from 11 AM to late 13 PM somewhat busy, and from 15 PM to late 16 PM mostly busy; the rest is free. Thursday is in the early morning somewhat free, from 10 AM to half past 12 PM mostly free, and from around 13 PM to 17 PM also mostly free; the rest is busy. Friday is in the morning mostly free, in the mid-afternoon free, and in the late afternoon also free; the rest is busy.");
     }
 
     /**
@@ -182,4 +195,31 @@ class AvailabilityTest extends TestCase
         
         $this->assertEquals($out, "Monday, Tuesday, Wednesday, Friday, and Saturday are free all day. Thursday is free from 6 AM to half past 16 PM, and from half past 17 PM to 24 PM; the rest is busy. Sunday is busy from late 6 AM to late 11 AM, and from half past 14 PM to 22 PM; the rest is free.");
     }
+
+    /**
+     * @test
+     */
+    public function noFreeLunch() : void
+    {
+        $gen = new AvailabilityGenerator();
+        $out = $this->apiCall($gen, '[1,{"0":[[9,0],[17,0]],"1":[[9,0],[17,0]],"2":[[9,0],[17,0]],"3":[[9,0],[17,0]],"4":[[9,0],[17,0]],"5":[[9,0],[17,0]]},[[2,[12,0],[12,30]],[2,[12,30],[13,0]]]]');
+        $out = $this->normalize($out);
+        $this->assertEquals($out, "The mornings are free in the morning. The afternoons, Wednesday is free from 13:00 PM to 17:00 PM. Monday, Tuesday, Thursday, Friday, and Saturday are free in the afternoon.");
+    }
+
+    /**
+     * @test
+     */
+    public function morningPerson() : void
+    {
+        static::markTestSkipped('The morning needs to be ommitted.');
+        // currently produces: The mornings are somewhat busy in the morning. The afternoons, Monday, Wednesday, Thursday, Friday, and Saturday are quite free.
+        
+        $gen = new AvailabilityGenerator();
+        $out = $this->apiCall($gen, '[1,{"0":[[9,0],[17,0]],"1":[[9,0],[17,0]],"2":[[9,0],[17,0]],"3":[[9,0],[17,0]],"4":[[9,0],[17,0]],"5":[[9,0],[17,0]]},[[0,[11,30],[12,0]],[2,[11,30],[12,0]],[1,[11,30],[12,0]],[1,[12,30],[13,0]],[4,[12,30],[13,0]],[4,[13,30],[14,0]],[3,[13,30],[14,0]],[2,[14,30],[15,0]],[1,[14,30],[15,0]],[1,[15,30],[16,0]],[2,[15,30],[16,0]],[3,[14,30],[15,0]],[3,[10,30],[11,0]],[3,[9,30],[10,0]],[3,[15,30],[16,0]],[2,[12,30],[13,0]],[0,[12,30],[13,0]],[4,[11,30],[12,0]],[5,[11,30],[12,0]],[0,[10,30],[11,0]],[1,[10,30],[11,0]],[2,[10,30],[11,0]],[4,[10,30],[11,0]],[5,[10,30],[11,0]],[0,[9,30],[10,0]],[1,[9,30],[10,0]],[2,[9,30],[10,0]],[4,[9,30],[10,0]],[5,[9,30],[10,0]],[3,[11,30],[12,0]],[3,[12,30],[13,0]],[5,[12,30],[13,0]],[5,[13,30],[14,0]],[2,[13,30],[14,0]],[1,[13,30],[14,0]],[0,[13,30],[14,0]],[1,[13,0],[13,30]],[1,[12,0],[12,30]],[1,[11,0],[11,30]]]]');
+        $out = $this->normalize($out);
+        // what happened with Tuesday???
+        $this->assertEquals($out, "The mornings are somewhat busy. The afternoons, Monday, Wednesday, Thursday, Friday, and Saturday are quite free.");
+    }
+    
 }

@@ -27,9 +27,9 @@ development.
 
 ## Available Generation Grammars
 
-The NLGen ships with a generation grammar ready to use, that
-constructs text descriptions for weekly schedules. The grammar is
-accessible by importing `\NLGen\Grammars\Availability\AvailabilityGenerator`.
+NLGen ships with a generation grammar ready to use, that constructs
+text descriptions for weekly schedules. The grammar is accessible by
+importing `\NLGen\Grammars\Availability\AvailabilityGenerator`.
 
 The method `generateAvailability` receives a list of "busy times" in
 the form of

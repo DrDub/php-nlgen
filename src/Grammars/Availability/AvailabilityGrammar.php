@@ -312,11 +312,14 @@ class AvailabilityGrammar extends Generator
                 $this->lex->string_for_id($block->isFree?"free":"busy")
             );
             if($block->fullRange) {
-                $this->addWS($text, $this->lex->string_for_id("all_day"));
-            }else{
                 if(!$isSegment){
-                    $this->addWS($text, $this->timeRange($block->startTime, $block->endTime));
+                    $this->addWS($text, $this->lex->string_for_id("all_day"));
                 }
+            }else{
+                $oldCoarseness = $this->context['coarseness'];
+                $this->context['coarseness'] = 3;
+                $this->addWS($text, $this->timeRange($block->startTime, $block->endTime));
+                $this->context['coarseness'] = $oldCoarseness;
             }
         }else{
             $purities = [];
@@ -364,9 +367,11 @@ class AvailabilityGrammar extends Generator
 
     protected function purity($purity)
     {
-        if($purity > 0.95){
-            //return $purityStr;
+        $purityStr = "{".sprintf("%1.2f",$purity)."}";        
+        if($purity > 0.99){
             return [ 'text'=>"", 'sem'=> [ 'level' => 'full', 'value'=>$purity ] ];
+        }elseif($purity > 0.95){
+            return [ 'text'=>$this->lex->string_for_id("almost"), 'sem'=> [ 'level' => 'almost', 'value'=>$purity ] ];
         }elseif($purity > 0.75){
             return [ 'text'=> $this->lex->string_for_id("mostly"),
                      'sem'=>  [ 'level' => 'medium', 'value'=>$purity ] ];
@@ -416,10 +421,10 @@ class AvailabilityGrammar extends Generator
 
     protected function timeRange($start, $end)
     {
-        if($start[0] <= 9 && $end[0] <= 13 && $end[0] >= 12) {
+        if($start[0] <= 9 && ($end[0] == 12 || ($this->context['coarseness'] < 2 && $end[0] == 13 && $end[1] == 0))) {
             return $this->lex->string_for_id("morning");
         }
-        if($start[0] >= 12 && $start[0] <= 13 && $end[0] >= 17) {
+        if(($start[0] == 12 || ($this->context['coarseness'] < 2 && $start[0] == 13 && $start[1] == 0)) && $end[0] >= 17) {
             return $this->lex->string_for_id("afternoon");
         }
         if($this->context['coarseness'] < 2) {
@@ -437,8 +442,12 @@ class AvailabilityGrammar extends Generator
             }
             // fall through
         }
-        $text = $this->lex->string_for_id("from")." ".$this->hour($start);
-        $text .= " ".$this->lex->string_for_id("to")." ".$this->hour($end);
+        $text = "";
+        $this->addWS($text,
+                     $this->lex->string_for_id("from"),
+                     $this->hour($start),
+                     $this->lex->string_for_id("to"),
+                     $this->hour($end));
         return [ 'text' => $text, 'sem' => [ $start, $end ] ];
     }
 
