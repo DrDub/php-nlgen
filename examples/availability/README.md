@@ -37,6 +37,8 @@ The examples here include:
   select busy times and see the output at a selected level of
   coarseness. It compiles to `index.html` with the provided `Makefile`. 
   See the live demo at http://textualization.com/availability/.
+  
+![PHP-NLGen Availability Demo Screenshot](https://textualization.com/availability/demo.png)
 
 ## Known issues
 
