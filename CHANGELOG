@@ -1,3 +1,9 @@
+php-nlgen (0.18)
+
+	* Availability fixes plus web demo.
+
+-- Pablo Duboue, 2022/10/11
+
 php-nlgen (0.17)
 
 	* A full grammar for generating availability descriptions based on schedules.
