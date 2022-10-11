@@ -47,7 +47,7 @@ function clean($a)
         }
         $v = clean($v);
         $result[$k] = $v;
-        if($k == "blocks" && !isset($v[0])) {
+        if($k === "blocks" && !isset($v[0])) {
             $result[$k] = [ $v ];
         }
     }
@@ -57,7 +57,7 @@ function clean($a)
 if ($_SERVER['REQUEST_METHOD']=="POST") {
     $rawData = file_get_contents('php://input');
     $data = json_decode($rawData, True);
-    file_put_contents("/tmp/api_call.json", $rawData);
+    //file_put_contents("/tmp/api_call.json", $rawData);
     $coarseness = $data[0];
     $ranges = [];
     foreach($data[1] as $dow=>$pair) {
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD']=="POST") {
     $gen = new AvailabilityGenerator();
     $text = $gen->generateAvailability($busyList, $ranges, $coarseness, null);
     $sem = $gen->semantics();
-    file_put_contents("/tmp/api_result.json", json_encode($sem));
+    //file_put_contents("/tmp/api_result.json", json_encode($sem));
 
     $result = [];
     $result['text'] = $text;
@@ -95,18 +95,18 @@ if ($_SERVER['REQUEST_METHOD']=="POST") {
         }
         $sentCount -= $delta;
     }
-    file_put_contents("/tmp/api_result2.json", json_encode($sem));
+    //file_put_contents("/tmp/api_result2.json", json_encode($sem));
     $result['sentences'] = [];
     foreach(range(0, $sentCount - 1) as $sent) {
         //$sentText = substr($text, $sem['top'][$sent]['offsetStart'], $sem['top'][$sent]['offsetEnd'] - $sem['top'][$sent]['offsetStart']);
-        if($sent) {
-            $key = "focusedMessage$sent";
-        }else{
-            $key = "focusedMessage";
-        }
-        $sentSem = clean($sem['top'][$key]);
-        $sentSem['offsetStart'] = $sem['top'][$sent]['offsetStart'];
-        $sentSem['offsetEnd']   = $sem['top'][$sent]['offsetEnd'];
+        //if($sent) {
+        //    $key = "focusedMessage$sent";
+        //}else{
+        //    $key = "focusedMessage";
+        //}
+        $sentSem = clean($sem['top'][$sent]);
+        //$sentSem['offsetStart'] = $sem['top'][$sent]['offsetStart'];
+        //$sentSem['offsetEnd']   = $sem['top'][$sent]['offsetEnd'];
         $result['sentences'][] = $sentSem;
         //$sentText = substr($text, $sem['top'][$sent]['offsetStart'], $sem['top'][$sent]['offsetEnd'] - $sem['top'][$sent]['offsetStart']);
     }
@@ -118,6 +118,7 @@ if ($_SERVER['REQUEST_METHOD']=="POST") {
     */
     $result['status'] = 200;
     
+    //file_put_contents("/tmp/api_result3.json", json_encode($result));
     echo json_encode($result);
 }else{
     echo '{"status":500, "error":"wrong method"}';

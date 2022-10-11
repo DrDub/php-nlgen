@@ -221,5 +221,16 @@ class AvailabilityTest extends TestCase
         // what happened with Tuesday???
         $this->assertEquals($out, "The mornings are somewhat busy. The afternoons, Monday, Wednesday, Thursday, Friday, and Saturday are quite free.");
     }
+
+    /**
+     * @test
+     */
+    public function randomBroke() : void
+    {
+        $gen = new AvailabilityGenerator();
+        $out = $this->apiCall($gen, '[3,{"0":[[9,0],[17,0]],"1":[[9,0],[17,0]],"2":[[9,0],[17,0]],"3":[[9,0],[17,0]],"4":[[9,0],[17,0]],"5":[[9,0],[17,0]]},[[2,[16,0],[16,30]],[2,[16,30],[17,0]],[2,[17,0],[17,30]],[1,[13,0],[13,30]],[4,[13,0],[13,30]],[4,[14,30],[15,0]],[4,[13,30],[14,0]],[5,[12,0],[12,30]],[5,[11,0],[11,30]],[5,[10,30],[11,0]]]]');
+        $out = $this->normalize($out);
+        $this->assertEquals($out, "Monday and Thursday are free all day. Tuesday is free from 9:00 AM to 13:00 PM, and from 13:30 PM to 17:00 PM; the rest is busy. Wednesday is free from 9:00 AM to 16:00 PM. Friday is free from 9:00 AM to 13:00 PM, from 14:00 PM to 14:30 PM, and from 15:00 PM to 17:00 PM; the rest is busy. Saturday is free from 9:00 AM to 10:30 AM, from 11:30 AM to 12:00 PM, and in the afternoon; the rest is busy.");
+    }
     
 }

@@ -56,10 +56,10 @@ EOD_LEX);
   }
 
   function blocks_orig($params){
-    return AvailabilityGrammar::blocks($params[0],$params[1]);
+    return AvailabilityGrammar::blocks($params[0],$params[1],$params[2]);
   }
 
-  function blocks($p0,$p1){
+  function blocks($p0,$p1,$p2){
     if(isset($this->context['debug'])) {
       error_log(print_r(func_get_args(),true));
     }

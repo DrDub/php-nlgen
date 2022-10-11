@@ -10,7 +10,7 @@ import Time exposing (Weekday(..))
 import Css as C
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
-import Html.Styled.Events exposing (onInput, onClick, on)
+import Html.Styled.Events exposing (onMouseOver, onMouseOut, onClick)
 import Date exposing (Date, day, month, weekday, year, Interval(..))
 
 main =
@@ -25,8 +25,9 @@ main =
 
 type alias Model =
     { busyList   : List Interval
-    , coarseness : Int
+    , coarseness : Coarseness
     , generated  : Maybe Generated
+    , highlight  : Maybe Int
     , message    : String
     }
 
@@ -53,7 +54,8 @@ init _ =
         ( { busyList   = []
           , generated  = Nothing
           , coarseness = 1
-          , message    = "" 
+          , highlight  = Nothing
+          , message    = ""
           }
         , fetchGeneration 1 []
         )
@@ -66,7 +68,9 @@ subscriptions model = Sub.none
 -- UPDATE
 
 type Msg = ToggleSlot Slot
-         | SelectCoarseness Int
+         | SelectCoarseness Coarseness
+         | HighlightIn Int
+         | HighlightOut
          | FetchedGeneration (Result Http.Error (ApiResult Generated))
 type alias Generated =
     { text : String
@@ -84,6 +88,7 @@ type alias Block =
     , free   : Bool
     , purity : Float
     }
+type alias Coarseness = Int
 type alias Dow = Int
 type Range = Range Dow Hour Hour
 dowRanges = List.range 0 5
@@ -110,6 +115,10 @@ update msg model =
                                                  , generated = Just g }, Cmd.none ))
             SelectCoarseness coarseness ->
                     ( { model | coarseness = coarseness }, fetchGeneration coarseness model.busyList )
+            HighlightIn h ->
+                    ( { model | highlight = Just h }, Cmd.none )
+            HighlightOut ->
+                    ( { model | highlight = Nothing }, Cmd.none )
             ToggleSlot slot ->
                 let
                     available = List.filter (\i -> i.start == slot.hour && i.dow == slot.dow) model.busyList |> List.isEmpty
@@ -133,14 +142,14 @@ toStr e =
         Http.BadStatus s -> "Bad status: " ++ (String.fromInt s)
         Http.BadBody s -> "Bad body: " ++ s
 
-fetchGeneration : Int -> List Interval -> Cmd Msg
+fetchGeneration : Coarseness -> List Interval -> Cmd Msg
 fetchGeneration coarseness busyList =
     let
         h2j : Hour -> J.Value
         h2j (Hour h m) = J.list J.int [ h, m ]
     in
         Http.post
-            { url = "/api.php"
+            { url = "api.php"
             , body = Http.jsonBody 
                      (J.list (\i->i)
                           [ J.int coarseness
@@ -196,22 +205,26 @@ view model =
     }
 viewHtml : Model -> Html Msg
 viewHtml model =
-    div [ css centeredLayout ]
+    div [ css [ C.textAlign C.center ] ]
         ([ h1 [ css [ C.textAlign C.center ] ] [ text "PHP-NLGen AvailabilityGenerator Demo" ]
          , p [] [ text model.message ]
          , p [ css [ C.textAlign C.center ] ] [ text "Click on the cells to toggle availability. See below for the generated text." ]
-         , p [ css [ C.textAlign C.center ] ] ([ text "Coarse level (click to select): " ] ++
-                                                   (List.concat <| List.map (\(idx,str) ->
-                                                                                 [ span
-                                                                                      (if idx == model.coarseness then
-                                                                                           [ css [ C.padding (C.px 5)]]
-                                                                                       else
-                                                                                           [ css [ C.padding (C.px 5), C.backgroundColor (C.hex "A0A0A0") ], onClick (SelectCoarseness idx) ])
-                                                                                      [ text str ]
-                                                                                 , span [] [text " "]]) (Array.toIndexedList coarseNames)))
+         , p [ css [ C.textAlign C.center ] ]
+             ([ text "Coarse level (click to select): " ] ++
+                  (List.concat <| List.map (\(idx,str) ->
+                                                [ span
+                                                      (if idx == model.coarseness then
+                                                           [ css [ C.padding (C.px 5)]]
+                                                       else
+                                                           [ css [ C.padding (C.px 5), C.backgroundColor (C.hex "A0A0A0") ], onClick (SelectCoarseness idx) ])
+                                                      [ text str ]
+                                                , span [] [text " "]]) (Array.toIndexedList coarseNames)))
          ,  table [ css [ C.verticalAlign C.center ] ]
              ([ tr []
-                    ([td [css [ C.width (C.px 50)]] [ text "Hour"]] ++ (List.map (\dow -> td [ css [ C.width (C.px 20) ] ] [ Array.get dow dowNames |> Maybe.withDefault "?" |> text ]) dowRanges))
+                    ([td [css [ C.width (C.px 50)]] [ text "Hour"]] ++
+                         (List.map
+                              (\dow -> td [ css [ C.width (C.px 20) ] ] [ Array.get dow dowNames |> Maybe.withDefault "?" |> text ])
+                              dowRanges))
               ] ++ (List.map
                         (\segment ->
                              let
@@ -220,15 +233,48 @@ viewHtml model =
                                  odd = remainderBy 2 segment == 1
                                  m = if odd then 30 else 0
                                  hh = Hour h m
-                                 available dow  = List.filter (\i -> i.start == hh && i.dow == dow) model.busyList |> List.isEmpty
+                                 blocks = case (model.highlight, model.generated) of
+                                              (Just i, Just g) -> Array.get i (Array.fromList g.sentences) |> Maybe.map (\s -> s.blocks) |> Maybe.withDefault []
+                                              _ -> []
                              in
-                                 (tr (if odd then [css [C.backgroundColor (C.hex "A0A0A0")]] else [])
+                                 (tr (if odd then [css [C.backgroundColor (C.hex "C0F0C0")]] else [])
                                       ([td [] [ text (toString hh) ]] ++
-                                           (List.map ( \dow -> td [ onClick (ToggleSlot { dow = dow, hour = hh }), css [ C.width (C.px 20) ] ]
-                                                           [ text (if available dow then "_" else "X") ]) dowRanges))))
+                                           (List.map ( \dow ->
+                                                           let
+                                                               available  = List.filter (\i -> i.start == hh && i.dow == dow) model.busyList |> List.isEmpty
+                                                               (inblock, purity) = List.filterMap (\b ->
+                                                                                                       let (inb, pu) = inBlock b dow hh
+                                                                                                       in if inb then Just (inb,pu) else Nothing) blocks
+                                                                                   |> List.head |> Maybe.withDefault (False, 0.0)
+                                                               blockBg = C.rgb 200 200 (Basics.floor purity * 255)
+                                                           in 
+                                                           td [ onClick (ToggleSlot { dow = dow, hour = hh }), css ([ C.width (C.px 20) ]
+                                                                                                                        ++ (if inblock then [ C.backgroundColor blockBg ] else [])) ]
+                                                           [ text (if available then "_" else "X") ]) dowRanges))))
                         (List.range 0 ((hour dayEnd - hour dayStart) * 2))))
-         , div [] [
-                text <| Maybe.withDefault "" (Maybe.map (\g->g.text) model.generated) ]
+         , div []
+             (case model.generated of
+                  Just g -> ([ p [ css [ C.textAlign C.center ] ] [ text "Mouse over to connect the text to the table." ] ] ++
+                                 List.concatMap (\(idx,sent)->
+                                                     let
+                                                         selected = case model.highlight of
+                                                                        Just h -> idx == h
+                                                                        _ -> False
+                                                         even = remainderBy 2 idx == 0
+                                                         out = onMouseOut HighlightOut
+                                                         evts = [ onMouseOver (HighlightIn idx), out ]
+                                                     in
+                                                         [ span (case (selected, even) of
+                                                                     (True, _) -> [css [C.backgroundColor (C.hex "D0D0FF")], out]
+                                                                     (_, True) -> [css [C.backgroundColor (C.hex "D0D0D0")]] ++ evts
+                                                                     _ -> evts)
+                                                               [ text <| String.slice sent.start sent.end g.text ], span [] [text " "]] )
+                                 (List.indexedMap Tuple.pair g.sentences))
+                  _ -> [])
+         , div [] [ p [] [ text "Source code: "
+                         , a [ href "https://github.com/DrDub/php-nlgen/blob/master/src/Grammars/Availability/AvailabilityGrammar.php" ][ text "Grammar" ]
+                         , span [] [ text " "]
+                         , a [ href "https://github.com/DrDub/php-nlgen/tree/master/examples/availability" ] [ text "Demo" ]]]
          ])
 
 centeredLayout : List C.Style
@@ -240,4 +286,15 @@ centeredLayout =
    , C.margin C.auto
    ]
 
-    
+inBlock : Block -> Dow -> Hour -> (Bool, Float)
+inBlock { dows, start, end, free, purity } dow (Hour xh xm) =
+    if List.member dow dows then
+        case (start, end) of
+            (Hour sh sm, Hour eh em) ->
+                if (sh < xh || (sh == xh && sm <= xm)) &&
+                    ( xh < eh || (xh == eh && xm < em)) then
+                    (True, purity)
+                else
+                    (False, 0.0)
+    else
+        (False, 0.0)

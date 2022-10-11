@@ -35,7 +35,8 @@ The examples here include:
   produce a dynamic visualization of the generator (because [PHP loves Elm](http://wiki.duboue.net/PHP_Elm)). 
   The provided [Elm](https://elm-lang.org/) front-end allows you to
   select busy times and see the output at a selected level of
-  coarseness. It compiles to `index.html` with the provided `Makefile`.
+  coarseness. It compiles to `index.html` with the provided `Makefile`. 
+  See the live demo at http://textualization.com/availability/.
 
 ## Known issues
 

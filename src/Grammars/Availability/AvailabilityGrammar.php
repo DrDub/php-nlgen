@@ -267,7 +267,7 @@ class AvailabilityGrammar extends Generator
                 $text,
                 $this->lex->string_for_id("all_week"),
                 $this->lex->query_string(['id'=>'be','number'=>'sg']),
-                $this->blocks($focused->blocks, false)
+                $this->blocks($focused->blocks, false, false)
             );
             break;
 
@@ -276,7 +276,7 @@ class AvailabilityGrammar extends Generator
                 $text,
                 $this->lex->string_for_id($focused->endTime[0] > 12 ? "afternoons" : "mornings"),
                 $this->lex->query_string(['id'=>'be','number'=>'pl']),
-                $this->blocks($focused->blocks, true)
+                $this->blocks($focused->blocks, true, false)
             );
             break;
             
@@ -288,7 +288,7 @@ class AvailabilityGrammar extends Generator
                     'id'=>'be',
                     'number'=>$this->current_semantics()['dows']['number']
                 ]),
-                $this->blocks($focused->blocks, $inSegment)
+                $this->blocks($focused->blocks, false, $inSegment)
             );
             break;
         }
@@ -298,7 +298,7 @@ class AvailabilityGrammar extends Generator
         return "$text.";
     }
 
-    protected function blocks($blocks, $isSegment)
+    protected function blocks($blocks, $isSegment, $inSegment)
     {
         if(! $blocks){
             return "{ERROR: no blocks given}";
@@ -312,14 +312,16 @@ class AvailabilityGrammar extends Generator
                 $this->lex->string_for_id($block->isFree?"free":"busy")
             );
             if($block->fullRange) {
-                if(!$isSegment){
+                if(!$inSegment){
                     $this->addWS($text, $this->lex->string_for_id("all_day"));
                 }
             }else{
-                $oldCoarseness = $this->context['coarseness'];
-                $this->context['coarseness'] = 3;
-                $this->addWS($text, $this->timeRange($block->startTime, $block->endTime));
-                $this->context['coarseness'] = $oldCoarseness;
+                if(!$isSegment) {
+                    $oldCoarseness = $this->context['coarseness'];
+                    $this->context['coarseness'] = 3;
+                    $this->addWS($text, $this->timeRange($block->startTime, $block->endTime));
+                    $this->context['coarseness'] = $oldCoarseness;
+                }
             }
         }else{
             $purities = [];
@@ -482,11 +484,15 @@ class AvailabilityGrammar extends Generator
         $perDay = [];
         foreach($busyList as $busy) {
             [$dow, $start, $end] = $busy;
+            if(! isset($ranges[$dow])) {
+                continue; // skip
+            }
             if(! isset($perDay[$dow])) {
                 $perDay[$dow] = [];
             }
             if($end[0] < $start[0] or // looped, set to end
-               $end[0] > $ranges[$dow][1][0]) { 
+               $end[0] > $ranges[$dow][1][0] or
+               ($end[0] == $ranges[$dow][1][0] and $end[1] > $ranges[$dow][1][1])) { 
                 $end = $ranges[$dow][1];
             }
             if($start[0] < $ranges[$dow][0][0]){
