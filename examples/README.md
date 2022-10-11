@@ -104,8 +104,8 @@ by a program that just generates insults, that is).
 
 
 Multilingual extensions are showcased in the `multilingual/` folder.
-It is a budget modifications commentary generator to go along an
-existing Web site (http://budgetplateau.com, unrelated to the author).
+It is a budget modifications commentary generator to go along a 
+now defunct Web site ([http://budgetplateau.com](http://web.archive.org/web/20111129102920/http://budgetplateau.com/), unrelated to the author).
 
 The `ste` folder contains Simple Technical English Linearizer built
 duing the first NLG hackathon at INLG'16.
@@ -119,3 +119,7 @@ presented at the Vancouver PHP Meetup in 2019.
 The `german` folder contains an expansion of the chatbot to the German
 language. It handles case and gender agreements (including weak and
 strong endings for adjectives).
+
+The `availability` folder contains example codes (including an
+[Elm](https://elm-lang.org/) front-end) for the `AvailibityGenerator`
+shipped with NLGen.
