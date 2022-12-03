@@ -146,7 +146,7 @@ and the class notes of his recent NLG course [5].
 
 ## Sponsorship
 
-Work on NLGen is sponsored by [Textualization Software Ltd.](http://textualization.com).
+Work on NLGen is sponsored by [Textualization Software Ltd.](https://textualization.com).
 
 
 ## License
