@@ -143,6 +143,9 @@ and the class notes of his recent NLG course [5].
 * [4] http://duboue.net/blog.html
 * [5] http://wiki.duboue.net/index.php/2011_FaMAF_Intro_to_NLG
 
+## Integrations
+* https://doc.tiki.org/Natural-Language-Generation
+
 
 ## Sponsorship
 
