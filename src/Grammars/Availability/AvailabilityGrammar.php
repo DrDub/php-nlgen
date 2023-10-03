@@ -45,7 +45,7 @@ class AvailabilityGrammar extends Generator
     // ranges is an array from dow to tuple start-time, end-time (earliest start and end of
     // meetings for that day),
     // coarseness is one of the above constant.
-    public function generateAvailability($busyList, $ranges, $coarseness=self::BASE, $context)
+    public function generateAvailability($busyList, $ranges, $context, $coarseness=self::BASE)
     {
         return $this->generate([ 'busyList' => $busyList, 'ranges' => $ranges, 'coarseness' => $coarseness ], $context);
     }
