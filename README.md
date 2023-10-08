@@ -58,7 +58,7 @@ $fullRanges = [];
 foreach(range(0, 6) as $dow) {
  $fullRanges[$dow] = [ [6, 0], [24, 0] ];
 }
-echp $gen->generateAvailability($busyList, $this->fullRanges, AvailabilityGenerator::BASE, null);
+echo $gen->generateAvailability($busyList, $fullRanges, AvailabilityGenerator::BASE, null);
 ```
 
 Produces _All week is mostly free all day. Sunday is busy from late 6 AM to late 11 AM, and from half past 14 PM to 22 PM; the rest is free._
